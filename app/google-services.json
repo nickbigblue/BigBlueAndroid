@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "154780732115",
+    "firebase_url": "https://bigblueapp-3921e.firebaseio.com",
+    "project_id": "bigblueapp-3921e",
+    "storage_bucket": "bigblueapp-3921e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154780732115:android:7b5e2de6b2162b37",
+        "android_client_info": {
+          "package_name": "com.example.nick.bigblueocean"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "154780732115-mdqdh6apma5v8rd98r0nalbd7ucouo1a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nick.bigblueocean",
+            "certificate_hash": "58c42d94b3b03fa974a62e92d9f763b4f989913e"
+          }
+        },
+        {
+          "client_id": "154780732115-j8gfjrlkpiskn6rcdf9qoj2tg6rvtl6e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyRNixWRJxuo11BzjvNjL3cdjHekxOzu4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "154780732115-j8gfjrlkpiskn6rcdf9qoj2tg6rvtl6e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "154780732115-l7ij550gs6lq1ru1a1ns5qopvuur502c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.aheadwithwings.Big-Blue-Ocean-App"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
