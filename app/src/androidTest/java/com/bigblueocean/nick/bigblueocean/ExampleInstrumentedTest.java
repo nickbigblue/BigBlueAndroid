@@ -1,4 +1,4 @@
-package com.example.nick.bigblueocean;
+package com.bigblueocean.nick.bigblueocean;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

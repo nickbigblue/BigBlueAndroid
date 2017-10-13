@@ -1,4 +1,4 @@
-package com.example.nick.bigblueocean;
+package com.bigblueocean.nick.bigblueocean;
 
 import org.junit.Test;
 
