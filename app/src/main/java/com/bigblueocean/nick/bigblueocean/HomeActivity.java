@@ -35,13 +35,16 @@ public class HomeActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private final String helpString = "Select a type of fish and specify your needs. " +
+            "It will be added to your list tab for review.";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.home_toolbar);
+        toolbar.setLogo(R.drawable.home_bar_icon);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -54,15 +57,16 @@ public class HomeActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.home_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, helpString, Snackbar.LENGTH_LONG)
+                        .setAction(null, null).show();
             }
         });
 
+        mViewPager.setCurrentItem(1);
     }
 
 
@@ -96,6 +100,7 @@ public class HomeActivity extends AppCompatActivity {
          * The fragment argument representing the section number for this
          * fragment.
          */
+
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
@@ -142,19 +147,20 @@ public class HomeActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            return 4;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "News";
                 case 1:
-                    return "SECTION 2";
+                    return "Order";
                 case 2:
-                    return "SECTION 3";
+                    return "List";
+                case 3:
+                    return "Chat";
             }
             return null;
         }
