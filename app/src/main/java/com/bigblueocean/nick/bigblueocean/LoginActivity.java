@@ -8,7 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,6 +25,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
+
+import java.lang.reflect.Array;
 
 
 public class LoginActivity extends Activity implements View.OnClickListener {
@@ -49,19 +53,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         LoginToHomeIntent = new Intent(this, HomeActivity.class);
 
-
         FirebaseAuth auth = FirebaseAuth.getInstance();
-
-        //////DEBUGGING CODE LINE, DELETE LATER/////
-        auth.getInstance().signOut();
-        ////////////////////////////////////////////
-
         if (auth.getCurrentUser() != null) {
             startActivity(LoginToHomeIntent);
         }
 
         setContentView(R.layout.login_activity);
-
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -90,7 +87,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         //setupButtons
         loginButton.setOnClickListener(this);
         registerButton.setOnClickListener(this);
-
     }
 
 
@@ -104,8 +100,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     @Override
     public void onResume(){
         super.onResume();
-        onClick(loginButton);
-        onClick(registerButton);
+        emailEdit.setText(null);
+        passwordEdit.setText(null);
+
     }
 
     @Override
@@ -176,19 +173,18 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     public void fetchFirebaseUser(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        user.getToken(true)
-                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                                           public void onComplete(@NonNull Task<GetTokenResult> task) {
-                                               if (task.isSuccessful()) {
-                                                   String idToken = task.getResult().getToken();
-                                                   Log.e("IdToken" , idToken);
-                                                   // Send token to your backend via HTTPS
-                                                   // ...
-                                               } else {
-                                                   // Handle error -> task.getException();
-                                               }
-                                           }
-                                       });
+//        user.getToken(true)
+//                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+//                                           public void onComplete(@NonNull Task<GetTokenResult> task) {
+//                                               if (task.isSuccessful()) {
+//                                                   String idToken = task.getResult().getToken();
+//                                                   // Send token to your backend via HTTPS
+//                                                   // ...
+//                                               } else {
+//                                                   // Handle error -> task.getException();
+//                                               }
+//                                           }
+//                                       });
         if (user != null) {
             // Name, email address, and profile photo Url
             String name = user.getDisplayName();
@@ -207,6 +203,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         int clickedItem = v.getId();
         switch (clickedItem) {
             case R.id.loginButton:
+                //startActivity(LoginToHomeIntent);
                 signIn(emailEdit.getText().toString(), passwordEdit.getText().toString());
                 break;
             case R.id.registerButton:
@@ -267,6 +264,5 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     }
                 });
     }
-
 
 }
