@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -32,51 +31,70 @@ public class HomeActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private SectionsPagerAdapter homeViewPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
-    private final String helpString = "Select a type of fish and specify your needs. " +
-            "It will be added to your list tab for review.";
+    private ViewPager homeViewPager;
+    private String helpString;
     private final int tabCount = 4;
-    private Intent LogoutIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        LogoutIntent = new Intent(this, LoginActivity.class);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null) {
-            startActivity(LogoutIntent);
+            startActivity(new Intent(this, LoginActivity.class));
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.home_toolbar);
-//        toolbar.setLogo(R.drawable.home_bar_icon);
-        setSupportActionBar(toolbar);
+        Toolbar homeToolbar = (Toolbar) findViewById(R.id.home_toolbar);
+        TextView toolbarTitle = (TextView) homeToolbar.findViewById(R.id.toolbar_title);
+        homeToolbar.setTitle("");
+        toolbarTitle.setText(R.string.app_name);
+        toolbarTitle.setTypeface(Helper.impactTypeface(this));
+        setSupportActionBar(homeToolbar);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        homeViewPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        homeViewPager = (ViewPager) findViewById(R.id.container);
+        homeViewPager.setAdapter(homeViewPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setupWithViewPager(homeViewPager);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.home_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, helpString, Snackbar.LENGTH_LONG)
-                        .setAction(null, null).show();
+                switch (homeViewPager.getCurrentItem()){
+                    case 0:
+                        helpString = getString(R.string.news_help);
+                        break;
+                    case 1:
+                        helpString = getString(R.string.order_help);
+                        break;
+                    case 2:
+                        helpString = getString(R.string.product_help);
+                        break;
+                    case 3:
+                        helpString = getString(R.string.chat_help);
+                        break;
+                    default:
+                        helpString = "Unable to recognize current tab...";
+                        break;
+                }
+
+                Snackbar.make(view, helpString, Snackbar.LENGTH_LONG).setAction(null, null).show();
             }
         });
-        mViewPager.setCurrentItem(1);
+
+        homeViewPager.setCurrentItem(1);
 
     }
 
@@ -93,7 +111,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null) {
-            startActivity(LogoutIntent);
+            this.finish();
+            startActivity(new Intent(this, LoginActivity.class));
         }
     }
 
@@ -102,7 +121,8 @@ public class HomeActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.signout:
                 FirebaseAuth.getInstance().signOut();
-                startActivity(LogoutIntent);
+                this.finish();
+                startActivity(new Intent(this, LoginActivity.class));
                 return true;
             case R.id.help:
                 startActivity(new Intent(this, HelpActivity.class));
@@ -178,13 +198,14 @@ public class HomeActivity extends AppCompatActivity {
                     case 1:
                         return "Order";
                     case 2:
-                        return "List";
+                        return "Products";
                     case 3:
                         return "Chat";
                 }
                 return null;
             }
         }
+
 
     @Override
     public void onBackPressed() {

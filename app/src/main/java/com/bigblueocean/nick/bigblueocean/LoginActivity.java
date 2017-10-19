@@ -2,19 +2,12 @@ package com.bigblueocean.nick.bigblueocean;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.text.InputType;
-import android.text.TextWatcher;
-import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,16 +17,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
-
-import java.lang.reflect.Array;
 
 
 public class LoginActivity extends Activity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
     private String email;
     private String password;
     private EditText emailEdit;
@@ -45,17 +34,16 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private ImageView background;
     private ImageView logo;
     private ImageView backdrop;
-    private Intent LoginToHomeIntent;
     private final String TAG = "EmailPassword";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LoginToHomeIntent = new Intent(this, HomeActivity.class);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
-            startActivity(LoginToHomeIntent);
+            startActivity(new Intent(this, HomeActivity.class));
         }
 
         setContentView(R.layout.login_activity);
@@ -87,6 +75,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         //setupButtons
         loginButton.setOnClickListener(this);
         registerButton.setOnClickListener(this);
+        title.setTypeface(Helper.impactTypeface(this));
     }
 
 
@@ -115,6 +104,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     public void createAccount(String email, String password){
         if (!credentialsAreComplete()){
+            return;
+        }
+        else if (!existsInBigBlueDatabase(email)){
+            Toast.makeText(LoginActivity.this, R.string.nonexistent_email,
+                    Toast.LENGTH_LONG).show();
             return;
         }
         else {
@@ -164,7 +158,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                             }
                             else{
                                 fetchFirebaseUser();
-                                startActivity(LoginToHomeIntent);
+                                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                             }
                         }
                     });
@@ -186,7 +180,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 //                                           }
 //                                       });
         if (user != null) {
-            // Name, email address, and profile photo Url
             String name = user.getDisplayName();
             String email = user.getEmail();
             Uri photoUrl = user.getPhotoUrl();
@@ -203,7 +196,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         int clickedItem = v.getId();
         switch (clickedItem) {
             case R.id.loginButton:
-                //startActivity(LoginToHomeIntent);
                 signIn(emailEdit.getText().toString(), passwordEdit.getText().toString());
                 break;
             case R.id.registerButton:
@@ -233,6 +225,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         return valid;
     }
 
+    private boolean existsInBigBlueDatabase(String email){
+        boolean valid = false;
+        ///QUERY JASON'S DATABASE FOR THIS EMAIL, IF IT EXISTS SET VALID = TRUE
+        ///
+        ///
+        ///
+        ///
+        return valid;
+    }
 
     private boolean isVerified(){
         boolean status = false;
