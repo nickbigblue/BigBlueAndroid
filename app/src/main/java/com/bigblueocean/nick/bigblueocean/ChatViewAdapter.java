@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bigblueocean.nick.bigblueocean.ProductFragment.OnListFragmentInteractionListener;
+import com.bigblueocean.nick.bigblueocean.ChatFragment.OnListFragmentInteractionListener;
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent.DummyItem;
 
 import java.util.List;
@@ -16,12 +16,12 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class ProductViewAdapter extends RecyclerView.Adapter<ProductViewAdapter.ViewHolder> {
+public class ChatViewAdapter extends RecyclerView.Adapter<ChatViewAdapter.ViewHolder> {
 
     private final List<DummyItem> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public ProductViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public ChatViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -29,7 +29,7 @@ public class ProductViewAdapter extends RecyclerView.Adapter<ProductViewAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.product_fragment, parent, false);
+                .inflate(R.layout.fragment_chat, parent, false);
         return new ViewHolder(view);
     }
 

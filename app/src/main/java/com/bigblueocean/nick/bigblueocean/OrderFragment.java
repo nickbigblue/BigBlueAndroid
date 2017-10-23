@@ -9,12 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent.DummyItem;
-
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -50,7 +47,7 @@ public class OrderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ((HomeActivity) getActivity()).logE();
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -59,7 +56,7 @@ public class OrderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.order_fragment_list, container, false);
+        View view = inflater.inflate(R.layout.product_fragment_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -93,7 +90,6 @@ public class OrderFragment extends Fragment {
         mListener = null;
     }
 
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -106,9 +102,6 @@ public class OrderFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-
         void onListFragmentInteraction(DummyItem item);
-
-
     }
 }

@@ -13,7 +13,11 @@ import android.view.ViewGroup;
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent.DummyItem;
 
-import java.util.List;
+import java.security.cert.CertificateRevokedException;
+import java.util.ArrayList;
+
+import Model.Category;
+
 
 /**
  * A fragment representing a list of Items.
@@ -21,7 +25,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ProductFragment extends Fragment {
+public class ProdFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -33,13 +37,13 @@ public class ProductFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ProductFragment() {
+    public ProdFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ProductFragment newInstance(int columnCount) {
-        ProductFragment fragment = new ProductFragment();
+    public static ProdFragment newInstance(int columnCount) {
+        ProdFragment fragment = new ProdFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -49,7 +53,7 @@ public class ProductFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ((HomeActivity) getActivity()).logE();
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -58,7 +62,7 @@ public class ProductFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.product_fragment_list, container, false);
+        View view = inflater.inflate(R.layout.order_fragment_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -69,7 +73,8 @@ public class ProductFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new ProductViewAdapter(DummyContent.ITEMS, mListener));
+            ArrayList<Category> CAL = new Category().categories();
+            recyclerView.setAdapter(new ProdViewAdapter(CAL, mListener));
         }
         return view;
     }
@@ -92,6 +97,7 @@ public class ProductFragment extends Fragment {
         mListener = null;
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -104,6 +110,9 @@ public class ProductFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
+
         void onListFragmentInteraction(DummyItem item);
+
+
     }
 }

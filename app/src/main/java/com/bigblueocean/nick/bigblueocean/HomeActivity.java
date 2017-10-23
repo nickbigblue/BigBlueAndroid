@@ -1,12 +1,11 @@
 package com.bigblueocean.nick.bigblueocean;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -23,24 +22,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
 import com.google.firebase.auth.FirebaseAuth;
 
-import Model.News;
-
 public class HomeActivity extends AppCompatActivity implements
-OrderFragment.OnListFragmentInteractionListener, ProductFragment.OnListFragmentInteractionListener, NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnFragmentInteractionListener {
+ProdFragment.OnListFragmentInteractionListener, OrderFragment.OnListFragmentInteractionListener,
+NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInteractionListener {
 
     private FragmentStatePagerAdapter homeViewPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager homeViewPager;
     private String helpString;
-    private final int TAB_COUNT = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,94 +51,77 @@ OrderFragment.OnListFragmentInteractionListener, ProductFragment.OnListFragmentI
         toolbarTitle.setTypeface(Helper.impactTypeface(this));
         setSupportActionBar(homeToolbar);
 
-        homeViewPagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
-            @Override
-            public Fragment getItem(int position) {
-                    Fragment Fr;
-                switch (position){
-                    case 0:
-                        Toast.makeText(getApplicationContext(), "Test0", Toast.LENGTH_LONG).show();
-                        Fr = NewsFragment.newInstance(1);
-                        break;
-                    case 1:
-                        Toast.makeText(getApplicationContext(), "Test1", Toast.LENGTH_LONG).show();
-                        Fr = OrderFragment.newInstance(2);
-                        break;
-                    case 2:
-                        Toast.makeText(getApplicationContext(), "Tes2t", Toast.LENGTH_LONG).show();
-                        Fr = ProductFragment.newInstance(3);
-                        break;
-                    case 3:
-                        Toast.makeText(getApplicationContext(), "Test3", Toast.LENGTH_LONG).show();
-                       // Fr = ProductFragment.newInstance(4);
-                       Fr = ChatFragment.newInstance("","");
-                        break;
-                    default:
-                        Fr = OrderFragment.newInstance(1);
-                        break;
-                }
-                return Fr;
-            }
-
-            @Override
-            public int getCount() {
-                return TAB_COUNT;
-            }
-
-            @Override
-            public CharSequence getPageTitle(int position) {
-                switch (position) {
-                    case 0:
-                        return "News";
-                    case 1:
-                        return "Order";
-                    case 2:
-                        return "Products";
-                    case 3:
-                        return "Chat";
-                }
-                return null;
-            }
-        };
-
-        // Set up the ViewPager with the sections adapter.
         homeViewPager = (ViewPager) findViewById(R.id.container);
-        homeViewPager.setAdapter(homeViewPagerAdapter);
+        homeViewPager.setAdapter(new FSPA(getSupportFragmentManager()));
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(homeViewPager);
+        setupFAB();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.home_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (homeViewPager.getCurrentItem()){
-                    case 0:
-                        helpString = getString(R.string.news_help);
-                        break;
-                    case 1:
-                        helpString = getString(R.string.order_help);
-                        break;
-                    case 2:
-                        helpString = getString(R.string.product_help);
-                        break;
-                    case 3:
-                        helpString = getString(R.string.chat_help);
-                        break;
-                    default:
-                        helpString = "Unable to recognize current tab...";
-                        break;
-                }
 
-                Snackbar.make(view, helpString, Snackbar.LENGTH_LONG).setAction(null, null).show();
-            }
-        });
+        homeViewPager.setCurrentItem(1);
 
-       // homeViewPager.setCurrentItem(1);
+
 
     }
 
+    public void logE(){
+        Log.e("HVP",homeViewPager.getCurrentItem()+"");
+    }
+    public static class FSPA extends FragmentPagerAdapter {
 
+        public FSPA(FragmentManager fragmentManager){
+            super(fragmentManager);
+        }
+        @Override
+        public Fragment getItem(int position) {
+            Fragment Fr;
+
+            switch (position){
+                case 0:
+                    Fr = NewsFragment.newInstance(1);
+                    break;
+                case 1:
+                    Fr = ProdFragment.newInstance(1);
+                    break;
+                case 2:
+                    Fr = OrderFragment.newInstance(1);
+                    break;
+                case 3:
+                    Fr = ChatFragment.newInstance(1);
+                    break;
+                default:
+                    Log.e("case","DEF on click");
+                    Fr = ProdFragment.newInstance(1);
+                    break;
+            }
+            return Fr;
+        }
+
+
+
+        @Override
+        public int getCount() {
+
+            return 4;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "News";
+                case 1:
+                    return "Products";
+                case 2:
+                    return "Order";
+
+                case 3:
+                    return "Chat";
+            }
+            return null;
+        }
+    };
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -222,14 +197,44 @@ OrderFragment.OnListFragmentInteractionListener, ProductFragment.OnListFragmentI
 
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri){
-
-    }
+//    @Override
+//    public void onFragmentInteraction(Uri uri){
+//
+//    }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
     }
+
+    public void setupFAB(){
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.home_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (homeViewPager.getCurrentItem()){
+                    case 0:
+                        helpString = getString(R.string.news_help);
+                        break;
+                    case 1:
+                        helpString = getString(R.string.order_help);
+                        break;
+                    case 2:
+                        helpString = getString(R.string.product_help);
+                        break;
+                    case 3:
+                        helpString = getString(R.string.chat_help);
+                        break;
+                    default:
+                        helpString = "Unable to recognize current tab...";
+                        break;
+                }
+
+                Snackbar.make(view, helpString, Snackbar.LENGTH_LONG).setAction(null, null).show();
+            }
+        });
+    }
+
+
 }
