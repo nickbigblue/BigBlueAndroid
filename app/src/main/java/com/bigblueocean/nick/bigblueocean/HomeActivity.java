@@ -1,17 +1,21 @@
 package com.bigblueocean.nick.bigblueocean;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,26 +23,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class HomeActivity extends AppCompatActivity {
+import Model.News;
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter homeViewPagerAdapter;
+public class HomeActivity extends AppCompatActivity implements
+OrderFragment.OnListFragmentInteractionListener, ProductFragment.OnListFragmentInteractionListener, NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnFragmentInteractionListener {
+
+    private FragmentStatePagerAdapter homeViewPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager homeViewPager;
     private String helpString;
-    private final int tabCount = 4;
+    private final int TAB_COUNT = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +55,59 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar homeToolbar = (Toolbar) findViewById(R.id.home_toolbar);
         TextView toolbarTitle = (TextView) homeToolbar.findViewById(R.id.toolbar_title);
         homeToolbar.setTitle("");
-        toolbarTitle.setText(R.string.app_name);
+        toolbarTitle.setText(R.string.app_name_caps);
         toolbarTitle.setTypeface(Helper.impactTypeface(this));
         setSupportActionBar(homeToolbar);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        homeViewPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        homeViewPagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                    Fragment Fr;
+                switch (position){
+                    case 0:
+                        Toast.makeText(getApplicationContext(), "Test0", Toast.LENGTH_LONG).show();
+                        Fr = NewsFragment.newInstance(1);
+                        break;
+                    case 1:
+                        Toast.makeText(getApplicationContext(), "Test1", Toast.LENGTH_LONG).show();
+                        Fr = OrderFragment.newInstance(2);
+                        break;
+                    case 2:
+                        Toast.makeText(getApplicationContext(), "Tes2t", Toast.LENGTH_LONG).show();
+                        Fr = ProductFragment.newInstance(3);
+                        break;
+                    case 3:
+                        Toast.makeText(getApplicationContext(), "Test3", Toast.LENGTH_LONG).show();
+                       // Fr = ProductFragment.newInstance(4);
+                       Fr = ChatFragment.newInstance("","");
+                        break;
+                    default:
+                        Fr = OrderFragment.newInstance(1);
+                        break;
+                }
+                return Fr;
+            }
+
+            @Override
+            public int getCount() {
+                return TAB_COUNT;
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                switch (position) {
+                    case 0:
+                        return "News";
+                    case 1:
+                        return "Order";
+                    case 2:
+                        return "Products";
+                    case 3:
+                        return "Chat";
+                }
+                return null;
+            }
+        };
 
         // Set up the ViewPager with the sections adapter.
         homeViewPager = (ViewPager) findViewById(R.id.container);
@@ -94,7 +142,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        homeViewPager.setCurrentItem(1);
+       // homeViewPager.setCurrentItem(1);
 
     }
 
@@ -168,44 +216,16 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
 
-        /**
-         * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-         * one of the sections/tabs/pages.
-         */
-        public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-            public SectionsPagerAdapter(FragmentManager fm) {
-                super(fm);
-            }
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item){
 
-            @Override
-            public Fragment getItem(int position) {
-                // getItem is called to instantiate the fragment for the given page.
-                // Return a PlaceholderFragment (defined as a static inner class below).
-                return PlaceholderFragment.newInstance(position + 1);
-            }
+    }
 
-            @Override
-            public int getCount() {
-                return tabCount;
-            }
+    @Override
+    public void onFragmentInteraction(Uri uri){
 
-            @Override
-            public CharSequence getPageTitle(int position) {
-                switch (position) {
-                    case 0:
-                        return "News";
-                    case 1:
-                        return "Order";
-                    case 2:
-                        return "Products";
-                    case 3:
-                        return "Chat";
-                }
-                return null;
-            }
-        }
-
+    }
 
     @Override
     public void onBackPressed() {

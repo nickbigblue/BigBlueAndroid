@@ -4,7 +4,14 @@
     <color name="colorPrimaryDark">#113fb4</color>
     <color name="colorAccent">#FFFFFF</color>
     <color name="white">#ffffff</color>
+    <color name="tuna">#ba052b</color>
+    <color name="sword">#6b7380</color>
+    <color name="mahi">#78b82c</color>
+    <color name="wahoo">#2e78a1</color>
+    <color name="grouper">#c24f0a</color>
+    <color name="salmon">#fcb0ed</color>
     <color name="transparent">#00ffffff</color>
+
 
     <color name="black_overlay">#66000000</color>
 </resources>
