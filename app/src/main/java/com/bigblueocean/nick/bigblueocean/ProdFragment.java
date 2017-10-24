@@ -1,19 +1,16 @@
 package com.bigblueocean.nick.bigblueocean;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
-import com.bigblueocean.nick.bigblueocean.dummy.DummyContent.DummyItem;
-
-import java.security.cert.CertificateRevokedException;
 import java.util.ArrayList;
 
 import Model.Category;
@@ -27,26 +24,15 @@ import Model.Category;
  */
 public class ProdFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private static int categoriesColumnCount;
+    private OnListFragmentInteractionListener prodInteractionListener;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public ProdFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static ProdFragment newInstance(int columnCount) {
         ProdFragment fragment = new ProdFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
+        categoriesColumnCount = columnCount;
         return fragment;
     }
 
@@ -54,28 +40,17 @@ public class ProdFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((HomeActivity) getActivity()).logE();
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.order_fragment_list, container, false);
+        View view = inflater.inflate(R.layout.product_fragment_list, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            ArrayList<Category> CAL = new Category().categories();
-            recyclerView.setAdapter(new ProdViewAdapter(CAL, mListener));
-        }
+            recyclerView.setAdapter(new ProdViewAdapter(categories(), prodInteractionListener));
         return view;
     }
 
@@ -84,7 +59,7 @@ public class ProdFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+            prodInteractionListener = (OnListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -94,7 +69,7 @@ public class ProdFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        prodInteractionListener = null;
     }
 
 
@@ -111,8 +86,27 @@ public class ProdFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
 
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Category item);
 
 
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        
+    }
+
+    public ArrayList<Category> categories() {
+        ArrayList<Category> CAL= new ArrayList<Category>();
+        CAL.add(new Category("Tuna H&G Wild-Caught", BitmapFactory.decodeResource(getContext().getResources(), R.drawable.tuna2x), getResources().getColor(R.color.tuna,null)));
+        CAL.add(new Category("Sword H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.sword2x), getResources().getColor(R.color.sword,null)));
+        CAL.add(new Category("Mahi H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.mahi2x), getResources().getColor(R.color.mahi,null)));
+        CAL.add(new Category("Wahoo H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wahoo2x), getResources().getColor(R.color.wahoo,null)));
+        CAL.add(new Category("Grouper H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.grouper2x), getResources().getColor(R.color.grouper,null)));
+        CAL.add(new Category("Salmon H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.tuna2x), getResources().getColor(R.color.salmon,null)));
+        return CAL;
+    }
+
 }

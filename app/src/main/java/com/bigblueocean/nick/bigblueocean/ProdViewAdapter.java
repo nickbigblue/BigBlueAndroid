@@ -1,7 +1,6 @@
 package com.bigblueocean.nick.bigblueocean;
 
 import android.content.Context;
-import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import com.bigblueocean.nick.bigblueocean.ProdFragment.OnListFragmentInteraction
 
 
 import java.util.ArrayList;
-import java.util.List;
 
 import Model.Category;
 
@@ -25,38 +23,39 @@ import Model.Category;
  */
 public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHolder> {
 
-    private final ArrayList<Category> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final ArrayList<Category> categoryArrayList;
+    private final OnListFragmentInteractionListener prodAdapterInteractionListener;
 
-    public ProdViewAdapter(ArrayList<Category> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
-        mListener = listener;
+    public ProdViewAdapter(ArrayList<Category> categories, OnListFragmentInteractionListener listener) {
+        categoryArrayList = categories;
+        prodAdapterInteractionListener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.order_fragment, parent, false);
+                .inflate(R.layout.product_fragment, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Context context = holder.mIdView.getContext();
+        final Context context = holder.categoryView.getContext();
         final int pos = position;
-        holder.mItem = mValues.get(pos);
-        holder.mIdView.setText(mValues.get(position).title);
-        holder. categoryImage.setImageBitmap(mValues.get(position).image);
-        holder.category.setText("asdfasdfads");
+        holder.currentCategory = categoryArrayList.get(pos);
+        holder.categoryImage.setImageBitmap(categoryArrayList.get(pos).getImage());
+        holder.categoryTitle.setText(categoryArrayList.get(pos).getTitle());
+        holder.categoryTitle.setTypeface(Helper.impactTypeface(context));
+        holder.categoryTitle.setTextColor(categoryArrayList.get(pos).getColor());
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.categoryView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
+                if (prodAdapterInteractionListener != null) {
                         // Notify the active callbacks interface (the activity, if the
-                        // fragment is attached to one) that an item has been selected.
-                    Log.e("adapter","On CLick listener");
-                   // mListener.onListFragmentInteraction(holder.mItem);
+                    // fragment is attached to one) that an item has been selected.
+                    Log.e("adapter","On CLick listener: "+categoryArrayList.get(pos).getTitle());
+                    prodAdapterInteractionListener.onListFragmentInteraction(holder.currentCategory);
                 }
             }
         });
@@ -64,27 +63,20 @@ public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return categoryArrayList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final ImageView categoryImage;
-        public final TextView category;
-        public Category mItem;
+    protected class ViewHolder extends RecyclerView.ViewHolder {
+        protected final View categoryView;
+        protected final ImageView categoryImage;
+        protected final TextView categoryTitle;
+        protected Category currentCategory;
 
         public ViewHolder(View view) {
             super(view);
-            mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
+            categoryView = view;
             categoryImage = (ImageView) view.findViewById(R.id.product_image);
-            category = (TextView) view.findViewById(R.id.content2);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" +  category.getText() + "'";
+            categoryTitle = (TextView) view.findViewById(R.id.product_title);
         }
     }
 

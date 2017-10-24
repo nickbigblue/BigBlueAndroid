@@ -26,6 +26,8 @@ import android.widget.TextView;
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
 import com.google.firebase.auth.FirebaseAuth;
 
+import Model.Category;
+
 public class HomeActivity extends AppCompatActivity implements
 ProdFragment.OnListFragmentInteractionListener, OrderFragment.OnListFragmentInteractionListener,
 NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInteractionListener {
@@ -48,11 +50,12 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         TextView toolbarTitle = (TextView) homeToolbar.findViewById(R.id.toolbar_title);
         homeToolbar.setTitle("");
         toolbarTitle.setText(R.string.app_name_caps);
+       // toolbarTitle.
         toolbarTitle.setTypeface(Helper.impactTypeface(this));
         setSupportActionBar(homeToolbar);
 
         homeViewPager = (ViewPager) findViewById(R.id.container);
-        homeViewPager.setAdapter(new FSPA(getSupportFragmentManager()));
+        homeViewPager.setAdapter(new homeStatePagerAdapter(getSupportFragmentManager()));
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(homeViewPager);
@@ -68,34 +71,34 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     public void logE(){
         Log.e("HVP",homeViewPager.getCurrentItem()+"");
     }
-    public static class FSPA extends FragmentPagerAdapter {
+    public static class homeStatePagerAdapter extends FragmentPagerAdapter {
 
-        public FSPA(FragmentManager fragmentManager){
+        public homeStatePagerAdapter(FragmentManager fragmentManager){
             super(fragmentManager);
         }
         @Override
         public Fragment getItem(int position) {
-            Fragment Fr;
+            Fragment intendedFragment;
 
             switch (position){
                 case 0:
-                    Fr = NewsFragment.newInstance(1);
+                    intendedFragment = NewsFragment.newInstance(1);
                     break;
                 case 1:
-                    Fr = ProdFragment.newInstance(1);
+                    intendedFragment = ProdFragment.newInstance(1);
                     break;
                 case 2:
-                    Fr = OrderFragment.newInstance(1);
+                    intendedFragment = OrderFragment.newInstance(1);
                     break;
                 case 3:
-                    Fr = ChatFragment.newInstance(1);
+                    intendedFragment = ChatFragment.newInstance(1);
                     break;
                 default:
                     Log.e("case","DEF on click");
-                    Fr = ProdFragment.newInstance(1);
+                    intendedFragment = ProdFragment.newInstance(1);
                     break;
             }
-            return Fr;
+            return intendedFragment;
         }
 
 
@@ -142,12 +145,12 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.signout:
+            case R.id.logout_home_menu:
                 FirebaseAuth.getInstance().signOut();
                 this.finish();
                 startActivity(new Intent(this, LoginActivity.class));
                 return true;
-            case R.id.help:
+            case R.id.help_home_menu:
                 startActivity(new Intent(this, HelpActivity.class));
                 return true;
             default:
@@ -197,10 +200,10 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
 
     }
 
-//    @Override
-//    public void onFragmentInteraction(Uri uri){
-//
-//    }
+    @Override
+    public void onListFragmentInteraction(Category item){
+
+    }
 
     @Override
     public void onBackPressed() {

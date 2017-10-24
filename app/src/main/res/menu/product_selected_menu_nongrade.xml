@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/region_non"
+    android:icon="@drawable/common_google_signin_btn_icon_dark_normal"
+    android:title="@string/region" />
+
+    <item android:id="@+id/size_non"
+        android:icon="@drawable/common_google_signin_btn_icon_dark_normal"
+        android:title="@string/size" />
+
+    <item android:id="@+id/quantity_price_non"
+        android:icon="@drawable/common_google_signin_btn_icon_dark_normal"
+        android:title="@string/quantity_price" />
+</menu>
