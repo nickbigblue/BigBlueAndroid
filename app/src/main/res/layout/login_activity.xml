@@ -46,7 +46,7 @@
     <TextView
         android:id="@+id/loginTitle"
         android:layout_width="370dp"
-        android:layout_height="44dp"
+        android:layout_height="46dp"
         android:layout_marginTop="50dp"
         android:text="@string/login_title"
         android:textAlignment="center"
@@ -81,7 +81,9 @@
         android:maxLines="1"
         android:visibility="visible"
         android:hint="@string/login_email_hint"
+        android:fontFamily="sans-serif-smallcaps"
         android:inputType="textEmailAddress"
+        android:textCursorDrawable="@drawable/custom_text_cursor"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginSubtitle"
@@ -95,10 +97,13 @@
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/colorPrimary"
         android:ems="10"
+        android:fontFamily="sans-serif-smallcaps"
+        android:hint="@string/login_password_hint"
+        android:imeOptions="actionDone"
         android:inputType="textPassword"
         android:maxLines="1"
+        android:textCursorDrawable="@drawable/custom_text_cursor"
         android:visibility="visible"
-        android:hint="@string/login_password_hint"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailLogin" />
@@ -110,6 +115,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="25dp"
         android:clickable="true"
+        android:focusable="true"
         android:tint="@color/white"
         app:fabSize="normal"
         app:backgroundTint="@color/colorPrimary"
@@ -117,18 +123,48 @@
         app:layout_constraintTop_toBottomOf="@+id/passwordLogin"
         app:layout_constraintLeft_toLeftOf="@+id/logoImage" />
 
+    <TextView
+        android:id="@+id/loginLabel"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="@string/login_button"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="@id/loginButton"
+        app:layout_constraintRight_toRightOf="@id/loginButton"
+        app:layout_constraintTop_toBottomOf="@id/loginButton" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/registerButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="25dp"
         android:clickable="true"
+        android:focusable="true"
         android:tint="@color/colorPrimary"
         app:fabSize="normal"
         app:backgroundTint="@color/white"
         app:srcCompat="@android:drawable/ic_input_add"
         app:layout_constraintTop_toBottomOf="@+id/passwordLogin"
         app:layout_constraintRight_toRightOf="@+id/logoImage" />
+
+    <TextView
+        android:id="@+id/registerLabel"
+        android:layout_width="72dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="@string/register_button"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="@id/registerButton"
+        app:layout_constraintRight_toRightOf="@id/registerButton"
+        app:layout_constraintTop_toBottomOf="@id/registerButton" />
+
 
 
 </android.support.constraint.ConstraintLayout>

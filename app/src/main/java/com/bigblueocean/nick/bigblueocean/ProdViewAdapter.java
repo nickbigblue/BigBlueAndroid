@@ -1,5 +1,7 @@
 package com.bigblueocean.nick.bigblueocean;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,6 +27,7 @@ public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHo
 
     private final ArrayList<Category> categoryArrayList;
     private final OnListFragmentInteractionListener prodAdapterInteractionListener;
+    private Context context;
 
     public ProdViewAdapter(ArrayList<Category> categories, OnListFragmentInteractionListener listener) {
         categoryArrayList = categories;
@@ -40,20 +43,18 @@ public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Context context = holder.categoryView.getContext();
+        context = holder.categoryView.getContext();
         final int pos = position;
         holder.currentCategory = categoryArrayList.get(pos);
         holder.categoryImage.setImageBitmap(categoryArrayList.get(pos).getImage());
         holder.categoryTitle.setText(categoryArrayList.get(pos).getTitle());
-        holder.categoryTitle.setTypeface(Helper.impactTypeface(context));
+        holder.categoryTitle.setTypeface(FontHelper.antonTypeface(context));
         holder.categoryTitle.setTextColor(categoryArrayList.get(pos).getColor());
 
         holder.categoryView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (prodAdapterInteractionListener != null) {
-                        // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
                     Log.e("adapter","On CLick listener: "+categoryArrayList.get(pos).getTitle());
                     prodAdapterInteractionListener.onListFragmentInteraction(holder.currentCategory);
                 }
@@ -80,7 +81,4 @@ public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHo
         }
     }
 
-    public void onListFragmentInteraction(Category item){
-
-    }
 }

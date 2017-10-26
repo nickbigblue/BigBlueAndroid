@@ -2,6 +2,7 @@
     <string name="app_name">Big Blue Ocean</string>
     <string name="app_name_caps">BIGBLUE</string>
     <string name="login_button">Log In</string>
+    <string name="register_button">Register</string>
     <string name="create_account_button">Create Account</string>
     <string name="login_title">Welcome to Big Blue Ocean!</string>
     <string name="login_subtitle">Log in now to access all the features Big Blue has to offer!</string>

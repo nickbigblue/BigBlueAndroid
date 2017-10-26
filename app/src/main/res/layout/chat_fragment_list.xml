@@ -10,4 +10,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.bigblueocean.nick.bigblueocean.ChatFragment"
-    tools:listitem="@layout/fragment_chat" />
+    tools:listitem="@layout/chat_fragment" />

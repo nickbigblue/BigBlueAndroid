@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent.DummyItem;
 
-import java.util.List;
-
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -58,7 +56,7 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
+        View view = inflater.inflate(R.layout.chat_fragment_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {

@@ -1,13 +1,17 @@
 package com.bigblueocean.nick.bigblueocean;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +40,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private ImageView backdrop;
     private final String TAG = "EmailPassword";
 
+
+//METHODS FOR ACTIVITY LIFE CYCLE//////////////////////////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +81,21 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         //setupButtons
         loginButton.setOnClickListener(this);
         registerButton.setOnClickListener(this);
-        title.setTypeface(Helper.impactTypeface(this));
-    }
+        title.setTypeface(FontHelper.antonTypeface(this));
 
+
+        backdrop = (ImageView) findViewById(R.id.backdropImage);
+        backdrop.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+                return false;
+            }
+        });
+    }
 
     @Override
     public void onStart() {
@@ -102,6 +120,22 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        int clickedItem = v.getId();
+        switch (clickedItem) {
+            case R.id.loginButton:
+                signIn(emailEdit.getText().toString(), passwordEdit.getText().toString());
+                break;
+            case R.id.registerButton:
+                createAccount(emailEdit.getText().toString(), passwordEdit.getText().toString());
+                break;
+            default:
+                break;
+        }
+    }
+
+    //METHODS FOR FIREBASE CONNECTIONS//////////////////////////////
     public void createAccount(String email, String password){
         if (!credentialsAreComplete()){
             return;
@@ -191,47 +225,22 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        int clickedItem = v.getId();
-        switch (clickedItem) {
-            case R.id.loginButton:
-                signIn(emailEdit.getText().toString(), passwordEdit.getText().toString());
-                break;
-            case R.id.registerButton:
-                createAccount(emailEdit.getText().toString(), passwordEdit.getText().toString());
-                break;
-            default:
-                break;
-            }
-    }
-
     private boolean credentialsAreComplete() {
         boolean valid = true;
-            String email = emailEdit.getText().toString();
-            if (email.isEmpty()) {
-                emailEdit.setError("Required.");
-                valid = false;
-            } else {
-                emailEdit.setError(null);
-            }
-            String password = passwordEdit.getText().toString();
-            if (password.isEmpty()) {
-                passwordEdit.setError("Required.");
-                valid = false;
-            } else {
-                passwordEdit.setError(null);
-            }
-        return valid;
-    }
-
-    private boolean existsInBigBlueDatabase(String email){
-        boolean valid = false;
-        ///QUERY JASON'S DATABASE FOR THIS EMAIL, IF IT EXISTS SET VALID = TRUE
-        ///
-        ///
-        ///
-        ///
+        String email = emailEdit.getText().toString();
+        if (email.isEmpty()) {
+            emailEdit.setError("Required.");
+            valid = false;
+        } else {
+            emailEdit.setError(null);
+        }
+        String password = passwordEdit.getText().toString();
+        if (password.isEmpty()) {
+            passwordEdit.setError("Required.");
+            valid = false;
+        } else {
+            passwordEdit.setError(null);
+        }
         return valid;
     }
 
@@ -266,4 +275,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 });
     }
 
+    private boolean existsInBigBlueDatabase(String email){
+        boolean valid = false;
+        ///QUERY JASON'S DATABASE FOR THIS EMAIL, IF IT EXISTS SET VALID = TRUE
+        ///
+        ///
+        ///
+        ///
+        return valid;
+    }
 }

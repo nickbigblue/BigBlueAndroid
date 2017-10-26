@@ -15,13 +15,6 @@ import java.util.ArrayList;
 
 import Model.Category;
 
-
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
 public class ProdFragment extends Fragment {
 
     private static int categoriesColumnCount;
@@ -54,7 +47,6 @@ public class ProdFragment extends Fragment {
         return view;
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -72,40 +64,18 @@ public class ProdFragment extends Fragment {
         prodInteractionListener = null;
     }
 
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-
         void onListFragmentInteraction(Category item);
-
-
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        
     }
 
     public ArrayList<Category> categories() {
         ArrayList<Category> CAL= new ArrayList<Category>();
-        CAL.add(new Category("Tuna H&G Wild-Caught", BitmapFactory.decodeResource(getContext().getResources(), R.drawable.tuna2x), getResources().getColor(R.color.tuna,null)));
-        CAL.add(new Category("Sword H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.sword2x), getResources().getColor(R.color.sword,null)));
-        CAL.add(new Category("Mahi H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.mahi2x), getResources().getColor(R.color.mahi,null)));
-        CAL.add(new Category("Wahoo H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wahoo2x), getResources().getColor(R.color.wahoo,null)));
-        CAL.add(new Category("Grouper H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.grouper2x), getResources().getColor(R.color.grouper,null)));
-        CAL.add(new Category("Salmon H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.tuna2x), getResources().getColor(R.color.salmon,null)));
+        CAL.add(new Category("Tuna H&G Wild-Caught", BitmapFactory.decodeResource(getContext().getResources(), R.drawable.tuna3x), getResources().getColor(R.color.tuna,null)));
+        CAL.add(new Category("Sword H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.sword3x), getResources().getColor(R.color.sword,null)));
+        CAL.add(new Category("Mahi H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.mahi3x), getResources().getColor(R.color.mahi,null)));
+        CAL.add(new Category("Wahoo H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wahoo3x), getResources().getColor(R.color.wahoo,null)));
+        CAL.add(new Category("Grouper H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.grouper3x), getResources().getColor(R.color.grouper,null)));
+        CAL.add(new Category("Salmon H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.tuna3x), getResources().getColor(R.color.salmon,null)));
         return CAL;
     }
 
