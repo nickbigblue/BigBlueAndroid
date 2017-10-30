@@ -33,6 +33,13 @@
     <string name="size">Size</string>
     <string name="quantity_price">Quantity and Price</string>
 
+    <string name="Tuna">Tuna H&amp;G Wild-Caught</string>
+    <string name="Sword">Sword H&amp;G Wild-Caught</string>
+    <string name="Mahi">Mahi H&amp;G Wild-Caught</string>
+    <string name="Wahoo">Wahoo H&amp;G Wild-Caught</string>
+    <string name="Grouper">Grouper H&amp;G Wild-Caught</string>
+    <string name="Salmon">Salmon H&amp;G Wild-Caught</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

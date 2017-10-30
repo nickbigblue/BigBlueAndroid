@@ -69,14 +69,25 @@ public class ProdFragment extends Fragment {
     }
 
     public ArrayList<Category> categories() {
-        ArrayList<Category> CAL= new ArrayList<Category>();
-        CAL.add(new Category("Tuna H&G Wild-Caught", BitmapFactory.decodeResource(getContext().getResources(), R.drawable.tuna3x), getResources().getColor(R.color.tuna,null)));
-        CAL.add(new Category("Sword H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.sword3x), getResources().getColor(R.color.sword,null)));
-        CAL.add(new Category("Mahi H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.mahi3x), getResources().getColor(R.color.mahi,null)));
-        CAL.add(new Category("Wahoo H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.wahoo3x), getResources().getColor(R.color.wahoo,null)));
-        CAL.add(new Category("Grouper H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.grouper3x), getResources().getColor(R.color.grouper,null)));
-        CAL.add(new Category("Salmon H&G Wild-Caught",BitmapFactory.decodeResource(getContext().getResources(), R.drawable.tuna3x), getResources().getColor(R.color.salmon,null)));
+        ArrayList<Category> CAL = new ArrayList<Category>();
+        CAL.add(new Category("Tuna H&G Wild-Caught",  BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.tuna3x), getResources().getColor(R.color.tuna)));
+
+        CAL.add(new Category("Sword H&G Wild-Caught", BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.sword3x), getResources().getColor(R.color.sword)));
+
+        CAL.add(new Category("Mahi H&G Wild-Caught", BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.mahi3x), getResources().getColor(R.color.mahi)));
+
+        CAL.add(new Category("Wahoo H&G Wild-Caught", BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.wahoo3x), getResources().getColor(R.color.wahoo)));
+
+        CAL.add(new Category("Grouper H&G Wild-Caught", BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.grouper3x), getResources().getColor(R.color.grouper)));
+
+        CAL.add(new Category("Salmon H&G Wild-Caught", BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.tuna3x), getResources().getColor(R.color.salmon)));
+
         return CAL;
     }
-
 }

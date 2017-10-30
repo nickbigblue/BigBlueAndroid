@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.AlertDialogLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.AlertDialogLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:floatingMenuActionButton="http://jitpack.io"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="500dp"
@@ -9,9 +9,10 @@
 
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/body"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/tuna">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/textView"
@@ -19,56 +20,246 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:foregroundGravity="center"
-            android:text="TUNA TEST"
-            android:textColor="@color/white"
+            android:text="..."
+            android:textColor="@color/colorPrimary"
             android:textSize="60sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.501" />
+
+        <TextView
+            android:id="@+id/region_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="REGION"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/region_fmb"
+            app:layout_constraintLeft_toLeftOf="@id/region_fmb"
+            app:layout_constraintRight_toRightOf="@id/region_fmb" />
 
         <rjsv.floatingmenu.floatingmenubutton.FloatingMenuButton
-            android:id="@+id/my_floating_button"
+            android:id="@+id/region_fmb"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:scaleType="centerInside"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.043"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            floatingMenuActionButton:anchored="false"
+            app:layout_constraintVertical_bias="0.121"
+            floatingMenuActionButton:anchored="true"
             floatingMenuActionButton:animationType="radial"
-            floatingMenuActionButton:dispositionEndAngle="360"
+            floatingMenuActionButton:dispositionEndAngle="90"
             floatingMenuActionButton:dispositionStartAngle="0"
             floatingMenuActionButton:subActionButtonRadius="100">
 
             <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
-                android:id="@+id/sub_button_1"
+                android:id="@+id/region_1"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/homeicon" />
 
             <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
-                android:id="@+id/sub_button_2"
+                android:id="@+id/region_2"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/homeicon" />
 
             <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
-                android:id="@+id/sub_button_3"
+                android:id="@+id/region_3"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/homeicon" />
 
             <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
-                android:id="@+id/sub_button_4"
+                android:id="@+id/region_4"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/homeicon" />
 
             <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
-                android:id="@+id/sub_button_5"
+                android:id="@+id/region_5"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+        </rjsv.floatingmenu.floatingmenubutton.FloatingMenuButton>
+
+        <TextView
+            android:id="@+id/grade_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GRADE"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/grade_fmb"
+            app:layout_constraintLeft_toLeftOf="@id/grade_fmb"
+            app:layout_constraintRight_toRightOf="@id/grade_fmb" />
+
+        <rjsv.floatingmenu.floatingmenubutton.FloatingMenuButton
+            android:id="@+id/grade_fmb"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.956"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.121"
+            floatingMenuActionButton:anchored="true"
+            floatingMenuActionButton:animationType="radial"
+            floatingMenuActionButton:dispositionEndAngle="-90"
+            floatingMenuActionButton:dispositionStartAngle="0"
+            floatingMenuActionButton:subActionButtonRadius="100">
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/grade_1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/grade_2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/grade_3"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/grade_4"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/grade_5"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+        </rjsv.floatingmenu.floatingmenubutton.FloatingMenuButton>
+
+        <TextView
+            android:id="@+id/size_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SIZE"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/size_fmb"
+            app:layout_constraintLeft_toLeftOf="@id/size_fmb"
+            app:layout_constraintRight_toRightOf="@id/size_fmb" />
+
+        <rjsv.floatingmenu.floatingmenubutton.FloatingMenuButton
+            android:id="@+id/size_fmb"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.043"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.878"
+            floatingMenuActionButton:anchored="true"
+            floatingMenuActionButton:animationType="radial"
+            floatingMenuActionButton:dispositionEndAngle="90"
+            floatingMenuActionButton:dispositionStartAngle="180"
+            floatingMenuActionButton:subActionButtonRadius="100">
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/size_1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/size_2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/size_3"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/size_4"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/size_5"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+        </rjsv.floatingmenu.floatingmenubutton.FloatingMenuButton>
+
+        <TextView
+            android:id="@+id/quantity_price_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QTY/$"
+            android:textSize="20sp"
+            app:layout_constraintLeft_toLeftOf="@id/quantity_price_fmb"
+            app:layout_constraintRight_toRightOf="@id/quantity_price_fmb"
+            app:layout_constraintTop_toBottomOf="@id/quantity_price_fmb" />
+
+        <rjsv.floatingmenu.floatingmenubutton.FloatingMenuButton
+            android:id="@+id/quantity_price_fmb"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.956"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.878"
+            floatingMenuActionButton:anchored="true"
+            floatingMenuActionButton:animationType="radial"
+            floatingMenuActionButton:dispositionEndAngle="270"
+            floatingMenuActionButton:dispositionStartAngle="180"
+            floatingMenuActionButton:subActionButtonRadius="100">
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/quantity_price_1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/quantity_price_2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/quantity_price_3"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/quantity_price_4"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/homeicon" />
+
+            <rjsv.floatingmenu.floatingmenubutton.subbutton.FloatingSubButton
+                android:id="@+id/quantity_price_5"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/homeicon" />

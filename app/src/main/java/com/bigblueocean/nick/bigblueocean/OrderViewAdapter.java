@@ -1,29 +1,29 @@
 package com.bigblueocean.nick.bigblueocean;
 
+
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.bigblueocean.nick.bigblueocean.OrderFragment.OnListFragmentInteractionListener;
-import com.bigblueocean.nick.bigblueocean.dummy.DummyContent.DummyItem;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Scanner;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+import Model.Product;
+
 public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final ArrayList<Product> currentOrder;
+    private final OnListFragmentInteractionListener orderAdapterInteractionListener;
+    private Context context;
 
-    public OrderViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
-        mListener = listener;
+    public OrderViewAdapter(ArrayList<Product> items, OnListFragmentInteractionListener listener) {
+        currentOrder = items;
+        orderAdapterInteractionListener = listener;
     }
 
     @Override
@@ -35,17 +35,27 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        context = holder.productView.getContext();
+        final int pos = position;
+        holder.currentProduct = currentOrder.get(pos);
+        holder.productTitle.setBackgroundColor(currentOrder.get(pos).getCategory().getColor());
+        String title = currentOrder.get(pos).getCategory().getTitle();
+        String[] result = title.split("\\s+");
+        holder.productTitle.setText(result[0]);
+        holder.productTitle.setTypeface(FontHelper.antonTypeface(context));
+        holder.productSubtitle.setBackgroundColor(currentOrder.get(pos).getCategory().getColor());
+        holder.productSubtitle.setText(currentOrder.get(pos).getDescription()[0]);
+        holder.productSubtitle.setTypeface(FontHelper.antonTypeface(context));
+        holder.productDetailsLabel.setText(currentOrder.get(pos).getDescription()[1]);
+        holder.productDetailsLabel.setTypeface(FontHelper.antonTypeface(context));
+        holder.productDetailsLabel.setTextColor(currentOrder.get(pos).getCategory().getColor());
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.productView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                if (orderAdapterInteractionListener != null) {
+                    Log.e("adapter","On CLick listener: "+currentOrder.get(pos).getCategory().getTitle());
+                    orderAdapterInteractionListener.onListFragmentInteraction(holder.currentProduct);
                 }
             }
         });
@@ -53,25 +63,27 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return currentOrder.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final View productView;
+        public final TextView productTitle;
+        public final TextView productSubtitle;
+        public final TextView productDetailsLabel;
+        public Product currentProduct;
 
         public ViewHolder(View view) {
             super(view);
-            mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            productView = view;
+            productTitle = (TextView) view.findViewById(R.id.order_title);
+            productSubtitle = (TextView) view.findViewById(R.id.order_subtitle);
+            productDetailsLabel = (TextView) view.findViewById(R.id.order_description);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + "\t" + productDetailsLabel.getText() + "\t";
         }
     }
 }
