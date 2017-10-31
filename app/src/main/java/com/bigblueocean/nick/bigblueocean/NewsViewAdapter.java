@@ -11,6 +11,8 @@ import com.bigblueocean.nick.bigblueocean.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
+import Model.News;
+
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
@@ -18,10 +20,10 @@ import java.util.List;
  */
 public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<News> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public NewsViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public NewsViewAdapter(List<News> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -36,8 +38,8 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+//        holder.mIdView.setText(mValues.get(position));
+//        holder.mContentView.setText(mValues.get(position).content);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +62,7 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHo
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public News mItem;
 
         public ViewHolder(View view) {
             super(view);

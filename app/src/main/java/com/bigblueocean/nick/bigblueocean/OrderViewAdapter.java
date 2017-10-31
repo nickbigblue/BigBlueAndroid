@@ -46,7 +46,7 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
         holder.productSubtitle.setBackgroundColor(currentOrder.get(pos).getCategory().getColor());
         holder.productSubtitle.setText(currentOrder.get(pos).getDescription()[0]);
         holder.productSubtitle.setTypeface(FontHelper.antonTypeface(context));
-        holder.productDetailsLabel.setText(currentOrder.get(pos).getDescription()[1]);
+        holder.productDetailsLabel.setText("1+ \t Placeholder size \t Placeholder lbs. \t $8.75");
         holder.productDetailsLabel.setTypeface(FontHelper.antonTypeface(context));
         holder.productDetailsLabel.setTextColor(currentOrder.get(pos).getCategory().getColor());
 

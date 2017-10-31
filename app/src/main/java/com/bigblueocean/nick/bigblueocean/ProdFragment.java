@@ -70,7 +70,7 @@ public class ProdFragment extends Fragment {
 
     public ArrayList<Category> categories() {
         ArrayList<Category> CAL = new ArrayList<Category>();
-        CAL.add(new Category("Tuna H&G Wild-Caught",  BitmapFactory.decodeResource(getContext().getResources(),
+        CAL.add(new Category("Tuna H&G Wild-Caught", BitmapFactory.decodeResource(getContext().getResources(),
                 R.drawable.tuna3x), getResources().getColor(R.color.tuna)));
 
         CAL.add(new Category("Sword H&G Wild-Caught", BitmapFactory.decodeResource(getContext().getResources(),

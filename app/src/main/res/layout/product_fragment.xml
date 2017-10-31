@@ -28,5 +28,6 @@
         android:gravity="left"
         android:textColor="@color/colorPrimary"
         android:textAppearance="?attr/textAppearanceListItem" />
+
     </LinearLayout>
 </LinearLayout>

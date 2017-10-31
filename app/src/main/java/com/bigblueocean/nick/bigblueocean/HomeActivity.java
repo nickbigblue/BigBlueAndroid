@@ -3,32 +3,28 @@ package com.bigblueocean.nick.bigblueocean;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
-
 import Model.Category;
 import Model.News;
 import Model.Product;
@@ -39,7 +35,6 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
 
     private FragmentStatePagerAdapter homeViewPagerAdapter;
     private ViewPager homeViewPager;
-    private String helpString;
     private static ArrayList<Product> currentOrder = new ArrayList<>();
 
 //METHODS FOR ACTIVITY LIFECYCLE AND FAB
@@ -57,20 +52,19 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         TextView toolbarTitle = (TextView) homeToolbar.findViewById(R.id.toolbar_title);
         homeToolbar.setTitle("");
         toolbarTitle.setText(R.string.app_name_caps);
-       // toolbarTitle.
         toolbarTitle.setTypeface(FontHelper.antonTypeface(this));
         setSupportActionBar(homeToolbar);
 
         homeViewPager = (ViewPager) findViewById(R.id.container);
-        homeViewPager.setAdapter(new homeStatePagerAdapter(getSupportFragmentManager()));
+        homeViewPagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager());
+        homeViewPager.setAdapter(homeViewPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(homeViewPager);
-        setupFAB();
 
         homeViewPager.setCurrentItem(1);
+        homeViewPager.setOffscreenPageLimit(0);
 
-        //currentOrder.add(0, new Product(new Category("", null, R.color.colorPrimary),"Placeholder","Pl","ace","hol", "der"));
     }
 
     @Override
@@ -83,10 +77,63 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     @Override
     public void onResume(){
         super.onResume();
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null) {
             this.finish();
             startActivity(new Intent(this, LoginActivity.class));
+        }
+
+        if (!(homeViewPagerAdapter == null)) {
+            homeViewPagerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(this.getApplicationContext());
+        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+        for(Product element : currentOrder){
+            int counter = 0;
+            Gson gson = new Gson();
+            String json = gson.toJson(element);
+            prefsEditor.putString("Element"+counter, json);
+            prefsEditor.commit();
+            counter++;
+        }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(this.getApplicationContext());
+        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+        for(Product element : currentOrder){
+            int counter = 0;
+            Gson gson = new Gson();
+            String json = gson.toJson(element);
+            prefsEditor.putString("Element"+counter, json);
+            prefsEditor.commit();
+            counter++;
+        }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(this.getApplicationContext());
+        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+        for(Product element : currentOrder){
+            int counter = 0;
+            Gson gson = new Gson();
+            String json = gson.toJson(element);
+            prefsEditor.putString("Element"+counter, json);
+            prefsEditor.commit();
+            counter++;
         }
     }
 
@@ -96,32 +143,8 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         finish();
     }
 
-    public void setupFAB(){
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.home_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (homeViewPager.getCurrentItem()){
-                    case 0:
-                        helpString = getString(R.string.news_help);
-                        break;
-                    case 1:
-                        helpString = getString(R.string.order_help);
-                        break;
-                    case 2:
-                        helpString = getString(R.string.product_help);
-                        break;
-                    case 3:
-                        helpString = getString(R.string.chat_help);
-                        break;
-                    default:
-                        helpString = "Unable to recognize current tab...";
-                        break;
-                }
-
-                Snackbar.make(view, helpString, Snackbar.LENGTH_LONG).setAction(null, null).show();
-            }
-        });
+    public static ArrayList<Product> getCurrentOrder(){
+        return currentOrder;
     }
 
 //METHOD FOR TAB BAR MENU
@@ -142,10 +165,10 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     }
 
 //METHODS FOR FRAGMENTS IN TABBED ACTIVITY
-//    @Override
-//    public void onListFragmentInteraction(News item){
-//
-//    }
+    @Override
+    public void onListFragmentInteraction(News item){
+
+    }
 
     @Override
     public void onListFragmentInteraction(Product item){
@@ -173,7 +196,13 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Product dummyProd = new Product(cat, "Caribbean","1", "70+", "1000lbs", "5.00");
-                currentOrder.add(dummyProd);
+                if (currentOrder.size() <= 50){
+                    currentOrder.add(dummyProd);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "You've reached your order maximum.", Toast.LENGTH_LONG).show();
+                }
+                homeViewPagerAdapter.notifyDataSetChanged();
             }
         });
         listItemDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -187,21 +216,37 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     }
 
     public AlertDialog editProductDialog(Product prod){
-        AlertDialog listItemDialog;
-        AlertDialog.Builder listItemDialogBuilder;
-        listItemDialogBuilder = new AlertDialog.Builder(HomeActivity.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = View.inflate(this, R.layout.product_selected_dialog, null);
-        view.setBackgroundColor(prod.getCategory().getColor());
-        listItemDialogBuilder.setView(view);
-        listItemDialog = listItemDialogBuilder.create();
-        return listItemDialog;
+        final Product product = prod;
+        AlertDialog editProductDialog;
+        AlertDialog.Builder editProductDialogBuilder;
+        editProductDialogBuilder = new AlertDialog.Builder(HomeActivity.this, R.style.AlertDialogTheme);
+        editProductDialogBuilder.setTitle(prod.getCategory().getTitle());
+        String message = "";
+            for (int i = 1; i <= 4; i++){
+                        message += prod.getDescription()[i]+"\n";
+            }
+        editProductDialogBuilder.setMessage(message);
+        editProductDialogBuilder.setPositiveButton("Delete this", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                currentOrder.remove(product);
+                homeViewPagerAdapter.notifyDataSetChanged();
+            }
+        });
+        editProductDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        editProductDialog = editProductDialogBuilder.create();
+        return editProductDialog;
     }
 
-//PAGER ADAPTER FOR TABBED ACTIVITY FUNCTION
-    public static class homeStatePagerAdapter extends FragmentPagerAdapter {
+//CUSTOMIZED PAGER ADAPTER FOR TABBED ACTIVITY FUNCTION
+    public static class FragmentStatePagerAdapter extends FragmentPagerAdapter {
 
-        public homeStatePagerAdapter(FragmentManager fragmentManager){
+        public FragmentStatePagerAdapter(FragmentManager fragmentManager){
             super(fragmentManager);
         }
         @Override
@@ -229,12 +274,14 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
             return intendedFragment;
         }
 
-
-
         @Override
         public int getCount() {
-
             return 4;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+        return POSITION_NONE;
         }
 
         @Override
@@ -256,9 +303,5 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
 
     public void logE(){
         Log.e("HVP",homeViewPager.getCurrentItem()+"");
-    }
-
-    public static ArrayList<Product> getCurrentOrder(){
-        return currentOrder;
     }
 }

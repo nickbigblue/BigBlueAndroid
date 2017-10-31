@@ -37,11 +37,13 @@ public class OrderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.order_fragment_list, container, false);
-        if (view instanceof RecyclerView) {
+
+
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView.findViewById(R.id.list);
             recyclerView.setAdapter(new OrderViewAdapter(currentOrder, orderFragmentListener));
-        }
+
         return view;
     }
 
