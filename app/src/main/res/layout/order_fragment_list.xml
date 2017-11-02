@@ -1,17 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+<android.support.v7.widget.RecyclerView
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list"
     android:name="com.bigblueocean.nick.bigblueocean.OrderFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_height="0dp"
+    android:layout_weight="5"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.bigblueocean.nick.bigblueocean.ProdFragment"
     tools:listitem="@layout/order_fragment" >
 
 </android.support.v7.widget.RecyclerView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/order_submit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="@string/submit_button"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:textSize="34sp"
+            android:fontFamily="@font/antonregular"
+            android:layout_weight="1"/>
+        <Button
+            android:layout_width="0dp"
+            android:id="@+id/order_clear"
+            android:layout_height="match_parent"
+            android:text="@string/clear_button"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:textSize="34sp"
+            android:fontFamily="@font/antonregular"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+</LinearLayout>
 
 

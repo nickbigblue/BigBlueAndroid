@@ -1,7 +1,5 @@
 package com.bigblueocean.nick.bigblueocean;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,11 +16,6 @@ import java.util.ArrayList;
 
 import Model.Category;
 
-/**
-
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHolder> {
 
     private final ArrayList<Category> categoryArrayList;

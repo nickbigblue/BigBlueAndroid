@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bigblueocean.nick.bigblueocean.OrderFragment.OnListFragmentInteractionListener;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import Model.Product;
 
@@ -46,17 +45,22 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
         holder.productSubtitle.setBackgroundColor(currentOrder.get(pos).getCategory().getColor());
         holder.productSubtitle.setText(currentOrder.get(pos).getDescription()[0]);
         holder.productSubtitle.setTypeface(FontHelper.antonTypeface(context));
-        holder.productDetailsLabel.setText("1+ \t Placeholder size \t Placeholder lbs. \t $8.75");
+        holder.productDetailsLabel.setText(
+                "currentOrder.get(pos).getDescription()[1] \t " +
+                "currentOrder.get(pos).getDescription()[2] \t " +
+                "currentOrder.get(pos).getDescription()[3] \t " +
+                "currentOrder.get(pos).getDescription()[4]");
         holder.productDetailsLabel.setTypeface(FontHelper.antonTypeface(context));
         holder.productDetailsLabel.setTextColor(currentOrder.get(pos).getCategory().getColor());
 
-        holder.productView.setOnClickListener(new View.OnClickListener() {
+        holder.productView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View v) {
                 if (orderAdapterInteractionListener != null) {
                     Log.e("adapter","On CLick listener: "+currentOrder.get(pos).getCategory().getTitle());
                     orderAdapterInteractionListener.onListFragmentInteraction(holder.currentProduct);
                 }
+                return true;
             }
         });
     }
@@ -79,11 +83,6 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
             productTitle = (TextView) view.findViewById(R.id.order_title);
             productSubtitle = (TextView) view.findViewById(R.id.order_subtitle);
             productDetailsLabel = (TextView) view.findViewById(R.id.order_description);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + "\t" + productDetailsLabel.getText() + "\t";
         }
     }
 }

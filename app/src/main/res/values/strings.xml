@@ -32,7 +32,14 @@
     <string name="grade">Grade</string>
     <string name="size">Size</string>
     <string name="quantity_price">Quantity and Price</string>
-
+    <string name="submit_button">SUBMIT</string>
+    <string name="clear_button">CLEAR</string>
+    <string name="submission_confirmed">Thank you for submitting,
+        your salesperson will reach out to you shortly to help you place your order.</string>
+    <string name="submission_notconfirmed">Something went wrong. Please reach out to Big Blue.</string>
+    <string name="dialog_add_button">Add Item</string>
+    <string name="dialog_cancel_button">Cancel</string>
+    <string name="dialog_confirm_changes">Confirm changes</string>
     <string name="Tuna">Tuna H&amp;G Wild-Caught</string>
     <string name="Sword">Sword H&amp;G Wild-Caught</string>
     <string name="Mahi">Mahi H&amp;G Wild-Caught</string>
@@ -40,6 +47,4 @@
     <string name="Grouper">Grouper H&amp;G Wild-Caught</string>
     <string name="Salmon">Salmon H&amp;G Wild-Caught</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

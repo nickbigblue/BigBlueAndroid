@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
 
 import java.util.ArrayList;
 
@@ -25,6 +27,7 @@ public class OrderFragment extends Fragment {
         OrderFragment fragment = new OrderFragment();
         productColumnCount = columnCount;
         return fragment;
+
     }
 
     @Override
@@ -40,9 +43,23 @@ public class OrderFragment extends Fragment {
 
 
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.findViewById(R.id.list);
+            RecyclerView recyclerView= (RecyclerView) view.findViewById(R.id.list);
             recyclerView.setAdapter(new OrderViewAdapter(currentOrder, orderFragmentListener));
+
+        Button submitButton = (Button) view.findViewById(R.id.order_submit);
+        Button clearButton = (Button) view.findViewById(R.id.order_clear);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((HomeActivity) getActivity()).submitOrder();
+            }
+        });
+        clearButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                ((HomeActivity) getActivity()).clearOrder();
+            }
+        });
 
         return view;
     }
