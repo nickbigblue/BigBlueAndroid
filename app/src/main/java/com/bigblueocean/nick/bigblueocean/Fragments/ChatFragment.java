@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean;
+package com.bigblueocean.nick.bigblueocean.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bigblueocean.nick.bigblueocean.Adapters.ChatViewAdapter;
+import com.bigblueocean.nick.bigblueocean.R;
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent.DummyItem;
 

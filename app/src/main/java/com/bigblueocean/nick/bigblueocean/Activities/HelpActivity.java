@@ -1,9 +1,13 @@
-package com.bigblueocean.nick.bigblueocean;
+package com.bigblueocean.nick.bigblueocean.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
+import com.bigblueocean.nick.bigblueocean.R;
+
 public class HelpActivity extends AppCompatActivity {
     private TextView HelpContentView;
 

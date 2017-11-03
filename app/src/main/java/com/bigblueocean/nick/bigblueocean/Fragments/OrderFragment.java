@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean;
+package com.bigblueocean.nick.bigblueocean.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,9 +10,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 
+import com.bigblueocean.nick.bigblueocean.Activities.HomeActivity;
+import com.bigblueocean.nick.bigblueocean.Adapters.OrderViewAdapter;
+import com.bigblueocean.nick.bigblueocean.R;
+
 import java.util.ArrayList;
 
-import Model.Product;
+import com.bigblueocean.nick.bigblueocean.Model.Product;
 
 public class OrderFragment extends Fragment {
 
@@ -33,7 +37,6 @@ public class OrderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((HomeActivity) getActivity()).logE();
     }
 
     @Override

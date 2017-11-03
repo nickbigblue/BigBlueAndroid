@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean;
+package com.bigblueocean.nick.bigblueocean.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bigblueocean.nick.bigblueocean.ChatFragment.OnListFragmentInteractionListener;
+import com.bigblueocean.nick.bigblueocean.Fragments.ChatFragment.OnListFragmentInteractionListener;
+import com.bigblueocean.nick.bigblueocean.R;
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent.DummyItem;
 
 import java.util.List;

@@ -13,7 +13,7 @@
     android:layout_height="0dp"
     android:layout_weight="5"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.bigblueocean.nick.bigblueocean.ProdFragment"
+    tools:context="com.bigblueocean.nick.bigblueocean.Fragments.ProdFragment"
     tools:listitem="@layout/order_fragment" >
 
 </android.support.v7.widget.RecyclerView>

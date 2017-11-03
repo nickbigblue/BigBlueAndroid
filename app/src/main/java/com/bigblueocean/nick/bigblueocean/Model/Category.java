@@ -1,12 +1,6 @@
-package Model;
+package com.bigblueocean.nick.bigblueocean.Model;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import com.bigblueocean.nick.bigblueocean.R;
-
-import java.util.ArrayList;
 
 
 public class Category {

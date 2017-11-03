@@ -36,10 +36,14 @@
     <string name="clear_button">CLEAR</string>
     <string name="submission_confirmed">Thank you for submitting,
         your salesperson will reach out to you shortly to help you place your order.</string>
-    <string name="submission_notconfirmed">Something went wrong. Please reach out to Big Blue.</string>
+    <string name="submission_notconfirmed">Something went wrong and your order could not be submitted. Please reach out to Big Blue.</string>
     <string name="dialog_add_button">Add Item</string>
     <string name="dialog_cancel_button">Cancel</string>
     <string name="dialog_confirm_changes">Confirm changes</string>
+    <string name="dialog_continue">Continue</string>
+    <string name="dialog_delete">Delete this item</string>
+    <string name="clear_dialog_title">Clear current list?</string>
+    <string name="clear_dialog_message">By clearing, you will remove all items in your current list. Do you still wish to continue?</string>
     <string name="Tuna">Tuna H&amp;G Wild-Caught</string>
     <string name="Sword">Sword H&amp;G Wild-Caught</string>
     <string name="Mahi">Mahi H&amp;G Wild-Caught</string>

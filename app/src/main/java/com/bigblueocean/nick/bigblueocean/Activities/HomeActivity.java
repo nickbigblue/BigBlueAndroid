@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean;
+package com.bigblueocean.nick.bigblueocean.Activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,14 +23,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
+import com.bigblueocean.nick.bigblueocean.Fragments.ChatFragment;
+import com.bigblueocean.nick.bigblueocean.Fragments.NewsFragment;
+import com.bigblueocean.nick.bigblueocean.Fragments.OrderFragment;
+import com.bigblueocean.nick.bigblueocean.Fragments.ProdFragment;
+import com.bigblueocean.nick.bigblueocean.R;
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
-
 import java.util.ArrayList;
-import Model.Category;
-import Model.News;
-import Model.Product;
+import com.bigblueocean.nick.bigblueocean.Model.Category;
+import com.bigblueocean.nick.bigblueocean.Model.News;
+import com.bigblueocean.nick.bigblueocean.Model.Product;
 import in.goodiebag.carouselpicker.CarouselPicker;
 
 public class HomeActivity extends AppCompatActivity implements
@@ -152,7 +156,7 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         return currentOrder;
     }
 
-//METHOD FOR TAB BAR MENU
+//METHOD FOR MENU OPTIONS
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -190,16 +194,17 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
          listItemDialog(item).show();
     }
 
+//METHODS FOR DIALOGS
     public Dialog listItemDialog(final Category cat){
-        final Dialog dialog = new Dialog(HomeActivity.this);
-        dialog.setContentView(R.layout.product_selected_dialog);
+        final Dialog addProductDialog = new Dialog(HomeActivity.this);
+        addProductDialog.setContentView(R.layout.add_product_selection_dialog);
 
         ImageView iv = new ImageView(this);
-        iv = (ImageView) dialog.findViewById(R.id.dialog_image);
+        iv = (ImageView) addProductDialog.findViewById(R.id.add_dialog_image);
         iv.setImageBitmap(cat.getImage());
         iv.setBackgroundColor(cat.getColor());
 
-        CarouselPicker carouselPicker = (CarouselPicker) dialog.findViewById(R.id.dialog_main_carousel);
+        CarouselPicker carouselPicker = (CarouselPicker) addProductDialog.findViewById(R.id.add_dialog_main_carousel);
         ArrayList<CarouselPicker.PickerItem> textItems = new ArrayList<>();
         textItems.add(new CarouselPicker.TextItem("Sp", 24));
         textItems.add(new CarouselPicker.TextItem("Rg", 24));
@@ -211,7 +216,7 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         carouselPicker.setAdapter(textAdapter);
 //        carouselPicker.setCurrentItem(0);
 
-        Button dialogAddButton = (Button) dialog.findViewById(R.id.dialog_add_button);
+        Button dialogAddButton = (Button) addProductDialog.findViewById(R.id.add_dialog_add_button);
         dialogAddButton.setTextColor(cat.getColor());
         dialogAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,126 +228,143 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
                 else {
                     Toast.makeText(getApplicationContext(), "You've reached your order maximum.", Toast.LENGTH_LONG).show();
                 }
-                dialog.cancel();
+                addProductDialog.cancel();
                 homeViewPagerAdapter.notifyDataSetChanged();
             }
         });
 
-        Button dialogCancelButton = (Button) dialog.findViewById(R.id.dialog_cancel_button);
+        Button dialogCancelButton = (Button) addProductDialog.findViewById(R.id.add_dialog_cancel_button);
         dialogCancelButton.setTextColor(cat.getColor());
         dialogCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.cancel();
+                addProductDialog.cancel();
             }
         });
 
-        return dialog;
+        return addProductDialog;
     }
 
-//    public AlertDialog listItemDialogCreate(final Category cat){
-//        //Dialog creation
-//        AlertDialog listItemDialog;
-//        AlertDialog.Builder listItemDialogBuilder;
-//        listItemDialogBuilder = new AlertDialog.Builder(HomeActivity.this, R.style.AlertDialogTheme);
-//        listItemDialogBuilder.setMessage("For testing the pass of a confirmation to order tab");
-//        listItemDialogBuilder.setTitle("Adding a dummy item");
-//        listItemDialogBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                Product dummyProd = new Product(cat, "Caribbean","1", "70+", "1000lbs", "5.00");
-//                if (currentOrder.size() <= 50){
-//                    currentOrder.add(dummyProd);
-//                }
-//                else {
-//                    Toast.makeText(getApplicationContext(), "You've reached your order maximum.", Toast.LENGTH_LONG).show();
-//                }
-//                homeViewPagerAdapter.notifyDataSetChanged();
-//            }
-//        });
-//        listItemDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.cancel();
-//            }
-//        });
-//        listItemDialog = listItemDialogBuilder.create();
-//        return listItemDialog;
-//    }
-
-    public AlertDialog editProductDialog(Product prod){
+    public Dialog editProductDialog(final Product prod){
         final Product product = prod;
-        AlertDialog editProductDialog;
-        AlertDialog.Builder editProductDialogBuilder;
-        editProductDialogBuilder = new AlertDialog.Builder(HomeActivity.this, R.style.AlertDialogTheme);
-        editProductDialogBuilder.setTitle(prod.getCategory().getTitle());
-        String message = "";
-            for (int i = 1; i <= 4; i++){
-                        message += prod.getDescription()[i]+"\n";
-            }
-        editProductDialogBuilder.setMessage(message);
-        editProductDialogBuilder.setPositiveButton("Delete this", new DialogInterface.OnClickListener() {
+        final Dialog editProductDialog = new Dialog(HomeActivity.this);
+        editProductDialog.setContentView(R.layout.edit_existing_product_dialog);
+
+        ImageView iv = new ImageView(this);
+        iv = (ImageView) editProductDialog.findViewById(R.id.edit_dialog_image);
+        iv.setImageBitmap(prod.getCategory().getImage());
+        iv.setBackgroundColor(prod.getCategory().getColor());
+
+        CarouselPicker carouselPicker = (CarouselPicker) editProductDialog.findViewById(R.id.edit_dialog_main_carousel);
+        ArrayList<CarouselPicker.PickerItem> textItems = new ArrayList<>();
+        textItems.add(new CarouselPicker.TextItem("Sp", 24));
+        textItems.add(new CarouselPicker.TextItem("Rg", 24));
+        textItems.add(new CarouselPicker.TextItem("Gr", 24));
+        textItems.add(new CarouselPicker.TextItem("Sz", 24));
+        textItems.add(new CarouselPicker.TextItem("Qty", 24));
+        textItems.add(new CarouselPicker.TextItem("$.$$", 24));
+        CarouselPicker.CarouselViewAdapter textAdapter = new CarouselPicker.CarouselViewAdapter(this, textItems, 0);
+        carouselPicker.setAdapter(textAdapter);
+//        carouselPicker.setCurrentItem(0);
+
+        Button editDialogConfirmButton = (Button) editProductDialog.findViewById(R.id.edit_dialog_change_button);
+        editDialogConfirmButton.setTextColor(prod.getCategory().getColor());
+        editDialogConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                currentOrder.remove(product);
+            public void onClick(View v) {
+                Product dummyProd = new Product(prod.getCategory(), "Southeast Asia","1+", "100+", "500lbs", "8.00");
+                currentOrder.set(currentOrder.indexOf(prod), dummyProd);
+                editProductDialog.cancel();
                 homeViewPagerAdapter.notifyDataSetChanged();
             }
         });
-        editProductDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+        Button editDialogDeleteButton = (Button) editProductDialog.findViewById(R.id.edit_dialog_delete_button);
+        editDialogDeleteButton.setTextColor(prod.getCategory().getColor());
+        editDialogDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            public void onClick(View v) {
+                currentOrder.remove(product);
+                homeViewPagerAdapter.notifyDataSetChanged();
+                editProductDialog.cancel();
             }
         });
-        editProductDialog = editProductDialogBuilder.create();
+
         return editProductDialog;
     }
 
+
+//METHODS FOR MANAGING CURRENT ORDER
     public void clearOrder(){
         if(!currentOrder.isEmpty()) {
-            final AlertDialog clearProductDialog;
-            AlertDialog.Builder clearProductDialogBuilder;
-            clearProductDialogBuilder = new AlertDialog.Builder(HomeActivity.this, R.style.AlertDialogTheme);
-            clearProductDialogBuilder.setTitle("Clear current list?");
-            clearProductDialogBuilder.setMessage("By clearing, you will remove all items in your current list. Do you still wish to continue?");
-            clearProductDialogBuilder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+            final AlertDialog clearOrderDialog;
+            AlertDialog.Builder clearOrderDialogBuilder;
+            clearOrderDialogBuilder = new AlertDialog.Builder(HomeActivity.this, R.style.AlertDialogTheme);
+            clearOrderDialogBuilder.setTitle(R.string.clear_dialog_title);
+            clearOrderDialogBuilder.setMessage(R.string.clear_dialog_message);
+            clearOrderDialogBuilder.setPositiveButton(R.string.dialog_continue, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     currentOrder.clear();
                     homeViewPagerAdapter.notifyDataSetChanged();
                 }
             });
-            clearProductDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            clearOrderDialogBuilder.setNegativeButton(R.string.dialog_cancel_button, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
                 }
             });
-            clearProductDialog = clearProductDialogBuilder.create();
-            clearProductDialog.show();
+            clearOrderDialog = clearOrderDialogBuilder.create();
+            clearOrderDialog.show();
         }
     }
 
     public void submitOrder(){
         if(!currentOrder.isEmpty()) {
-            //SEND currentOrder TO JASON, ASK FOR CONFIRMATION
-            //
-            //
-            //
-            boolean success = true;
-            if (success) {
-                currentOrder.clear();
-                homeViewPagerAdapter.notifyDataSetChanged();
-                Toast.makeText(HomeActivity.this,
-                        R.string.submission_confirmed, Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(HomeActivity.this,
-                        R.string.submission_notconfirmed, Toast.LENGTH_LONG).show();
-            }
+            final AlertDialog confirmOrderDialog;
+            AlertDialog.Builder confirmOrderDialogBuilder;
+            confirmOrderDialogBuilder = new AlertDialog.Builder(HomeActivity.this, R.style.AlertDialogTheme);
+            confirmOrderDialogBuilder.setTitle(R.string.clear_dialog_title);
+            confirmOrderDialogBuilder.setMessage(R.string.clear_dialog_message);
+            confirmOrderDialogBuilder.setPositiveButton(R.string.dialog_continue, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //SEND currentOrder TO JASON, ASK FOR CONFIRMATION
+                    //
+                    //
+                    //
+                    boolean success = sendOrder();
+                    if (success) {
+                        currentOrder.clear();
+                        homeViewPagerAdapter.notifyDataSetChanged();
+                        Toast.makeText(HomeActivity.this,
+                                R.string.submission_confirmed, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(HomeActivity.this,
+                                R.string.submission_notconfirmed, Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+            confirmOrderDialogBuilder.setNegativeButton(R.string.dialog_cancel_button, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            confirmOrderDialog = confirmOrderDialogBuilder.create();
+            confirmOrderDialog.show();
         }
     }
 
+//BIGBLUE DATABASE METHODS
+    public boolean sendOrder(){
+        boolean confirmation =  true;
 
+        //SEND DATA TO DATA BASE AND ASK FOR A CONFIRMATION SOMEHOW
+
+        return confirmation;
+    }
 
 //CUSTOMIZED PAGER ADAPTER FOR TABBED ACTIVITY FUNCTION
     public static class FragmentStatePagerAdapter extends FragmentPagerAdapter {
@@ -368,7 +390,6 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
                     intendedFragment = ChatFragment.newInstance(1);
                     break;
                 default:
-                    Log.e("case","DEF on click");
                     intendedFragment = ProdFragment.newInstance(1);
                     break;
             }
@@ -401,8 +422,4 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
             return null;
         }
     };
-
-    public void logE(){
-        Log.e("HVP",homeViewPager.getCurrentItem()+"");
-    }
 }

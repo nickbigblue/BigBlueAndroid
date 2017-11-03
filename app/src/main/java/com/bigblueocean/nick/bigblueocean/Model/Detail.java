@@ -1,7 +1,6 @@
-package Model;
+package com.bigblueocean.nick.bigblueocean.Model;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 
 import com.bigblueocean.nick.bigblueocean.R;

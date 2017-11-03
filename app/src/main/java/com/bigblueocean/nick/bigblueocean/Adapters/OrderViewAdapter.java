@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean;
+package com.bigblueocean.nick.bigblueocean.Adapters;
 
 
 import android.content.Context;
@@ -8,11 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.bigblueocean.nick.bigblueocean.OrderFragment.OnListFragmentInteractionListener;
+
+import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
+import com.bigblueocean.nick.bigblueocean.Fragments.OrderFragment.OnListFragmentInteractionListener;
+import com.bigblueocean.nick.bigblueocean.R;
 
 import java.util.ArrayList;
 
-import Model.Product;
+import com.bigblueocean.nick.bigblueocean.Model.Product;
 
 public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.ViewHolder> {
 
@@ -40,18 +43,34 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
         holder.productTitle.setBackgroundColor(currentOrder.get(pos).getCategory().getColor());
         String title = currentOrder.get(pos).getCategory().getTitle();
         String[] result = title.split("\\s+");
+
         holder.productTitle.setText(result[0]);
         holder.productTitle.setTypeface(FontHelper.antonTypeface(context));
+
         holder.productSubtitle.setBackgroundColor(currentOrder.get(pos).getCategory().getColor());
         holder.productSubtitle.setText(currentOrder.get(pos).getDescription()[0]);
         holder.productSubtitle.setTypeface(FontHelper.antonTypeface(context));
-        holder.productDetailsLabel.setText(
-                "currentOrder.get(pos).getDescription()[1] \t " +
-                "currentOrder.get(pos).getDescription()[2] \t " +
-                "currentOrder.get(pos).getDescription()[3] \t " +
-                "currentOrder.get(pos).getDescription()[4]");
-        holder.productDetailsLabel.setTypeface(FontHelper.antonTypeface(context));
-        holder.productDetailsLabel.setTextColor(currentOrder.get(pos).getCategory().getColor());
+
+        String label = currentOrder.get(pos).getDescription()[1];
+        holder.productDetailsLabel1.setText(label);
+        holder.productDetailsLabel1.setTypeface(FontHelper.antonTypeface(context));
+        holder.productDetailsLabel1.setTextColor(currentOrder.get(pos).getCategory().getColor());
+
+        label = currentOrder.get(pos).getDescription()[2];
+        holder.productDetailsLabel2.setText(label);
+        holder.productDetailsLabel2.setTypeface(FontHelper.antonTypeface(context));
+        holder.productDetailsLabel2.setTextColor(currentOrder.get(pos).getCategory().getColor());
+
+        label = currentOrder.get(pos).getDescription()[3];
+        holder.productDetailsLabel3.setText(label);
+        holder.productDetailsLabel3.setTypeface(FontHelper.antonTypeface(context));
+        holder.productDetailsLabel3.setTextColor(currentOrder.get(pos).getCategory().getColor());
+
+        label = currentOrder.get(pos).getDescription()[4];
+        holder.productDetailsLabel4.setText(label);
+        holder.productDetailsLabel4.setTypeface(FontHelper.antonTypeface(context));
+        holder.productDetailsLabel4.setTextColor(currentOrder.get(pos).getCategory().getColor());
+
 
         holder.productView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -74,7 +93,10 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
         public final View productView;
         public final TextView productTitle;
         public final TextView productSubtitle;
-        public final TextView productDetailsLabel;
+        public final TextView productDetailsLabel1;
+        public final TextView productDetailsLabel2;
+        public final TextView productDetailsLabel3;
+        public final TextView productDetailsLabel4;
         public Product currentProduct;
 
         public ViewHolder(View view) {
@@ -82,7 +104,10 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
             productView = view;
             productTitle = (TextView) view.findViewById(R.id.order_title);
             productSubtitle = (TextView) view.findViewById(R.id.order_subtitle);
-            productDetailsLabel = (TextView) view.findViewById(R.id.order_description);
+            productDetailsLabel1 = (TextView) view.findViewById(R.id.order_description_sub1);
+            productDetailsLabel2 = (TextView) view.findViewById(R.id.order_description_sub2);
+            productDetailsLabel3 = (TextView) view.findViewById(R.id.order_description_sub3);
+            productDetailsLabel4 = (TextView) view.findViewById(R.id.order_description_sub4);
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean;
+package com.bigblueocean.nick.bigblueocean.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bigblueocean.nick.bigblueocean.ProdFragment.OnListFragmentInteractionListener;
+import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
+import com.bigblueocean.nick.bigblueocean.Fragments.ProdFragment.OnListFragmentInteractionListener;
+import com.bigblueocean.nick.bigblueocean.R;
 
 
 import java.util.ArrayList;
 
-import Model.Category;
+import com.bigblueocean.nick.bigblueocean.Model.Category;
 
 public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHolder> {
 

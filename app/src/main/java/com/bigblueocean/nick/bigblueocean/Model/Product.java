@@ -1,8 +1,4 @@
-package Model;
-
-import android.graphics.Bitmap;
-
-import com.bigblueocean.nick.bigblueocean.R;
+package com.bigblueocean.nick.bigblueocean.Model;
 
 /**
  * Created by nick on 10/10/17.

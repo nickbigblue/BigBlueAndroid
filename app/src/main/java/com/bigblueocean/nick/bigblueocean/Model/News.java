@@ -1,4 +1,4 @@
-package Model;
+package com.bigblueocean.nick.bigblueocean.Model;
 
 /**
  * Created by nick on 10/10/17.

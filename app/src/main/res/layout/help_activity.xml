@@ -4,7 +4,7 @@
     android:id="@+id/contraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bigblueocean.nick.bigblueocean.LoginActivity"
+    tools:context="com.bigblueocean.nick.bigblueocean.Activities.LoginActivity"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="25dp">
 

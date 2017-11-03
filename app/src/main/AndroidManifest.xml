@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
+            android:name=".Activities.LoginActivity"
             android:noHistory="true"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".HomeActivity"
+            android:name=".Activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:noHistory="true"
             android:theme="@style/AppTheme"
@@ -29,7 +29,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".HelpActivity"
+            android:name=".Activities.HelpActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_help"

@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean;
+package com.bigblueocean.nick.bigblueocean.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,13 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
-import com.bigblueocean.nick.bigblueocean.dummy.DummyContent.DummyItem;
+import com.bigblueocean.nick.bigblueocean.Adapters.NewsViewAdapter;
+import com.bigblueocean.nick.bigblueocean.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import Model.News;
+import com.bigblueocean.nick.bigblueocean.Model.News;
 
 /**
  * A fragment representing a list of Items.
@@ -52,7 +51,6 @@ public class NewsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((HomeActivity) getActivity()).logE();
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }

@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean;
+package com.bigblueocean.nick.bigblueocean.Fragments;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -9,9 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bigblueocean.nick.bigblueocean.Adapters.ProdViewAdapter;
+import com.bigblueocean.nick.bigblueocean.R;
+
 import java.util.ArrayList;
 
-import Model.Category;
+import com.bigblueocean.nick.bigblueocean.Model.Category;
 
 public class ProdFragment extends Fragment {
 
@@ -30,7 +33,6 @@ public class ProdFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((HomeActivity) getActivity()).logE();
     }
 
     @Override
