@@ -41,10 +41,8 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
         final int pos = position;
         holder.currentProduct = currentOrder.get(pos);
         holder.productTitle.setBackgroundColor(currentOrder.get(pos).getCategory().getColor());
-        String title = currentOrder.get(pos).getCategory().getTitle();
-        String[] result = title.split("\\s+");
 
-        holder.productTitle.setText(result[0]);
+        holder.productTitle.setText(currentOrder.get(pos).getCategory().getTag());
         holder.productTitle.setTypeface(FontHelper.antonTypeface(context));
 
         holder.productSubtitle.setBackgroundColor(currentOrder.get(pos).getCategory().getColor());

@@ -3,6 +3,7 @@ package com.bigblueocean.nick.bigblueocean.Activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -174,6 +175,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     public void signIn(String email, String password){
         if (!credentialsAreComplete()){
+
             return;
         }
         else {

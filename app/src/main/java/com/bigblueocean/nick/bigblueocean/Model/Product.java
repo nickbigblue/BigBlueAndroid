@@ -1,5 +1,9 @@
 package com.bigblueocean.nick.bigblueocean.Model;
 
+
+import java.text.NumberFormat;
+import java.util.Locale;
+
 /**
  * Created by nick on 10/10/17.
  */
@@ -16,20 +20,26 @@ public class Product {
     private String quantity;
     private String price;
 
+    public Product(){
+
+    }
+
     public Product (Category category, String regions, String grades, String sizes, String quantity, String price){
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
         this.category = category;
         this.region = regions;
         this.grade = grades;
         this.size = sizes;
-        this.quantity = quantity;
+        this.quantity = quantity+" lbs.";
         this.price = price;
+        String nf = numberFormat.format(Double.parseDouble(price));
         this.productDetails[0] = this.region;
         this.productDetails[1] = this.grade;
         this.productDetails[2] = this.size;
         this.productDetails[3] = this.quantity;
-        this.productDetails[4] = this.price;
+        this.productDetails[4] = nf;
 
-        if(!(category.getTitle().equalsIgnoreCase("Tuna H&G Wild-Caught") || category.getTitle().equalsIgnoreCase("Sword H&G Wild-Caught"))){
+        if(!(category.getTag().equalsIgnoreCase("Tuna") || category.getTag().equalsIgnoreCase("Sword"))){
             this.grade = "N/A";
         }
     }
@@ -40,6 +50,26 @@ public class Product {
 
     public String [] getDescription() {
         return productDetails;
+    }
+
+    public void setRegion(String region){
+        this.region = region;
+    }
+
+    public void setGrade(String grade){
+        this.grade = grade;
+    }
+
+    public void setQuantity(String quantity){
+        this.quantity = quantity;
+    }
+
+    public void setPrice(String price){
+        this.price = price;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
 }

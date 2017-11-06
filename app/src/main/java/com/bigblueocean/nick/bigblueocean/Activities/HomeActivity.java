@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -22,8 +23,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
+import com.bigblueocean.nick.bigblueocean.Helpers.SelectionHelper;
 import com.bigblueocean.nick.bigblueocean.Fragments.ChatFragment;
 import com.bigblueocean.nick.bigblueocean.Fragments.NewsFragment;
 import com.bigblueocean.nick.bigblueocean.Fragments.OrderFragment;
@@ -32,10 +33,17 @@ import com.bigblueocean.nick.bigblueocean.R;
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
+
 import com.bigblueocean.nick.bigblueocean.Model.Category;
 import com.bigblueocean.nick.bigblueocean.Model.News;
 import com.bigblueocean.nick.bigblueocean.Model.Product;
+import com.google.gson.reflect.TypeToken;
+
 import in.goodiebag.carouselpicker.CarouselPicker;
 
 public class HomeActivity extends AppCompatActivity implements
@@ -45,6 +53,7 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     private static FragmentStatePagerAdapter homeViewPagerAdapter;
     private ViewPager homeViewPager;
     private static ArrayList<Product> currentOrder = new ArrayList<>();
+    private static ArrayList<CarouselPicker.PickerItem> subPickerItem;
 
 //METHODS FOR ACTIVITY LIFECYCLE AND FAB
     @Override
@@ -96,22 +105,23 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         if (!(homeViewPagerAdapter == null)) {
             homeViewPagerAdapter.notifyDataSetChanged();
         }
+
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(this.getApplicationContext());
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<Product>>(){}.getType();
+        String json = appSharedPrefs.getString("CurrentOrder", "");
+        currentOrder = gson.fromJson(json, type);
+        if (currentOrder == null){
+            currentOrder = new ArrayList<>();
+        }
+
     }
 
     @Override
     public void onStop(){
         super.onStop();
-        SharedPreferences appSharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(this.getApplicationContext());
-        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
-        for(Product element : currentOrder){
-            int counter = 0;
-            Gson gson = new Gson();
-            String json = gson.toJson(element);
-            prefsEditor.putString("Element"+counter, json);
-            prefsEditor.commit();
-            counter++;
-        }
+
     }
 
     @Override
@@ -120,30 +130,16 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(this.getApplicationContext());
         SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
-        for(Product element : currentOrder){
-            int counter = 0;
             Gson gson = new Gson();
-            String json = gson.toJson(element);
-            prefsEditor.putString("Element"+counter, json);
+            String json = gson.toJson(currentOrder);
+            prefsEditor.putString("CurrentOrder", json);
             prefsEditor.commit();
-            counter++;
-        }
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        SharedPreferences appSharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(this.getApplicationContext());
-        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
-        for(Product element : currentOrder){
-            int counter = 0;
-            Gson gson = new Gson();
-            String json = gson.toJson(element);
-            prefsEditor.putString("Element"+counter, json);
-            prefsEditor.commit();
-            counter++;
-        }
+
     }
 
     @Override
@@ -196,90 +192,253 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
 
 //METHODS FOR DIALOGS
     public Dialog listItemDialog(final Category cat){
-        final Dialog addProductDialog = new Dialog(HomeActivity.this);
-        addProductDialog.setContentView(R.layout.add_product_selection_dialog);
+        final Dialog dialog = new Dialog(HomeActivity.this);
+        dialog.setContentView(R.layout.add_product_selection_dialog);
+        final Product dummyProd = new Product(cat, "Southeast Asia", "1+", "100+", "200", "8.75");
 
         ImageView iv = new ImageView(this);
-        iv = (ImageView) addProductDialog.findViewById(R.id.add_dialog_image);
-        iv.setImageBitmap(cat.getImage());
+        iv = (ImageView) dialog.findViewById(R.id.dialog_image);
+        iv.setImageBitmap(BitmapFactory.decodeResource(dialog.getContext().getResources(), cat.getImage()));
         iv.setBackgroundColor(cat.getColor());
 
-        CarouselPicker carouselPicker = (CarouselPicker) addProductDialog.findViewById(R.id.add_dialog_main_carousel);
-        ArrayList<CarouselPicker.PickerItem> textItems = new ArrayList<>();
-        textItems.add(new CarouselPicker.TextItem("Sp", 24));
-        textItems.add(new CarouselPicker.TextItem("Rg", 24));
-        textItems.add(new CarouselPicker.TextItem("Gr", 24));
-        textItems.add(new CarouselPicker.TextItem("Sz", 24));
-        textItems.add(new CarouselPicker.TextItem("Qty", 24));
-        textItems.add(new CarouselPicker.TextItem("$.$$", 24));
-        CarouselPicker.CarouselViewAdapter textAdapter = new CarouselPicker.CarouselViewAdapter(this, textItems, 0);
-        carouselPicker.setAdapter(textAdapter);
-//        carouselPicker.setCurrentItem(0);
+        ////MAIN PICKER
+        final SelectionHelper infoPasser = new SelectionHelper();
+        final CarouselPicker mainCarouselPicker = (CarouselPicker) dialog.findViewById(R.id.dialog_main_carousel);
+        final CarouselPicker subCarouselPicker = (CarouselPicker) dialog.findViewById(R.id.dialog_sub_carousel);
+        final String tag = cat.getTag();
+        final ArrayList<CarouselPicker.PickerItem> mainPickerItem;
+        CarouselPicker.CarouselViewAdapter textAdapter;
+        switch (cat.getTag()){
+            case "Tuna":
+                mainPickerItem = infoPasser.getTunaSelections();
+                break;
+            case "Sword":
+                mainPickerItem = infoPasser.getSwordSelections();
+                break;
+            case "Mahi":
+                mainPickerItem = infoPasser.getMahiSelections();
+                break;
+            case "Wahoo":
+                mainPickerItem = infoPasser.getWahooSelections();
+                break;
+            case "Grouper":
+                mainPickerItem = infoPasser.getGrouperSelections();
+                break;
+            case "Salmon":
+                mainPickerItem = infoPasser.getSalmonSelections();
+                break;
+            default:
+                mainPickerItem = infoPasser.getTunaSelections();
+                break;
 
-        Button dialogAddButton = (Button) addProductDialog.findViewById(R.id.add_dialog_add_button);
+        }
+
+        String s = mainPickerItem.get(0).getText();
+
+
+        ////SUBPICKER
+        if(s.equalsIgnoreCase("Quantity") || s.equalsIgnoreCase("($.$$)")){
+            subPickerItem = new ArrayList<>();
+        } else {
+            subPickerItem = getSubPicker(tag,s);
+        }
+        CarouselPicker.CarouselViewAdapter subTextAdapter;
+        subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
+        subCarouselPicker.setAdapter(subTextAdapter);
+
+
+
+        textAdapter = new CarouselPicker.CarouselViewAdapter(this, mainPickerItem, 0);
+        mainCarouselPicker.setAdapter(textAdapter);
+
+        mainCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                String s = mainPickerItem.get(position).getText();
+                if(s.equalsIgnoreCase("Quantity") || s.equalsIgnoreCase("($.$$)")){
+                    subPickerItem = new ArrayList<>();
+                } else {
+                    subPickerItem = getSubPicker(tag,s);
+                }
+                CarouselPicker.CarouselViewAdapter subTextAdapter;
+                subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
+                subCarouselPicker.setAdapter(subTextAdapter);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+
+        subCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+        Button dialogAddButton = (Button) dialog.findViewById(R.id.dialog_add_button);
         dialogAddButton.setTextColor(cat.getColor());
         dialogAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Product dummyProd = new Product(cat, "Caribbean","1", "70+", "1000lbs", "5.00");
-                if (currentOrder.size() <= 50){
-                    currentOrder.add(dummyProd);
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "You've reached your order maximum.", Toast.LENGTH_LONG).show();
-                }
-                addProductDialog.cancel();
-                homeViewPagerAdapter.notifyDataSetChanged();
+        @Override
+        public void onClick(View v) {
+            if (currentOrder.size() <= 50){
+                currentOrder.add(dummyProd);
             }
-        });
-
-        Button dialogCancelButton = (Button) addProductDialog.findViewById(R.id.add_dialog_cancel_button);
-        dialogCancelButton.setTextColor(cat.getColor());
-        dialogCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addProductDialog.cancel();
+            else {
+                Toast.makeText(getApplicationContext(), "You've reached your order maximum.", Toast.LENGTH_SHORT).show();
             }
-        });
+            dialog.cancel();
+            homeViewPagerAdapter.notifyDataSetChanged();
+        }
+    });
 
-        return addProductDialog;
-    }
+    Button dialogCancelButton = (Button) dialog.findViewById(R.id.dialog_cancel_button);
+    dialogCancelButton.setTextColor(cat.getColor());
+    dialogCancelButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            dialog.cancel();
+        }
+    });
+
+    return dialog;
+}
 
     public Dialog editProductDialog(final Product prod){
         final Product product = prod;
         final Dialog editProductDialog = new Dialog(HomeActivity.this);
-        editProductDialog.setContentView(R.layout.edit_existing_product_dialog);
+        editProductDialog.setContentView(R.layout.add_product_selection_dialog);
 
         ImageView iv = new ImageView(this);
-        iv = (ImageView) editProductDialog.findViewById(R.id.edit_dialog_image);
-        iv.setImageBitmap(prod.getCategory().getImage());
+        iv = (ImageView) editProductDialog.findViewById(R.id.dialog_image);
+        iv.setImageBitmap(BitmapFactory.decodeResource(editProductDialog.getContext().getResources(), prod.getCategory().getImage()));
         iv.setBackgroundColor(prod.getCategory().getColor());
 
-        CarouselPicker carouselPicker = (CarouselPicker) editProductDialog.findViewById(R.id.edit_dialog_main_carousel);
-        ArrayList<CarouselPicker.PickerItem> textItems = new ArrayList<>();
-        textItems.add(new CarouselPicker.TextItem("Sp", 24));
-        textItems.add(new CarouselPicker.TextItem("Rg", 24));
-        textItems.add(new CarouselPicker.TextItem("Gr", 24));
-        textItems.add(new CarouselPicker.TextItem("Sz", 24));
-        textItems.add(new CarouselPicker.TextItem("Qty", 24));
-        textItems.add(new CarouselPicker.TextItem("$.$$", 24));
-        CarouselPicker.CarouselViewAdapter textAdapter = new CarouselPicker.CarouselViewAdapter(this, textItems, 0);
-        carouselPicker.setAdapter(textAdapter);
-//        carouselPicker.setCurrentItem(0);
+        ////MAIN PICKER
+        final SelectionHelper infoPasser = new SelectionHelper();
+        final CarouselPicker mainCarouselPicker = (CarouselPicker) editProductDialog.findViewById(R.id.dialog_main_carousel);
+        final CarouselPicker subCarouselPicker = (CarouselPicker) editProductDialog.findViewById(R.id.dialog_sub_carousel);
+        final String tag = prod.getCategory().getTag();
+        final ArrayList<CarouselPicker.PickerItem> mainPickerItem;
+        CarouselPicker.CarouselViewAdapter textAdapter;
+        switch (prod.getCategory().getTag()){
+            case "Tuna":
+                mainPickerItem = infoPasser.getTunaSelections();
+                break;
+            case "Sword":
+                mainPickerItem = infoPasser.getSwordSelections();
+                break;
+            case "Mahi":
+                mainPickerItem = infoPasser.getMahiSelections();
+                break;
+            case "Wahoo":
+                mainPickerItem = infoPasser.getWahooSelections();
+                break;
+            case "Grouper":
+                mainPickerItem = infoPasser.getGrouperSelections();
+                break;
+            case "Salmon":
+                mainPickerItem = infoPasser.getSalmonSelections();
+                break;
+            default:
+                mainPickerItem = infoPasser.getTunaSelections();
+                break;
 
-        Button editDialogConfirmButton = (Button) editProductDialog.findViewById(R.id.edit_dialog_change_button);
+        }
+
+        String s = mainPickerItem.get(0).getText();
+
+
+        ////SUBPICKER
+        if(s.equalsIgnoreCase("Quantity") || s.equalsIgnoreCase("($.$$)")){
+            subPickerItem = new ArrayList<>();
+        } else {
+            subPickerItem = getSubPicker(tag,s);
+        }
+        CarouselPicker.CarouselViewAdapter subTextAdapter;
+        subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
+        subCarouselPicker.setAdapter(subTextAdapter);
+
+
+
+        textAdapter = new CarouselPicker.CarouselViewAdapter(this, mainPickerItem, 0);
+        mainCarouselPicker.setAdapter(textAdapter);
+
+        mainCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                String s = mainPickerItem.get(position).getText();
+                if(s.equalsIgnoreCase("Quantity") || s.equalsIgnoreCase("($.$$)")){
+                    subPickerItem = new ArrayList<>();
+                } else {
+                    subPickerItem = getSubPicker(tag,s);
+                }
+                CarouselPicker.CarouselViewAdapter subTextAdapter;
+                subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
+                subCarouselPicker.setAdapter(subTextAdapter);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+
+        subCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+
+        Button editDialogConfirmButton = (Button) editProductDialog.findViewById(R.id.dialog_add_button);
+        editDialogConfirmButton.setText(R.string.dialog_confirm_changes);
         editDialogConfirmButton.setTextColor(prod.getCategory().getColor());
         editDialogConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Product dummyProd = new Product(prod.getCategory(), "Southeast Asia","1+", "100+", "500lbs", "8.00");
+                Product dummyProd = new Product(prod.getCategory(), "Southeast Asia","1+", "100+", "500", "8");
                 currentOrder.set(currentOrder.indexOf(prod), dummyProd);
                 editProductDialog.cancel();
                 homeViewPagerAdapter.notifyDataSetChanged();
             }
         });
 
-        Button editDialogDeleteButton = (Button) editProductDialog.findViewById(R.id.edit_dialog_delete_button);
+        Button editDialogDeleteButton = (Button) editProductDialog.findViewById(R.id.dialog_cancel_button);
+        editDialogDeleteButton.setText(R.string.dialog_delete);
         editDialogDeleteButton.setTextColor(prod.getCategory().getColor());
         editDialogDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -293,6 +452,56 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         return editProductDialog;
     }
 
+    public ArrayList<CarouselPicker.PickerItem> getSubPicker(String tag, String title){
+        ArrayList<CarouselPicker.PickerItem> temp;
+        SelectionHelper S1 = new SelectionHelper();
+        switch (title){
+            case "Grade":
+                switch (tag){
+                    case "Tuna":
+                        temp = S1.getTunaGrades();
+                        break;
+                    case "Sword":
+                        temp = S1.getTunaGrades();
+                        break;
+                    default:
+                        temp = S1.getTunaGrades();
+                }
+                break;
+            case "Species":
+                switch (tag){
+                    case "Tuna":
+                        temp = S1.getTunaSpecies();
+                        break;
+                    case "Salmon":
+                        temp = S1.getTunaSpecies();
+                        break;
+                    default:
+                        temp = S1.getTunaSpecies();
+                }
+                break;
+            case "Region":
+                temp = S1.getRegions();
+                break;
+            case "Size":
+                switch (tag){
+                    case "Tuna":
+                        temp = S1.getTunaSizes();
+                        break;
+                    case "Sword":
+                        temp = S1.getTunaSizes();
+                        break;
+                    default:
+                        temp = S1.getTunaSizes();
+                }
+                break;
+            default:
+                temp = S1.getTunaGrades();
+                break;
+
+        }
+        return temp;
+    }
 
 //METHODS FOR MANAGING CURRENT ORDER
     public void clearOrder(){
@@ -325,8 +534,8 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
             final AlertDialog confirmOrderDialog;
             AlertDialog.Builder confirmOrderDialogBuilder;
             confirmOrderDialogBuilder = new AlertDialog.Builder(HomeActivity.this, R.style.AlertDialogTheme);
-            confirmOrderDialogBuilder.setTitle(R.string.clear_dialog_title);
-            confirmOrderDialogBuilder.setMessage(R.string.clear_dialog_message);
+            confirmOrderDialogBuilder.setTitle(R.string.submit_dialog_title);
+            confirmOrderDialogBuilder.setMessage(R.string.submit_dialog_message);
             confirmOrderDialogBuilder.setPositiveButton(R.string.dialog_continue, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

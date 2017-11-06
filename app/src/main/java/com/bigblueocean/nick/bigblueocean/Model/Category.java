@@ -5,18 +5,20 @@ import android.graphics.Bitmap;
 
 public class Category {
     private String title;
-    private Bitmap image;
+    private int imageId;
     private int color;
+    private String tag;
 
 
-    public Category(String title, Bitmap image, int color){
+    public Category(String title, int image, int color, String tag){
         this.title = title;
-        this.image = image;
+        this.imageId = image;
         this.color = color;
+        this.tag = tag;
     }
 
-    public Bitmap getImage() {
-        return image;
+    public int getImage() {
+        return imageId;
     }
 
     public int getColor() {
@@ -25,5 +27,9 @@ public class Category {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getTag() {
+        return tag;
     }
 }
