@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +31,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private String email;
-    private String password;
     private EditText emailEdit;
     private EditText passwordEdit;
     private TextView title;
@@ -40,7 +39,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private FloatingActionButton registerButton;
     private ImageView background;
     private ImageView logo;
-    private ImageView backdrop;
+    private LinearLayout backdrop;
     private final String TAG = "EmailPassword";
 
 
@@ -79,7 +78,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         registerButton = (FloatingActionButton)findViewById(R.id.registerButton);
         background = (ImageView)findViewById(R.id.backgroundImage);
         logo = (ImageView)findViewById(R.id.logoImage);
-        backdrop = (ImageView)findViewById(R.id.backdropImage);
+        backdrop = (LinearLayout)findViewById(R.id.sub_container);
 
         //setupButtons
         loginButton.setOnClickListener(this);
@@ -87,7 +86,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         title.setTypeface(FontHelper.antonTypeface(this));
 
 
-        backdrop = (ImageView) findViewById(R.id.backdropImage);
+        backdrop = (LinearLayout) findViewById(R.id.sub_container);
         backdrop.setOnTouchListener(new View.OnTouchListener()
         {
             @Override

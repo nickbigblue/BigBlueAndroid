@@ -81,7 +81,7 @@ public class ProdFragment extends Fragment {
 
         CAL.add(new Category("Grouper H&G Wild-Caught", R.drawable.grouper2x, getResources().getColor(R.color.grouper), "Grouper"));
 
-        CAL.add(new Category("Salmon H&G Farm-Raised", R.drawable.tuna2x, getResources().getColor(R.color.salmon), "Salmon"));
+        CAL.add(new Category("Salmon Farm-Raised", R.drawable.tuna2x, getResources().getColor(R.color.salmon), "Salmon"));
 
         return CAL;
     }

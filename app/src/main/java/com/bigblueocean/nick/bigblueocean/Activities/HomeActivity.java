@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -54,17 +55,13 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     private ViewPager homeViewPager;
     private static ArrayList<Product> currentOrder = new ArrayList<>();
     private static ArrayList<CarouselPicker.PickerItem> subPickerItem;
+    public static Product dummyProd;
 
 //METHODS FOR ACTIVITY LIFECYCLE AND FAB
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
-
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() == null) {
-            startActivity(new Intent(this, LoginActivity.class));
-        }
 
         Toolbar homeToolbar = (Toolbar) findViewById(R.id.home_toolbar);
         TextView toolbarTitle = (TextView) homeToolbar.findViewById(R.id.toolbar_title);
@@ -194,7 +191,7 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     public Dialog listItemDialog(final Category cat){
         final Dialog dialog = new Dialog(HomeActivity.this);
         dialog.setContentView(R.layout.add_product_selection_dialog);
-        final Product dummyProd = new Product(cat, "Southeast Asia", "1+", "100+", "200", "8.75");
+        final Product dummyProd = new Product(cat, "Blue Fin", "Southeast Asia", "1+", "100+", "200", "8.75");
 
         ImageView iv = new ImageView(this);
         iv = (ImageView) dialog.findViewById(R.id.dialog_image);
@@ -285,7 +282,7 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
 
             @Override
             public void onPageSelected(int position) {
-
+                //dummyProd.setRegion(subPickerItem.get(position).getText());
             }
 
             @Override
@@ -338,7 +335,7 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         final String tag = prod.getCategory().getTag();
         final ArrayList<CarouselPicker.PickerItem> mainPickerItem;
         CarouselPicker.CarouselViewAdapter textAdapter;
-        switch (prod.getCategory().getTag()){
+        switch (tag){
             case "Tuna":
                 mainPickerItem = infoPasser.getTunaSelections();
                 break;
@@ -430,7 +427,6 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         editDialogConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Product dummyProd = new Product(prod.getCategory(), "Southeast Asia","1+", "100+", "500", "8");
                 currentOrder.set(currentOrder.indexOf(prod), dummyProd);
                 editProductDialog.cancel();
                 homeViewPagerAdapter.notifyDataSetChanged();
@@ -462,10 +458,10 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
                         temp = S1.getTunaGrades();
                         break;
                     case "Sword":
-                        temp = S1.getTunaGrades();
+                        temp = S1.getSwordGrades();
                         break;
                     default:
-                        temp = S1.getTunaGrades();
+                        temp = S1.getUngraded();
                 }
                 break;
             case "Species":
@@ -473,8 +469,11 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
                     case "Tuna":
                         temp = S1.getTunaSpecies();
                         break;
+                    case "Grouper":
+                        temp = S1.getGrouperSpecies();
+                        break;
                     case "Salmon":
-                        temp = S1.getTunaSpecies();
+                        temp = S1.getSalmonSpecies();
                         break;
                     default:
                         temp = S1.getTunaSpecies();
@@ -489,7 +488,27 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
                         temp = S1.getTunaSizes();
                         break;
                     case "Sword":
-                        temp = S1.getTunaSizes();
+                        temp = S1.getSwordSizes();
+                        break;
+                    case "Mahi":
+                        temp = S1.getMahiSizes();
+                        break;
+                    case "Wahoo":
+                        temp = S1.getWahooSizes();
+                        break;
+                    case "Grouper":
+                        temp = S1.getGrouperSizes();
+                        break;
+                    case "Salmon":
+                        if (dummyProd.getSpecies().equalsIgnoreCase("Fillet")){
+                            temp = S1.getSalmonFilletSizes();
+                        }
+                        else if(dummyProd.getSpecies().equalsIgnoreCase("H&G")){
+                            temp = S1.getSalmonHgSizes();
+                        }
+                        else{
+                            temp = new ArrayList<CarouselPicker.PickerItem>();
+                        }
                         break;
                     default:
                         temp = S1.getTunaSizes();

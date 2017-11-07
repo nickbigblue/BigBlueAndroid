@@ -14,6 +14,7 @@ public class Product {
 
     private Category category;
     private String [] productDetails = new String[5];
+    private String species;
     private String region;
     private String size;
     private String grade;
@@ -24,9 +25,10 @@ public class Product {
 
     }
 
-    public Product (Category category, String regions, String grades, String sizes, String quantity, String price){
+    public Product (Category category, String species, String regions, String grades, String sizes, String quantity, String price){
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
         this.category = category;
+        this.species = species;
         this.region = regions;
         this.grade = grades;
         this.size = sizes;
@@ -52,6 +54,10 @@ public class Product {
         return productDetails;
     }
 
+    public String getSpecies(){
+        return this.species;
+    }
+
     public void setRegion(String region){
         this.region = region;
     }
@@ -72,4 +78,7 @@ public class Product {
         this.size = size;
     }
 
+    public void setSpecies(String species){
+        this.species = species;
+    }
 }

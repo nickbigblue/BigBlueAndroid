@@ -8,7 +8,7 @@
     <string name="login_subtitle">Log in now to access all the features Big Blue has to offer!</string>
     <string name="login_email_hint">Email Address</string>
     <string name="login_password_hint">Password</string>
-    <string name="auth_failed">Invalid account or password.</string>
+    <string name="auth_failed">Either account or password is invalid. Confirm wireless connection and try again.</string>
     <string name="login_verify_failed">Current account is not verified.</string>
     <string name="create_failed">Account creation failed. Address is invalid or already in use.</string>
     <string name="create_success">Account creation success.</string>

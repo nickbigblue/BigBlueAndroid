@@ -1,9 +1,7 @@
 package com.bigblueocean.nick.bigblueocean.Adapters;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +40,7 @@ public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHo
         context = holder.categoryView.getContext();
         final int pos = position;
         holder.currentCategory = categoryArrayList.get(pos);
-
+        holder.categoryImage.setBackgroundColor(holder.currentCategory.getColor());
         holder.categoryImage.setImageResource(categoryArrayList.get(pos).getImage());
         holder.categoryTitle.setText(categoryArrayList.get(pos).getTitle());
         holder.categoryTitle.setTypeface(FontHelper.antonTypeface(context));
