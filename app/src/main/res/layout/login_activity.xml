@@ -44,6 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/login_title"
@@ -60,8 +62,8 @@
             android:id="@+id/loginSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
             android:gravity="center"
             android:text="@string/login_subtitle"
             android:textAlignment="center"
@@ -71,128 +73,62 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/loginTitle" />
 
-        <EditText
-            android:id="@+id/emailLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:ems="10"
-            android:fontFamily="sans-serif-smallcaps"
-            android:hint="@string/login_email_hint"
-            android:inputType="textEmailAddress"
-            android:maxLines="1"
-            android:textCursorDrawable="@drawable/custom_text_cursor"
-            android:visibility="visible"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/loginSubtitle" />
-
-
-        <EditText
-            android:id="@+id/passwordLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:ems="10"
-            android:fontFamily="sans-serif-smallcaps"
-            android:hint="@string/login_password_hint"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            android:textCursorDrawable="@drawable/custom_text_cursor"
-            android:visibility="visible"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailLogin" />
-
         <LinearLayout
             android:id="@+id/login_controls_container"
             android:baselineAligned="false"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:orientation="horizontal"
+            android:layout_marginTop="14dp"
+            android:orientation="vertical"
             android:layout_weight="4">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-            <android.support.design.widget.FloatingActionButton
+            <Button
                 android:id="@+id/loginButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
                 android:layout_gravity="center"
                 android:clickable="true"
                 android:focusable="true"
                 android:tint="@color/white"
-                app:backgroundTint="@color/colorPrimary"
-                app:fabSize="normal"
-                app:layout_constraintLeft_toLeftOf="@+id/logoImage"
-                app:layout_constraintTop_toBottomOf="@+id/passwordLogin"
-                app:srcCompat="@android:drawable/stat_sys_upload_done" />
-
-            <TextView
-                android:id="@+id/loginLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_gravity="center"
-                android:fontFamily="sans-serif-smallcaps"
-                android:text="@string/login_button"
-                android:textAlignment="center"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/white"
                 android:textSize="18sp"
-                app:layout_constraintLeft_toLeftOf="@id/loginButton"
-                app:layout_constraintRight_toRightOf="@id/loginButton"
-                app:layout_constraintTop_toBottomOf="@id/loginButton" />
-            </LinearLayout>
+                android:background="@drawable/rounded_button_background_primary"
+                android:text="@string/login_button" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-            <android.support.design.widget.FloatingActionButton
+            <Button
                 android:id="@+id/registerButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
                 android:layout_gravity="center"
                 android:clickable="true"
                 android:focusable="true"
-                android:tint="@color/colorPrimary"
-                app:backgroundTint="@color/white"
-                app:fabSize="normal"
-                app:layout_constraintRight_toRightOf="@+id/logoImage"
-                app:layout_constraintTop_toBottomOf="@+id/passwordLogin"
-                app:srcCompat="@android:drawable/ic_input_add" />
-
-            <TextView
-                android:id="@+id/registerLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_gravity="center"
-                android:fontFamily="sans-serif-smallcaps"
+                android:background="@drawable/rounded_button_background"
                 android:text="@string/register_button"
-                android:textAlignment="center"
                 android:textColor="@color/colorPrimary"
-                android:textSize="18sp"
-                app:layout_constraintLeft_toLeftOf="@id/registerButton"
-                app:layout_constraintRight_toRightOf="@id/registerButton"
-                app:layout_constraintTop_toBottomOf="@id/registerButton" />
-            </LinearLayout>
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/forgotPasswordButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="14dp"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/forgot_password"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

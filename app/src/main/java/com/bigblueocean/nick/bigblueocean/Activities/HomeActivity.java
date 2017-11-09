@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,7 @@ import com.bigblueocean.nick.bigblueocean.Fragments.ProdFragment;
 import com.bigblueocean.nick.bigblueocean.R;
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Array;
@@ -55,6 +57,7 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     private ViewPager homeViewPager;
     private static ArrayList<Product> currentOrder = new ArrayList<>();
     private static ArrayList<CarouselPicker.PickerItem> subPickerItem;
+    public static String userEmail;
     public static Product dummyProd;
 
 //METHODS FOR ACTIVITY LIFECYCLE AND FAB
@@ -62,6 +65,21 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
+
+        FirebaseAuth homeAuthenticator = FirebaseAuth.getInstance();
+        homeAuthenticator.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user == null) {
+                    HomeActivity.this.finish();
+                    startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+                }
+                else{
+                    userEmail = user.getEmail();
+                }
+            }
+        });
 
         Toolbar homeToolbar = (Toolbar) findViewById(R.id.home_toolbar);
         TextView toolbarTitle = (TextView) homeToolbar.findViewById(R.id.toolbar_title);
@@ -92,12 +110,6 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     @Override
     public void onResume(){
         super.onResume();
-
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() == null) {
-            this.finish();
-            startActivity(new Intent(this, LoginActivity.class));
-        }
 
         if (!(homeViewPagerAdapter == null)) {
             homeViewPagerAdapter.notifyDataSetChanged();

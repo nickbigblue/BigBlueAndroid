@@ -1,19 +1,18 @@
 package com.bigblueocean.nick.bigblueocean.Activities;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,64 +28,48 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
 
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseAuth loginAuthenticator;
+    private FirebaseAuth.AuthStateListener loginAuthListener;
     private EditText emailEdit;
     private EditText passwordEdit;
     private TextView title;
-    private TextView subtitle;
-    private FloatingActionButton loginButton;
-    private FloatingActionButton registerButton;
-    private ImageView background;
-    private ImageView logo;
+    private Button loginButton;
+    private Button registerButton;
+    private Button forgotPasswordButton;
     private LinearLayout backdrop;
-    private final String TAG = "EmailPassword";
 
 
-//METHODS FOR ACTIVITY LIFE CYCLE//////////////////////////////
+    //METHODS FOR ACTIVITY LIFE CYCLE//////////////////////////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(this, HomeActivity.class));
-        }
-
         setContentView(R.layout.login_activity);
-
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        loginAuthenticator = FirebaseAuth.getInstance();
+        loginAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                 }
             }
         };
 
         //setupViews
-        emailEdit = (EditText)findViewById(R.id.emailLogin);
-        passwordEdit = (EditText)findViewById(R.id.passwordLogin);
-        title = (TextView)findViewById(R.id.loginTitle);
-        subtitle = (TextView)findViewById(R.id.loginSubtitle);
-        loginButton = (FloatingActionButton)findViewById(R.id.loginButton);
-        registerButton = (FloatingActionButton)findViewById(R.id.registerButton);
-        background = (ImageView)findViewById(R.id.backgroundImage);
-        logo = (ImageView)findViewById(R.id.logoImage);
-        backdrop = (LinearLayout)findViewById(R.id.sub_container);
+        loginButton = findViewById(R.id.loginButton);
+        registerButton = findViewById(R.id.registerButton);
+        forgotPasswordButton = findViewById(R.id.forgotPasswordButton);
+        title = findViewById(R.id.loginTitle);
 
         //setupButtons
         loginButton.setOnClickListener(this);
         registerButton.setOnClickListener(this);
+        forgotPasswordButton.setOnClickListener(this);
         title.setTypeface(FontHelper.antonTypeface(this));
 
 
-        backdrop = (LinearLayout) findViewById(R.id.sub_container);
+        backdrop = findViewById(R.id.sub_container);
         backdrop.setOnTouchListener(new View.OnTouchListener()
         {
             @Override
@@ -102,43 +85,120 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+        loginAuthenticator.addAuthStateListener(loginAuthListener);
 
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        emailEdit.setText(null);
-        passwordEdit.setText(null);
 
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
+        if (loginAuthListener != null) {
+            loginAuthenticator.removeAuthStateListener(loginAuthListener);
         }
     }
 
     @Override
     public void onClick(View v) {
         int clickedItem = v.getId();
-        switch (clickedItem) {
-            case R.id.loginButton:
-                signIn(emailEdit.getText().toString(), passwordEdit.getText().toString());
-                break;
-            case R.id.registerButton:
-                createAccount(emailEdit.getText().toString(), passwordEdit.getText().toString());
-                break;
-            default:
-                break;
+        if (hasWindowFocus()){
+            switch (clickedItem) {
+                case R.id.loginButton:
+                    generateDialog(R.id.loginButton).show();
+                    break;
+                case R.id.registerButton:
+                    generateDialog(R.id.registerButton).show();
+                    break;
+                case R.id.forgotPasswordButton:
+                    generateDialog(R.id.forgotPasswordButton).show();
+                    break;
+                default:
+                    break;
+            }
+        }
+        else {
+            return;
         }
     }
 
+    //METHODS FOR GENERATING LOGIN INPUT DIALOGS
+
+    public Dialog generateDialog(int id){
+        final Dialog input = new Dialog(LoginActivity.this);
+        int width = 0;
+        int height = 0;
+        Button positive;
+        Button negative = new Button(input.getContext());
+
+        switch(id){
+            case R.id.loginButton:
+                input.setContentView(R.layout.login_dialog);
+                emailEdit = input.findViewById(R.id.emailLogin);
+                passwordEdit = input.findViewById(R.id.passwordLogin);
+                positive = input.findViewById(R.id.dialog_positive);
+                negative = input.findViewById(R.id.dialog_negative);
+                positive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        signIn(emailEdit.getText().toString(), passwordEdit.getText().toString());
+                        input.cancel();
+                    }
+                });
+                break;
+
+            case R.id.registerButton:
+                input.setContentView(R.layout.register_dialog);
+                emailEdit = input.findViewById(R.id.emailLogin);
+                passwordEdit = input.findViewById(R.id.passwordLogin);
+                EditText companyName = input.findViewById(R.id.register_company_name);
+                EditText phoneNum = input.findViewById(R.id.register_phone);
+                positive = input.findViewById(R.id.dialog_positive);
+                negative = input.findViewById(R.id.dialog_negative);
+                positive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        createAccount(emailEdit.getText().toString(), passwordEdit.getText().toString());
+                        input.cancel();
+                    }
+                });
+                break;
+
+            case R.id.forgotPasswordButton:
+                input.setContentView(R.layout.forgot_password_dialog);
+                emailEdit = input.findViewById(R.id.emailLogin);
+                positive = input.findViewById(R.id.dialog_positive);
+                negative = input.findViewById(R.id.dialog_negative);
+                positive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        forgotPassword(emailEdit.getText().toString());
+                        input.cancel();
+                    }
+                });
+                break;
+        }
+        negative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                input.cancel();
+            }
+        });
+
+        width = (int)(getResources().getDisplayMetrics().widthPixels*0.999);
+        height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        input.getWindow().setLayout(width, height);
+        return input;
+    }
+
     //METHODS FOR FIREBASE CONNECTIONS//////////////////////////////
+
     public void createAccount(String email, String password){
+        final String emailString = email;
         if (!credentialsAreComplete()){
             return;
         }
@@ -148,24 +208,18 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             return;
         }
         else {
-            mAuth.createUserWithEmailAndPassword(email, password)
+            loginAuthenticator.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-
-                            // If sign in fails, display a message to the user. If sign in succeeds
-                            // the auth state listener will be notified and logic to handle the
-                            // signed in user can be handled in the listener.
                             if (!task.isSuccessful()) {
                                 Toast.makeText(LoginActivity.this, R.string.create_failed,
                                         Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                Toast.makeText(LoginActivity.this, R.string.create_success,
+                                Toast.makeText(LoginActivity.this, R.string.create_success+emailString,
                                         Toast.LENGTH_SHORT).show();
                                 sendVerificationEmail();
-
                             }
                         }
                     });
@@ -174,75 +228,62 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     public void signIn(String email, String password){
         if (!credentialsAreComplete()){
-
             return;
         }
         else {
-            mAuth.signInWithEmailAndPassword(email, password)
+            loginAuthenticator.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
                             if (!task.isSuccessful()) {
-                                Log.w(TAG, "signInWithEmail:failed", task.getException());
                                 Toast.makeText(LoginActivity.this, R.string.auth_failed,
                                         Toast.LENGTH_SHORT).show();
                             }
                             else if (!isVerified()) {
-                                Log.w(TAG, "signInWithEmail:failed", task.getException());
                                 Toast.makeText(LoginActivity.this, R.string.login_verify_failed,
                                         Toast.LENGTH_SHORT).show();
                             }
                             else{
-                                fetchFirebaseUser();
-                                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                            }
+                                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                        }
                         }
                     });
         }
     }
 
-    public void fetchFirebaseUser(){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        user.getToken(true)
-//                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-//                                           public void onComplete(@NonNull Task<GetTokenResult> task) {
-//                                               if (task.isSuccessful()) {
-//                                                   String idToken = task.getResult().getToken();
-//                                                   // Send token to your backend via HTTPS
-//                                                   // ...
-//                                               } else {
-//                                                   // Handle error -> task.getException();
-//                                               }
-//                                           }
-//                                       });
-        if (user != null) {
-            String name = user.getDisplayName();
-            String email = user.getEmail();
-            Uri photoUrl = user.getPhotoUrl();
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            //user.getToken() instead.
-            String uid = user.getUid();
-        }
+    public void forgotPassword(String email){
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email);
     }
 
     private boolean credentialsAreComplete() {
-        boolean valid = true;
+        boolean valid = false;
+
         String email = emailEdit.getText().toString();
         if (email.isEmpty()) {
             emailEdit.setError("Required.");
-            valid = false;
-        } else {
+        }
+        else if(!email.matches("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")){
+            emailEdit.setError("Not a valid address.");
+        }
+        else {
             emailEdit.setError(null);
+            valid = true;
         }
         String password = passwordEdit.getText().toString();
         if (password.isEmpty()) {
             passwordEdit.setError("Required.");
-            valid = false;
-        } else {
+        }
+        else if(!password.matches("(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{6,}")){
+            passwordEdit.setError("Weak password.");
+            Toast.makeText(LoginActivity.this,
+                    "Password must contain: " +
+                            "\n  (6) or more total characters." +
+                            "\n  (1) or more digits." +
+                            "\n  (0) occurrences of spaces.", Toast.LENGTH_LONG).show();
+        }
+        else {
             passwordEdit.setError(null);
+            valid = true;
         }
         return valid;
     }
@@ -251,7 +292,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         boolean status = false;
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user.isEmailVerified()){
+        if (user != null && user.isEmailVerified()){
             status = true;
         }
 
@@ -266,7 +307,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "Email sent.");
                             Toast.makeText(LoginActivity.this, R.string.email_sent,
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -287,4 +327,5 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         ///
         return valid;
     }
+
 }
