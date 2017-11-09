@@ -67,19 +67,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         registerButton.setOnClickListener(this);
         forgotPasswordButton.setOnClickListener(this);
         title.setTypeface(FontHelper.antonTypeface(this));
-
-
-        backdrop = findViewById(R.id.sub_container);
-        backdrop.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
-                return false;
-            }
-        });
     }
 
     @Override
