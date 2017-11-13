@@ -1,32 +1,28 @@
 package com.bigblueocean.nick.bigblueocean.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bigblueocean.nick.bigblueocean.Fragments.NewsFragment.OnListFragmentInteractionListener;
 import com.bigblueocean.nick.bigblueocean.R;
-import com.bigblueocean.nick.bigblueocean.dummy.DummyContent.DummyItem;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import com.bigblueocean.nick.bigblueocean.Model.News;
+import com.squareup.picasso.Picasso;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHolder> {
 
-    private final List<News> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final ArrayList<News> recentNews;
+    private final OnListFragmentInteractionListener newsInteractionListener;
 
-    public NewsViewAdapter(List<News> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
-        mListener = listener;
+    public NewsViewAdapter(ArrayList<News> items, OnListFragmentInteractionListener listener) {
+        recentNews = items;
+        newsInteractionListener = listener;
     }
 
     @Override
@@ -38,17 +34,20 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-//        holder.mIdView.setText(mValues.get(position));
-//        holder.mContentView.setText(mValues.get(position).content);
-
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        Context context = holder.newsCell.getContext();
+        holder.currentNews = recentNews.get(position);
+            if(recentNews.get(position).getImage()==null) {
+//                holder.newsBanner.setImageResource(recentNews.get(position).getImageID());
+            }
+            else{
+                Picasso.with(context).load(recentNews.get(position).getImage()).into(holder.newsBanner);
+            }
+        holder.newsTitle.setText(recentNews.get(position).getTitle());
+        holder.newsCell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                if (null != newsInteractionListener) {
+                    newsInteractionListener.onListFragmentInteraction(holder.currentNews);
                 }
             }
         });
@@ -56,25 +55,25 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return recentNews.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public News mItem;
+        public final View newsCell;
+        public final ImageView newsBanner;
+        public final TextView newsTitle;
+        public News currentNews;
 
         public ViewHolder(View view) {
             super(view);
-            mView = view;
-            mIdView = (TextView) view.findViewById(R.id.news_id);
-            mContentView = (TextView) view.findViewById(R.id.news_content);
+            newsCell = view;
+            newsBanner = (ImageView) view.findViewById(R.id.news_image);
+            newsTitle = (TextView) view.findViewById(R.id.news_title);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + newsTitle.getText() + "'";
         }
     }
 }

@@ -20,12 +20,12 @@ import com.bigblueocean.nick.bigblueocean.Model.Product;
 public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.ViewHolder> {
 
     private final ArrayList<Product> currentOrder;
-    private final OnListFragmentInteractionListener orderAdapterInteractionListener;
+    private final OnListFragmentInteractionListener orderInteractionListener;
     private Context context;
 
     public OrderViewAdapter(ArrayList<Product> items, OnListFragmentInteractionListener listener) {
         currentOrder = items;
-        orderAdapterInteractionListener = listener;
+        orderInteractionListener = listener;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        context = holder.productView.getContext();
+        context = holder.productCell.getContext();
         final int pos = position;
         holder.currentProduct = currentOrder.get(pos);
         holder.productTitle.setBackgroundColor(currentOrder.get(pos).getCategory().getColor());
@@ -70,12 +70,12 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
         holder.productDetailsLabel4.setTextColor(currentOrder.get(pos).getCategory().getColor());
 
 
-        holder.productView.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.productCell.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (orderAdapterInteractionListener != null) {
+                if (orderInteractionListener != null) {
                     Log.e("adapter","On CLick listener: "+currentOrder.get(pos).getCategory().getTitle());
-                    orderAdapterInteractionListener.onListFragmentInteraction(holder.currentProduct);
+                    orderInteractionListener.onListFragmentInteraction(holder.currentProduct);
                 }
                 return true;
             }
@@ -88,7 +88,7 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View productView;
+        public final View productCell;
         public final TextView productTitle;
         public final TextView productSubtitle;
         public final TextView productDetailsLabel1;
@@ -99,7 +99,7 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
 
         public ViewHolder(View view) {
             super(view);
-            productView = view;
+            productCell = view;
             productTitle = (TextView) view.findViewById(R.id.order_title);
             productSubtitle = (TextView) view.findViewById(R.id.order_subtitle);
             productDetailsLabel1 = (TextView) view.findViewById(R.id.order_description_sub1);

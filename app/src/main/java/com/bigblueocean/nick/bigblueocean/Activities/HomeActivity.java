@@ -95,7 +95,10 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(homeViewPager);
 
-        homeViewPager.setCurrentItem(1);
+        if (this.getIntent().hasExtra("currentItem"))
+            homeViewPager.setCurrentItem(Integer.parseInt(this.getIntent().getStringExtra("currentItem")));
+        else
+            homeViewPager.setCurrentItem(1);
         homeViewPager.setOffscreenPageLimit(0);
 
     }
@@ -136,12 +139,15 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     @Override
     public void onPause(){
         super.onPause();
+
+
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(this.getApplicationContext());
         SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
             Gson gson = new Gson();
             String json = gson.toJson(currentOrder);
             prefsEditor.putString("CurrentOrder", json);
+            prefsEditor.putString("CurrentFragment", Integer.toString(homeViewPager.getCurrentItem()));
             prefsEditor.commit();
     }
 
@@ -180,18 +186,20 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
 
 //METHODS FOR FRAGMENTS IN TABBED ACTIVITY
     @Override
-    public void onListFragmentInteraction(News item){
+    public void onListFragmentInteraction(DummyContent.DummyItem item){
 
+    }
+
+    @Override
+    public void onListFragmentInteraction(News item){
+        Intent toNewsPage = new Intent(this, NewsActivity.class);
+        toNewsPage.putExtra("newsID", ""+item.getNewsID());
+        startActivity(toNewsPage);
     }
 
     @Override
     public void onListFragmentInteraction(Product item){
         editProductDialog(item).show();
-    }
-
-    @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item){
-
     }
 
     @Override

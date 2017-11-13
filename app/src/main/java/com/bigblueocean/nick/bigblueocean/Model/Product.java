@@ -10,8 +10,6 @@ import java.util.Locale;
 
 public class Product {
 
-    private static final int COUNT = 10;
-
     private Category category;
     private String [] productDetails = new String[5];
     private String species;
@@ -56,6 +54,26 @@ public class Product {
 
     public String getSpecies(){
         return this.species;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public String getPrice() {
+        return price;
     }
 
     public void setRegion(String region){

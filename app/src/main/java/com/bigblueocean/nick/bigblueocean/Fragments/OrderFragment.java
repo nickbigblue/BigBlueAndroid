@@ -31,7 +31,6 @@ public class OrderFragment extends Fragment {
         OrderFragment fragment = new OrderFragment();
         productColumnCount = columnCount;
         return fragment;
-
     }
 
     @Override
@@ -40,15 +39,10 @@ public class OrderFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.order_fragment_list, container, false);
-
-
-            Context context = view.getContext();
-            RecyclerView recyclerView= (RecyclerView) view.findViewById(R.id.list);
-            recyclerView.setAdapter(new OrderViewAdapter(currentOrder, orderFragmentListener));
-
+        RecyclerView recyclerView= (RecyclerView) view.findViewById(R.id.list);
+        recyclerView.setAdapter(new OrderViewAdapter(currentOrder, orderFragmentListener));
         Button submitButton = (Button) view.findViewById(R.id.order_submit);
         Button clearButton = (Button) view.findViewById(R.id.order_clear);
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -63,10 +57,8 @@ public class OrderFragment extends Fragment {
                 ((HomeActivity) getActivity()).clearOrder();
             }
         });
-
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {

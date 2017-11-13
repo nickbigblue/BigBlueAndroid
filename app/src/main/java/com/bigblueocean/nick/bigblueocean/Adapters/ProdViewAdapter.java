@@ -20,12 +20,12 @@ import com.bigblueocean.nick.bigblueocean.Model.Category;
 public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHolder> {
 
     private final ArrayList<Category> categoryArrayList;
-    private final OnListFragmentInteractionListener prodAdapterInteractionListener;
+    private final OnListFragmentInteractionListener productInteractionListener;
     private Context context;
 
     public ProdViewAdapter(ArrayList<Category> categories, OnListFragmentInteractionListener listener) {
         categoryArrayList = categories;
-        prodAdapterInteractionListener = listener;
+        productInteractionListener = listener;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        context = holder.categoryView.getContext();
+        context = holder.categoryCell.getContext();
         final int pos = position;
         holder.currentCategory = categoryArrayList.get(pos);
         holder.categoryImage.setBackgroundColor(holder.currentCategory.getColor());
@@ -46,11 +46,11 @@ public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHo
         holder.categoryTitle.setTypeface(FontHelper.antonTypeface(context));
         holder.categoryTitle.setTextColor(categoryArrayList.get(pos).getColor());
 
-        holder.categoryView.setOnClickListener(new View.OnClickListener() {
+        holder.categoryCell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (prodAdapterInteractionListener != null) {
-                    prodAdapterInteractionListener.onListFragmentInteraction(holder.currentCategory);
+                if (productInteractionListener != null) {
+                    productInteractionListener.onListFragmentInteraction(holder.currentCategory);
                 }
             }
         });
@@ -62,14 +62,14 @@ public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHo
     }
 
     protected class ViewHolder extends RecyclerView.ViewHolder {
-        protected final View categoryView;
+        protected final View categoryCell;
         protected final ImageView categoryImage;
         protected final TextView categoryTitle;
         protected Category currentCategory;
 
         public ViewHolder(View view) {
             super(view);
-            categoryView = view;
+            categoryCell = view;
             categoryImage = (ImageView) view.findViewById(R.id.product_image);
             categoryTitle = (TextView) view.findViewById(R.id.product_title);
         }

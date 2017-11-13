@@ -37,12 +37,8 @@ public class ProdFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.product_fragment_list, container, false);
-
-        // Set the adapter
-            Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setAdapter(new ProdViewAdapter(categories(), prodInteractionListener));
         return view;

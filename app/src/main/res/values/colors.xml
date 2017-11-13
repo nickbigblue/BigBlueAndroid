@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#256AC4</color>
-    <color name="colorPrimaryDark">#256AC4</color>
+    <color name="colorPrimary">#0E5BB1</color>
+    <color name="colorPrimaryDark">#0E5BB1</color>
     <color name="colorAccent">#FFFFFF</color>
     <color name="white">#ffffff</color>
     <color name="tuna">#ba052b</color>
@@ -11,7 +11,5 @@
     <color name="grouper">#c24f0a</color>
     <color name="salmon">#fcb0ed</color>
     <color name="transparent">#00ffffff</color>
-
-
     <color name="black_overlay">#4b000000</color>
 </resources>

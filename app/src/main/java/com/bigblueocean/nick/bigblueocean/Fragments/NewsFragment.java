@@ -1,86 +1,65 @@
 package com.bigblueocean.nick.bigblueocean.Fragments;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bigblueocean.nick.bigblueocean.Adapters.NewsViewAdapter;
+import com.bigblueocean.nick.bigblueocean.Activities.HomeActivity;
+import com.bigblueocean.nick.bigblueocean.Adapters.NewsViewAdapter;;
+import com.bigblueocean.nick.bigblueocean.Helpers.ReadJSONFromURLTask;
 import com.bigblueocean.nick.bigblueocean.R;
-
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import com.bigblueocean.nick.bigblueocean.Model.News;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class NewsFragment extends Fragment {
+    private static int newsColumnCount = 1;
+    private OnListFragmentInteractionListener newsFragmentListener;
+    private ArrayList<News> recentNews;
+    private String dataSourceURL = "http://bigblueocean.net/jb2/public/bigblueapp/news";
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public NewsFragment() {
+
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static NewsFragment newInstance(int columnCount) {
         NewsFragment fragment = new NewsFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
+        newsColumnCount = columnCount;
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.news_fragment_list, container, false);
-
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new NewsViewAdapter(new ArrayList<News>(1), mListener));
-        }
+            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+            recyclerView.setAdapter(new NewsViewAdapter(getRecentNews(), newsFragmentListener));
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+            newsFragmentListener = (OnListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -90,10 +69,32 @@ public class NewsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        newsFragmentListener = null;
     }
 
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(News item);
     }
+
+    public ArrayList<News> getRecentNews() {
+        Type dataType = new TypeToken<List<News>>(){}.getType();
+        ReadJSONFromURLTask task = new ReadJSONFromURLTask();
+        task.execute(dataSourceURL);
+        String dataJSON = null;
+            try {
+                dataJSON = task.get();
+                Gson gson = new Gson();
+                JSONObject json = new JSONObject(dataJSON);
+                recentNews = gson.fromJson(json.getString("News"), dataType);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        return recentNews;
+    }
+
 }
