@@ -127,9 +127,9 @@ public class SelectionHelper {
 
     public ArrayList<CarouselPicker.PickerItem> getGrouperSpecies(){
         ArrayList<CarouselPicker.PickerItem> grouperSpecies = new ArrayList<>();
-        grouperSpecies.add(new CarouselPicker.TextItem("Red Grouper", 10));
-        grouperSpecies.add(new CarouselPicker.TextItem("Black Grouper", 10));
-        grouperSpecies.add(new CarouselPicker.TextItem("Brown Grouper", 10));
+        grouperSpecies.add(new CarouselPicker.TextItem("Red", 10));
+        grouperSpecies.add(new CarouselPicker.TextItem("Black", 10));
+        grouperSpecies.add(new CarouselPicker.TextItem("Dusky", 10));
         return grouperSpecies;
     }
 

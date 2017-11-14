@@ -16,12 +16,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +37,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +55,10 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     private static FragmentStatePagerAdapter homeViewPagerAdapter;
     private ViewPager homeViewPager;
     private static ArrayList<Product> currentOrder = new ArrayList<>();
+    private static ArrayList<News> recentNews = NewsFragment.newInstance(1).getRecentNews();
     private static ArrayList<CarouselPicker.PickerItem> subPickerItem;
     public static String userEmail;
-    public static Product dummyProd;
+    public static Product dummyProd = new Product();
 
 //METHODS FOR ACTIVITY LIFECYCLE AND FAB
     @Override
@@ -194,6 +194,7 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     public void onListFragmentInteraction(News item){
         Intent toNewsPage = new Intent(this, NewsActivity.class);
         toNewsPage.putExtra("newsID", ""+item.getNewsID());
+        toNewsPage.putExtra("selectedNews", new Gson().toJson(item));
         startActivity(toNewsPage);
     }
 
@@ -211,12 +212,19 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
     public Dialog listItemDialog(final Category cat){
         final Dialog dialog = new Dialog(HomeActivity.this);
         dialog.setContentView(R.layout.add_product_selection_dialog);
-        final Product dummyProd = new Product(cat, "Blue Fin", "Southeast Asia", "1+", "100+", "200", "8.75");
+        dummyProd.setCategory(cat);
+        dummyProd.setPrice("0.00");
+        dummyProd.setQuantity("100");
+
 
         ImageView iv = new ImageView(this);
         iv = (ImageView) dialog.findViewById(R.id.dialog_image);
         iv.setImageBitmap(BitmapFactory.decodeResource(dialog.getContext().getResources(), cat.getImage()));
         iv.setBackgroundColor(cat.getColor());
+
+        EditText field = (EditText) dialog.findViewById(R.id.dialog_edit_text);
+        field.setTextColor(cat.getColor());
+        field.setVisibility(View.INVISIBLE);
 
         ////MAIN PICKER
         final SelectionHelper infoPasser = new SelectionHelper();
@@ -263,8 +271,6 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
         subCarouselPicker.setAdapter(subTextAdapter);
 
-
-
         textAdapter = new CarouselPicker.CarouselViewAdapter(this, mainPickerItem, 0);
         mainCarouselPicker.setAdapter(textAdapter);
 
@@ -279,8 +285,12 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
                 String s = mainPickerItem.get(position).getText();
                 if(s.equalsIgnoreCase("Quantity") || s.equalsIgnoreCase("($.$$)")){
                     subPickerItem = new ArrayList<>();
+                    EditText field = dialog.findViewById(R.id.dialog_edit_text);
+                    field.setVisibility(View.VISIBLE);
                 } else {
                     subPickerItem = getSubPicker(tag,s);
+                    EditText field = dialog.findViewById(R.id.dialog_edit_text);
+                    field.setVisibility(View.INVISIBLE);
                 }
                 CarouselPicker.CarouselViewAdapter subTextAdapter;
                 subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
@@ -302,7 +312,23 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
 
             @Override
             public void onPageSelected(int position) {
-                //dummyProd.setRegion(subPickerItem.get(position).getText());
+                String s = mainPickerItem.get(position).getText();
+                switch(s){
+                    case "Region":
+                        dummyProd.setRegion(subPickerItem.get(position).getText());
+                        break;
+                    case "Species":
+                        dummyProd.setSpecies(subPickerItem.get(position).getText());
+                        break;
+                    case "Size":
+                        dummyProd.setSize(subPickerItem.get(position).getText());
+                        break;
+                    case "Grade":
+                        dummyProd.setGrade(subPickerItem.get(position).getText());
+                        break;
+                    default:
+                        break;
+                }
             }
 
             @Override

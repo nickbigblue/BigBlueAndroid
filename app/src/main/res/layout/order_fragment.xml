@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="210dp"
     android:orientation="vertical"
-    android:layoutAnimation = "@anim/products_cell_animation">
+    android:layoutAnimation="@anim/products_cell_animation">
+
 
     <TextView
         android:id="@+id/order_title"
@@ -12,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="8"
         android:layout_margin="0dp"
-        android:gravity="center"
+        android:gravity="top"
         android:textSize="80sp"
         android:textColor="@color/white"
         android:textAlignment="center" />
@@ -32,6 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="3"
+        android:layout_gravity="bottom"
         android:orientation="horizontal">
 
         <TextView
@@ -83,5 +85,6 @@
             />
 
     </LinearLayout>
+
 
 </LinearLayout>

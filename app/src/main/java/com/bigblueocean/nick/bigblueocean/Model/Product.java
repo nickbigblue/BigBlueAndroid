@@ -30,7 +30,7 @@ public class Product {
         this.region = regions;
         this.grade = grades;
         this.size = sizes;
-        this.quantity = quantity+" lbs.";
+        this.quantity = quantity;
         this.price = price;
         String nf = numberFormat.format(Double.parseDouble(price));
         this.productDetails[0] = this.region;
@@ -46,6 +46,10 @@ public class Product {
 
     public Category getCategory() {
         return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public String [] getDescription() {

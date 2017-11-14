@@ -2,9 +2,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/news_page_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context="com.bigblueocean.nick.bigblueocean.Activities.NewsActivity">
 
     <ImageView
@@ -20,18 +22,27 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:text="Default News Title"
         android:textSize="30sp"
         />
 
-    <TextView
-        android:id="@+id/news_page_body"
+    <ScrollView
+        android:id="@+id/news_page_scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="8dp"
-        android:text="Default News Body"
-        android:textSize="18sp"
-        />
+        android:layout_height="0dp"
+        android:layout_weight="3">
+
+        <TextView
+            android:id="@+id/news_page_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="Default News Body"
+            android:textSize="18sp" />
+
+    </ScrollView>
 
 </LinearLayout>
