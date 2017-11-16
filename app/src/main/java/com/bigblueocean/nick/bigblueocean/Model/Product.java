@@ -24,7 +24,6 @@ public class Product {
     }
 
     public Product (Category category, String species, String regions, String grades, String sizes, String quantity, String price){
-        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
         this.category = category;
         this.species = species;
         this.region = regions;
@@ -32,15 +31,14 @@ public class Product {
         this.size = sizes;
         this.quantity = quantity;
         this.price = price;
-        String nf = numberFormat.format(Double.parseDouble(price));
         this.productDetails[0] = this.region;
         this.productDetails[1] = this.grade;
         this.productDetails[2] = this.size;
         this.productDetails[3] = this.quantity;
-        this.productDetails[4] = nf;
+        this.productDetails[4] = this.price;
 
         if(!(category.getTag().equalsIgnoreCase("Tuna") || category.getTag().equalsIgnoreCase("Sword"))){
-            this.grade = "N/A";
+            this.grade = "U";
         }
     }
 
@@ -85,7 +83,11 @@ public class Product {
     }
 
     public void setGrade(String grade){
-        this.grade = grade;
+        if(!(category.getTag().equalsIgnoreCase("Tuna") || category.getTag().equalsIgnoreCase("Sword"))){
+            this.grade = "U";
+        }
+        else
+            this.grade = grade;
     }
 
     public void setQuantity(String quantity){

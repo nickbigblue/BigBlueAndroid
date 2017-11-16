@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
+import com.bigblueocean.nick.bigblueocean.Helpers.MoneyTextWatcher;
 import com.bigblueocean.nick.bigblueocean.Helpers.SelectionHelper;
 import com.bigblueocean.nick.bigblueocean.Fragments.ChatFragment;
 import com.bigblueocean.nick.bigblueocean.Fragments.NewsFragment;
@@ -46,21 +48,22 @@ import com.bigblueocean.nick.bigblueocean.Model.News;
 import com.bigblueocean.nick.bigblueocean.Model.Product;
 import com.google.gson.reflect.TypeToken;
 
+import org.w3c.dom.Text;
+
 import in.goodiebag.carouselpicker.CarouselPicker;
 
 public class HomeActivity extends AppCompatActivity implements
-ProdFragment.OnListFragmentInteractionListener, OrderFragment.OnListFragmentInteractionListener,
-NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInteractionListener {
+        ProdFragment.OnListFragmentInteractionListener, OrderFragment.OnListFragmentInteractionListener,
+        NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInteractionListener {
 
     private static FragmentStatePagerAdapter homeViewPagerAdapter;
     private ViewPager homeViewPager;
     private static ArrayList<Product> currentOrder = new ArrayList<>();
-    private static ArrayList<News> recentNews = NewsFragment.newInstance(1).getRecentNews();
     private static ArrayList<CarouselPicker.PickerItem> subPickerItem;
     public static String userEmail;
     public static Product dummyProd = new Product();
 
-//METHODS FOR ACTIVITY LIFECYCLE AND FAB
+    //METHODS FOR ACTIVITY LIFECYCLE AND FAB
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,11 +147,11 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(this.getApplicationContext());
         SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
-            Gson gson = new Gson();
-            String json = gson.toJson(currentOrder);
-            prefsEditor.putString("CurrentOrder", json);
-            prefsEditor.putString("CurrentFragment", Integer.toString(homeViewPager.getCurrentItem()));
-            prefsEditor.commit();
+        Gson gson = new Gson();
+        String json = gson.toJson(currentOrder);
+        prefsEditor.putString("CurrentOrder", json);
+        prefsEditor.putString("CurrentFragment", Integer.toString(homeViewPager.getCurrentItem()));
+        prefsEditor.commit();
     }
 
     @Override
@@ -167,7 +170,7 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         return currentOrder;
     }
 
-//METHOD FOR MENU OPTIONS
+    //METHOD FOR MENU OPTIONS
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -184,7 +187,7 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         }
     }
 
-//METHODS FOR FRAGMENTS IN TABBED ACTIVITY
+    //METHODS FOR FRAGMENTS IN TABBED ACTIVITY
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item){
 
@@ -205,31 +208,42 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
 
     @Override
     public void onListFragmentInteraction(Category item){
-         listItemDialog(item).show();
+        addItemDialog(item).show();
     }
 
-//METHODS FOR DIALOGS
-    public Dialog listItemDialog(final Category cat){
+    //METHODS FOR DIALOGS
+    public Dialog addItemDialog(final Category cat){
         final Dialog dialog = new Dialog(HomeActivity.this);
         dialog.setContentView(R.layout.add_product_selection_dialog);
+        dummyProd = new Product();
         dummyProd.setCategory(cat);
+        dummyProd.setRegion("N/P");
+        dummyProd.setSpecies("N/P");
+        dummyProd.setGrade("N/P");
+        dummyProd.setSize("N/P");
         dummyProd.setPrice("0.00");
-        dummyProd.setQuantity("100");
+        dummyProd.setQuantity("0");
 
 
-        ImageView iv = new ImageView(this);
-        iv = (ImageView) dialog.findViewById(R.id.dialog_image);
+        ImageView iv = dialog.findViewById(R.id.dialog_image);
         iv.setImageBitmap(BitmapFactory.decodeResource(dialog.getContext().getResources(), cat.getImage()));
         iv.setBackgroundColor(cat.getColor());
 
-        EditText field = (EditText) dialog.findViewById(R.id.dialog_edit_text);
-        field.setTextColor(cat.getColor());
-        field.setVisibility(View.INVISIBLE);
+        final TextView infoLabel = dialog.findViewById(R.id.dialog_info_label);
+        infoLabel.setVisibility(View.INVISIBLE);
+
+        final EditText qtyField = dialog.findViewById(R.id.dialog_edit_text2);
+        qtyField.setTextColor(cat.getColor());
+        qtyField.setVisibility(View.INVISIBLE);
+
+        final EditText priceField = dialog.findViewById(R.id.dialog_edit_text1);
+        priceField.setTextColor(cat.getColor());
+        priceField.setVisibility(View.INVISIBLE);
 
         ////MAIN PICKER
         final SelectionHelper infoPasser = new SelectionHelper();
-        final CarouselPicker mainCarouselPicker = (CarouselPicker) dialog.findViewById(R.id.dialog_main_carousel);
-        final CarouselPicker subCarouselPicker = (CarouselPicker) dialog.findViewById(R.id.dialog_sub_carousel);
+        final CarouselPicker mainCarouselPicker = dialog.findViewById(R.id.dialog_main_carousel);
+        final CarouselPicker subCarouselPicker = dialog.findViewById(R.id.dialog_sub_carousel);
         final String tag = cat.getTag();
         final ArrayList<CarouselPicker.PickerItem> mainPickerItem;
         CarouselPicker.CarouselViewAdapter textAdapter;
@@ -283,19 +297,32 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
             @Override
             public void onPageSelected(int position) {
                 String s = mainPickerItem.get(position).getText();
-                if(s.equalsIgnoreCase("Quantity") || s.equalsIgnoreCase("($.$$)")){
+                dummyProd.setQuantity(qtyField.getText().toString());
+                dummyProd.setPrice(priceField.getText().toString());
+
+                if (s.equalsIgnoreCase("Quantity")){
                     subPickerItem = new ArrayList<>();
-                    EditText field = dialog.findViewById(R.id.dialog_edit_text);
-                    field.setVisibility(View.VISIBLE);
-                } else {
+                    infoLabel.setText(R.string.quantity_prompt);
+                    infoLabel.setVisibility(View.VISIBLE);
+                    qtyField.setVisibility(View.VISIBLE);
+                    priceField.setVisibility(View.INVISIBLE);
+                }
+                else if (s.equalsIgnoreCase("($.$$)")){
+                    subPickerItem = new ArrayList<>();
+                    infoLabel.setText(R.string.price_prompt);
+                    infoLabel.setVisibility(View.VISIBLE);
+                    priceField.setVisibility(View.VISIBLE);
+                    qtyField.setVisibility(View.INVISIBLE);
+                }
+                else {
                     subPickerItem = getSubPicker(tag,s);
-                    EditText field = dialog.findViewById(R.id.dialog_edit_text);
-                    field.setVisibility(View.INVISIBLE);
+                    infoLabel.setVisibility(View.INVISIBLE);
+                    qtyField.setVisibility(View.INVISIBLE);
+                    priceField.setVisibility(View.INVISIBLE);
                 }
                 CarouselPicker.CarouselViewAdapter subTextAdapter;
                 subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
                 subCarouselPicker.setAdapter(subTextAdapter);
-
             }
 
             @Override
@@ -312,7 +339,7 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
 
             @Override
             public void onPageSelected(int position) {
-                String s = mainPickerItem.get(position).getText();
+                String s = mainPickerItem.get(mainCarouselPicker.getCurrentItem()).getText();
                 switch(s){
                     case "Region":
                         dummyProd.setRegion(subPickerItem.get(position).getText());
@@ -339,49 +366,69 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         Button dialogAddButton = (Button) dialog.findViewById(R.id.dialog_add_button);
         dialogAddButton.setTextColor(cat.getColor());
         dialogAddButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (currentOrder.size() <= 50){
-                currentOrder.add(dummyProd);
+            @Override
+            public void onClick(View v) {
+                if (currentOrder.size() <= 50){
+                    dummyProd.setQuantity(qtyField.getText().toString());
+                    dummyProd.setPrice(priceField.getText().toString());
+                    currentOrder.add(dummyProd);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),
+                            "You've reached your order maximum.", Toast.LENGTH_SHORT).show();
+                }
+                dialog.cancel();
+                homeViewPagerAdapter.notifyDataSetChanged();
             }
-            else {
-                Toast.makeText(getApplicationContext(), "You've reached your order maximum.", Toast.LENGTH_SHORT).show();
+        });
+
+        Button dialogCancelButton = (Button) dialog.findViewById(R.id.dialog_cancel_button);
+        dialogCancelButton.setTextColor(cat.getColor());
+        dialogCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
             }
-            dialog.cancel();
-            homeViewPagerAdapter.notifyDataSetChanged();
-        }
-    });
+        });
 
-    Button dialogCancelButton = (Button) dialog.findViewById(R.id.dialog_cancel_button);
-    dialogCancelButton.setTextColor(cat.getColor());
-    dialogCancelButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            dialog.cancel();
-        }
-    });
-
-    return dialog;
-}
+        return dialog;
+    }
 
     public Dialog editProductDialog(final Product prod){
-        final Product product = prod;
-        final Dialog editProductDialog = new Dialog(HomeActivity.this);
-        editProductDialog.setContentView(R.layout.add_product_selection_dialog);
+        final Dialog dialog = new Dialog(HomeActivity.this);
+        dialog.setContentView(R.layout.add_product_selection_dialog);
+        dummyProd = new Product();
+        dummyProd.setCategory(prod.getCategory());
+        dummyProd.setRegion(prod.getRegion());
+        dummyProd.setSpecies(prod.getSpecies());
+        dummyProd.setGrade(prod.getGrade());
+        dummyProd.setSize(prod.getSize());
+        dummyProd.setPrice(prod.getPrice());
+        dummyProd.setQuantity(prod.getQuantity());
 
-        ImageView iv = new ImageView(this);
-        iv = (ImageView) editProductDialog.findViewById(R.id.dialog_image);
-        iv.setImageBitmap(BitmapFactory.decodeResource(editProductDialog.getContext().getResources(), prod.getCategory().getImage()));
+
+        ImageView iv = dialog.findViewById(R.id.dialog_image);
+        iv.setImageBitmap(BitmapFactory.decodeResource(dialog.getContext().getResources(), prod.getCategory().getImage()));
         iv.setBackgroundColor(prod.getCategory().getColor());
+
+        final EditText qtyField = dialog.findViewById(R.id.dialog_edit_text2);
+        qtyField.setText(dummyProd.getPrice());
+        qtyField.setTextColor(prod.getCategory().getColor());
+        qtyField.setVisibility(View.INVISIBLE);
+
+        final EditText priceField = dialog.findViewById(R.id.dialog_edit_text1);
+        qtyField.setText(dummyProd.getQuantity());
+        priceField.setTextColor(prod.getCategory().getColor());
+        priceField.setVisibility(View.INVISIBLE);
 
         ////MAIN PICKER
         final SelectionHelper infoPasser = new SelectionHelper();
-        final CarouselPicker mainCarouselPicker = (CarouselPicker) editProductDialog.findViewById(R.id.dialog_main_carousel);
-        final CarouselPicker subCarouselPicker = (CarouselPicker) editProductDialog.findViewById(R.id.dialog_sub_carousel);
+        final CarouselPicker mainCarouselPicker = dialog.findViewById(R.id.dialog_main_carousel);
+        final CarouselPicker subCarouselPicker = dialog.findViewById(R.id.dialog_sub_carousel);
         final String tag = prod.getCategory().getTag();
         final ArrayList<CarouselPicker.PickerItem> mainPickerItem;
         CarouselPicker.CarouselViewAdapter textAdapter;
-        switch (tag){
+        switch (prod.getCategory().getTag()){
             case "Tuna":
                 mainPickerItem = infoPasser.getTunaSelections();
                 break;
@@ -419,8 +466,6 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
         subCarouselPicker.setAdapter(subTextAdapter);
 
-
-
         textAdapter = new CarouselPicker.CarouselViewAdapter(this, mainPickerItem, 0);
         mainCarouselPicker.setAdapter(textAdapter);
 
@@ -433,15 +478,27 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
             @Override
             public void onPageSelected(int position) {
                 String s = mainPickerItem.get(position).getText();
-                if(s.equalsIgnoreCase("Quantity") || s.equalsIgnoreCase("($.$$)")){
+                dummyProd.setQuantity(qtyField.getText().toString());
+                dummyProd.setPrice(priceField.getText().toString());
+
+                if (s.equalsIgnoreCase("Quantity")){
                     subPickerItem = new ArrayList<>();
-                } else {
+                    qtyField.setVisibility(View.VISIBLE);
+                    priceField.setVisibility(View.INVISIBLE);
+                }
+                else if (s.equalsIgnoreCase("($.$$)")){
+                    subPickerItem = new ArrayList<>();
+                    priceField.setVisibility(View.VISIBLE);
+                    qtyField.setVisibility(View.INVISIBLE);
+                }
+                else {
                     subPickerItem = getSubPicker(tag,s);
+                    qtyField.setVisibility(View.INVISIBLE);
+                    priceField.setVisibility(View.INVISIBLE);
                 }
                 CarouselPicker.CarouselViewAdapter subTextAdapter;
                 subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
                 subCarouselPicker.setAdapter(subTextAdapter);
-
             }
 
             @Override
@@ -458,7 +515,23 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
 
             @Override
             public void onPageSelected(int position) {
-
+                String s = mainPickerItem.get(mainCarouselPicker.getCurrentItem()).getText();
+                switch(s){
+                    case "Region":
+                        dummyProd.setRegion(subPickerItem.get(position).getText());
+                        break;
+                    case "Species":
+                        dummyProd.setSpecies(subPickerItem.get(position).getText());
+                        break;
+                    case "Size":
+                        dummyProd.setSize(subPickerItem.get(position).getText());
+                        break;
+                    case "Grade":
+                        dummyProd.setGrade(subPickerItem.get(position).getText());
+                        break;
+                    default:
+                        break;
+                }
             }
 
             @Override
@@ -467,31 +540,33 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         });
 
 
-        Button editDialogConfirmButton = (Button) editProductDialog.findViewById(R.id.dialog_add_button);
+        Button editDialogConfirmButton = (Button) dialog.findViewById(R.id.dialog_add_button);
         editDialogConfirmButton.setText(R.string.dialog_confirm_changes);
         editDialogConfirmButton.setTextColor(prod.getCategory().getColor());
         editDialogConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dummyProd.setQuantity(qtyField.getText().toString());
+                dummyProd.setPrice(priceField.getText().toString());
                 currentOrder.set(currentOrder.indexOf(prod), dummyProd);
-                editProductDialog.cancel();
+                dialog.cancel();
                 homeViewPagerAdapter.notifyDataSetChanged();
             }
         });
 
-        Button editDialogDeleteButton = (Button) editProductDialog.findViewById(R.id.dialog_cancel_button);
+        Button editDialogDeleteButton = (Button) dialog.findViewById(R.id.dialog_cancel_button);
         editDialogDeleteButton.setText(R.string.dialog_delete);
         editDialogDeleteButton.setTextColor(prod.getCategory().getColor());
         editDialogDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentOrder.remove(product);
+                currentOrder.remove(prod);
                 homeViewPagerAdapter.notifyDataSetChanged();
-                editProductDialog.cancel();
+                dialog.cancel();
             }
         });
 
-        return editProductDialog;
+        return dialog;
     }
 
     public ArrayList<CarouselPicker.PickerItem> getSubPicker(String tag, String title){
@@ -546,16 +621,16 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
                         temp = S1.getGrouperSizes();
                         break;
                     case "Salmon":
-                        if (dummyProd.getSpecies().equalsIgnoreCase("Fillet")){
-                            temp = S1.getSalmonFilletSizes();
+                        if (dummyProd.getSpecies() != null) {
+                            if (dummyProd.getSpecies().equalsIgnoreCase("Fillet")) {
+                                temp = S1.getSalmonFilletSizes();
+                            } else if (dummyProd.getSpecies().equalsIgnoreCase("H&G")) {
+                                temp = S1.getSalmonHgSizes();
+                            } else {
+                                temp = new ArrayList<CarouselPicker.PickerItem>();
+                            }
+                            break;
                         }
-                        else if(dummyProd.getSpecies().equalsIgnoreCase("H&G")){
-                            temp = S1.getSalmonHgSizes();
-                        }
-                        else{
-                            temp = new ArrayList<CarouselPicker.PickerItem>();
-                        }
-                        break;
                     default:
                         temp = S1.getTunaSizes();
                 }
@@ -568,7 +643,7 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         return temp;
     }
 
-//METHODS FOR MANAGING CURRENT ORDER
+    //METHODS FOR MANAGING CURRENT ORDER
     public void clearOrder(){
         if(!currentOrder.isEmpty()) {
             final AlertDialog clearOrderDialog;
@@ -631,7 +706,7 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         }
     }
 
-//BIGBLUE DATABASE METHODS
+    //BIGBLUE DATABASE METHODS
     public boolean sendOrder(){
         boolean confirmation =  true;
 
@@ -640,12 +715,14 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
         return confirmation;
     }
 
-//CUSTOMIZED PAGER ADAPTER FOR TABBED ACTIVITY FUNCTION
+    //CUSTOMIZED PAGER ADAPTER FOR TABBED ACTIVITY FUNCTION
     public static class FragmentStatePagerAdapter extends FragmentPagerAdapter {
+        private String tabTitles[] = new String[] { "News", "Product", "Order", "Chat" };
 
         public FragmentStatePagerAdapter(FragmentManager fragmentManager){
             super(fragmentManager);
         }
+
         @Override
         public Fragment getItem(int position) {
             Fragment intendedFragment;
@@ -677,22 +754,12 @@ NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInter
 
         @Override
         public int getItemPosition(Object object) {
-        return POSITION_NONE;
+            return POSITION_NONE;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "News";
-                case 1:
-                    return "Products";
-                case 2:
-                    return "Order";
-
-                case 3:
-                    return "Chat";
-            }
+//            return tabTitles[position];
             return null;
         }
     };

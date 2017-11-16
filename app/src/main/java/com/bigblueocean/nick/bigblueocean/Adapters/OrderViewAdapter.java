@@ -13,7 +13,9 @@ import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
 import com.bigblueocean.nick.bigblueocean.Fragments.OrderFragment.OnListFragmentInteractionListener;
 import com.bigblueocean.nick.bigblueocean.R;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.bigblueocean.nick.bigblueocean.Model.Product;
 
@@ -46,25 +48,34 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
         holder.productTitle.setTypeface(FontHelper.antonTypeface(context));
 
         holder.productSubtitle.setBackgroundColor(currentOrder.get(pos).getCategory().getColor());
-        holder.productSubtitle.setText(currentOrder.get(pos).getDescription()[0]);
+        if (currentOrder.get(pos).getSpecies() != null && !currentOrder.get(pos).getSpecies().equalsIgnoreCase("N/P") ){
+            holder.productSubtitle.setText(currentOrder.get(pos).getRegion()+" " +currentOrder.get(pos).getSpecies());
+        }
+        else
+            holder.productSubtitle.setText(currentOrder.get(pos).getRegion());
         holder.productSubtitle.setTypeface(FontHelper.antonTypeface(context));
 
-        String label = currentOrder.get(pos).getDescription()[1];
+        String label = currentOrder.get(pos).getGrade();
         holder.productDetailsLabel1.setText(label);
         holder.productDetailsLabel1.setTypeface(FontHelper.antonTypeface(context));
         holder.productDetailsLabel1.setTextColor(currentOrder.get(pos).getCategory().getColor());
 
-        label = currentOrder.get(pos).getDescription()[2];
+        label = currentOrder.get(pos).getSize();
         holder.productDetailsLabel2.setText(label);
         holder.productDetailsLabel2.setTypeface(FontHelper.antonTypeface(context));
         holder.productDetailsLabel2.setTextColor(currentOrder.get(pos).getCategory().getColor());
 
-        label = currentOrder.get(pos).getDescription()[3];
+        label = currentOrder.get(pos).getQuantity() + " lbs.";
         holder.productDetailsLabel3.setText(label);
         holder.productDetailsLabel3.setTypeface(FontHelper.antonTypeface(context));
         holder.productDetailsLabel3.setTextColor(currentOrder.get(pos).getCategory().getColor());
 
-        label = currentOrder.get(pos).getDescription()[4];
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        if (!currentOrder.get(pos).getPrice().isEmpty()) {
+            label = numberFormat.format(Double.parseDouble(currentOrder.get(pos).getPrice()));
+        }
+        else
+            label = "$0.00";
         holder.productDetailsLabel4.setText(label);
         holder.productDetailsLabel4.setTypeface(FontHelper.antonTypeface(context));
         holder.productDetailsLabel4.setTextColor(currentOrder.get(pos).getCategory().getColor());

@@ -56,6 +56,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             }
         };
 
+
         //setupViews
         loginButton = findViewById(R.id.loginButton);
         registerButton = findViewById(R.id.registerButton);
@@ -132,8 +133,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 positive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        signIn(emailEdit.getText().toString(), passwordEdit.getText().toString());
-                        input.cancel();
+                        if (credentialsAreComplete()) {
+                            signIn(emailEdit.getText().toString(), passwordEdit.getText().toString());
+                            input.cancel();
+                        }
                     }
                 });
                 break;
@@ -149,8 +152,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 positive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        createAccount(emailEdit.getText().toString(), passwordEdit.getText().toString());
-                        input.cancel();
+                        if (credentialsAreComplete()) {
+                            createAccount(emailEdit.getText().toString(), passwordEdit.getText().toString());
+                            input.cancel();
+                        }
                     }
                 });
                 break;
@@ -163,8 +168,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 positive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        forgotPassword(emailEdit.getText().toString());
-                        input.cancel();
+                        if (credentialsAreComplete()) {
+                            forgotPassword(emailEdit.getText().toString());
+                            input.cancel();
+                        }
                     }
                 });
                 break;

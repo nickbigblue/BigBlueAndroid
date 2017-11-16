@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 
 public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHolder> {
 
-    private final ArrayList<News> recentNews;
+    private ArrayList<News> recentNews = new ArrayList<News>(1);
     private final OnListFragmentInteractionListener newsInteractionListener;
 
     public NewsViewAdapter(ArrayList<News> items, OnListFragmentInteractionListener listener) {
@@ -55,7 +55,10 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return recentNews.size();
+        if (recentNews != null) {
+            return recentNews.size();
+        }
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

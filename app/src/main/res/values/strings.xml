@@ -59,6 +59,10 @@
                 Your order will be reviewed by your salesperson, who will then contact you to place your order officially.</string>
     <string name="clear_dialog_title">Clear current list?</string>
     <string name="clear_dialog_message">By clearing, you will remove all items in your current list. Do you still wish to continue?</string>
+    <string name="default_price">$0.00</string>
+    <string name="default_quantity">0 lbs.</string>
+    <string name="quantity_prompt">Please enter how many pounds of this fish you would like: </string>
+    <string name="price_prompt">Please enter your desired price per pound of this fish: </string>
     <string name="Tuna">Tuna H&amp;G Wild-Caught</string>
     <string name="Sword">Sword H&amp;G Wild-Caught</string>
     <string name="Mahi">Mahi H&amp;G Wild-Caught</string>
