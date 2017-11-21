@@ -6,10 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v4.app.Fragment;
@@ -24,10 +26,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
-import com.bigblueocean.nick.bigblueocean.Helpers.MoneyTextWatcher;
+import com.bigblueocean.nick.bigblueocean.Helpers.PostJSONTask;
 import com.bigblueocean.nick.bigblueocean.Helpers.SelectionHelper;
 import com.bigblueocean.nick.bigblueocean.Fragments.ChatFragment;
 import com.bigblueocean.nick.bigblueocean.Fragments.NewsFragment;
@@ -39,15 +42,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import com.bigblueocean.nick.bigblueocean.Model.Category;
 import com.bigblueocean.nick.bigblueocean.Model.News;
 import com.bigblueocean.nick.bigblueocean.Model.Product;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONException;
 import org.w3c.dom.Text;
 
 import in.goodiebag.carouselpicker.CarouselPicker;
@@ -56,12 +62,13 @@ public class HomeActivity extends AppCompatActivity implements
         ProdFragment.OnListFragmentInteractionListener, OrderFragment.OnListFragmentInteractionListener,
         NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInteractionListener {
 
-    private static FragmentStatePagerAdapter homeViewPagerAdapter;
+    private static ViewPagerAdapter homeViewPagerAdapter;
     private ViewPager homeViewPager;
     private static ArrayList<Product> currentOrder = new ArrayList<>();
     private static ArrayList<CarouselPicker.PickerItem> subPickerItem;
-    public static String userEmail;
-    public static Product dummyProd = new Product();
+    private static String userEmail;
+    private static Product dummyProd = new Product();
+    private TabLayout tabLayout;
 
     //METHODS FOR ACTIVITY LIFECYCLE AND FAB
     @Override
@@ -92,18 +99,21 @@ public class HomeActivity extends AppCompatActivity implements
         setSupportActionBar(homeToolbar);
 
         homeViewPager = (ViewPager) findViewById(R.id.container);
-        homeViewPagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager());
+        homeViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         homeViewPager.setAdapter(homeViewPagerAdapter);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(homeViewPager, false);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(homeViewPager);
+        tabLayout.getTabAt(0).setIcon(R.drawable.news);
+        tabLayout.getTabAt(1).setIcon(R.drawable.add_item);
+        tabLayout.getTabAt(2).setIcon(R.drawable.list);
+        tabLayout.getTabAt(3).setIcon(R.drawable.chat);
 
         if (this.getIntent().hasExtra("currentItem"))
             homeViewPager.setCurrentItem(Integer.parseInt(this.getIntent().getStringExtra("currentItem")));
         else
             homeViewPager.setCurrentItem(1);
         homeViewPager.setOffscreenPageLimit(0);
-
     }
 
     @Override
@@ -131,6 +141,10 @@ public class HomeActivity extends AppCompatActivity implements
             currentOrder = new ArrayList<>();
         }
 
+//        tabLayout.getTabAt(0).setIcon(R.drawable.news);
+//        tabLayout.getTabAt(1).setIcon(R.drawable.add_item);
+//        tabLayout.getTabAt(2).setIcon(R.drawable.list);
+//        tabLayout.getTabAt(3).setIcon(R.drawable.chat);
     }
 
     @Override
@@ -227,17 +241,17 @@ public class HomeActivity extends AppCompatActivity implements
 
         ImageView iv = dialog.findViewById(R.id.dialog_image);
         iv.setImageBitmap(BitmapFactory.decodeResource(dialog.getContext().getResources(), cat.getImage()));
-        iv.setBackgroundColor(cat.getColor());
+        iv.setBackgroundColor(Color.parseColor(cat.getColor()));
 
         final TextView infoLabel = dialog.findViewById(R.id.dialog_info_label);
         infoLabel.setVisibility(View.INVISIBLE);
 
         final EditText qtyField = dialog.findViewById(R.id.dialog_edit_text2);
-        qtyField.setTextColor(cat.getColor());
+        qtyField.setTextColor(Color.parseColor(cat.getColor()));
         qtyField.setVisibility(View.INVISIBLE);
 
         final EditText priceField = dialog.findViewById(R.id.dialog_edit_text1);
-        priceField.setTextColor(cat.getColor());
+        priceField.setTextColor(Color.parseColor(cat.getColor()));
         priceField.setVisibility(View.INVISIBLE);
 
         ////MAIN PICKER
@@ -297,28 +311,38 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onPageSelected(int position) {
                 String s = mainPickerItem.get(position).getText();
-                dummyProd.setQuantity(qtyField.getText().toString());
-                dummyProd.setPrice(priceField.getText().toString());
+                if (!qtyField.getText().toString().isEmpty() &&
+                        !qtyField.getText().toString().equalsIgnoreCase(dummyProd.getQuantity()))
+                    dummyProd.setQuantity(qtyField.getText().toString());
+                if (!priceField.getText().toString().isEmpty() &&
+                        !priceField.getText().toString().equalsIgnoreCase(dummyProd.getPrice()))
+                    dummyProd.setPrice(priceField.getText().toString());
 
                 if (s.equalsIgnoreCase("Quantity")){
                     subPickerItem = new ArrayList<>();
                     infoLabel.setText(R.string.quantity_prompt);
                     infoLabel.setVisibility(View.VISIBLE);
                     qtyField.setVisibility(View.VISIBLE);
+                    qtyField.setEnabled(true);
                     priceField.setVisibility(View.INVISIBLE);
+                    priceField.setEnabled(false);
                 }
                 else if (s.equalsIgnoreCase("($.$$)")){
                     subPickerItem = new ArrayList<>();
                     infoLabel.setText(R.string.price_prompt);
                     infoLabel.setVisibility(View.VISIBLE);
                     priceField.setVisibility(View.VISIBLE);
+                    priceField.setEnabled(true);
                     qtyField.setVisibility(View.INVISIBLE);
+                    qtyField.setEnabled(false);
                 }
                 else {
                     subPickerItem = getSubPicker(tag,s);
                     infoLabel.setVisibility(View.INVISIBLE);
                     qtyField.setVisibility(View.INVISIBLE);
+                    qtyField.setEnabled(false);
                     priceField.setVisibility(View.INVISIBLE);
+                    priceField.setEnabled(false);
                 }
                 CarouselPicker.CarouselViewAdapter subTextAdapter;
                 subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
@@ -364,13 +388,15 @@ public class HomeActivity extends AppCompatActivity implements
         });
 
         Button dialogAddButton = (Button) dialog.findViewById(R.id.dialog_add_button);
-        dialogAddButton.setTextColor(cat.getColor());
+        dialogAddButton.setTextColor(Color.parseColor(cat.getColor()));
         dialogAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (currentOrder.size() <= 50){
-                    dummyProd.setQuantity(qtyField.getText().toString());
-                    dummyProd.setPrice(priceField.getText().toString());
+                    if (!qtyField.getText().toString().isEmpty())
+                        dummyProd.setQuantity(qtyField.getText().toString());
+                    if (!priceField.getText().toString().isEmpty())
+                        dummyProd.setPrice(priceField.getText().toString());
                     currentOrder.add(dummyProd);
                 }
                 else {
@@ -383,7 +409,7 @@ public class HomeActivity extends AppCompatActivity implements
         });
 
         Button dialogCancelButton = (Button) dialog.findViewById(R.id.dialog_cancel_button);
-        dialogCancelButton.setTextColor(cat.getColor());
+        dialogCancelButton.setTextColor(Color.parseColor(cat.getColor()));
         dialogCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -391,6 +417,9 @@ public class HomeActivity extends AppCompatActivity implements
             }
         });
 
+        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.999);
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setLayout(width, height);
         return dialog;
     }
 
@@ -406,19 +435,21 @@ public class HomeActivity extends AppCompatActivity implements
         dummyProd.setPrice(prod.getPrice());
         dummyProd.setQuantity(prod.getQuantity());
 
-
         ImageView iv = dialog.findViewById(R.id.dialog_image);
         iv.setImageBitmap(BitmapFactory.decodeResource(dialog.getContext().getResources(), prod.getCategory().getImage()));
-        iv.setBackgroundColor(prod.getCategory().getColor());
+        iv.setBackgroundColor(Color.parseColor(prod.getCategory().getColor()));
+
+        final TextView infoLabel = dialog.findViewById(R.id.dialog_info_label);
+        infoLabel.setVisibility(View.INVISIBLE);
 
         final EditText qtyField = dialog.findViewById(R.id.dialog_edit_text2);
-        qtyField.setText(dummyProd.getPrice());
-        qtyField.setTextColor(prod.getCategory().getColor());
+        qtyField.setText(dummyProd.getQuantity());
+        qtyField.setTextColor(Color.parseColor(prod.getCategory().getColor()));
         qtyField.setVisibility(View.INVISIBLE);
 
         final EditText priceField = dialog.findViewById(R.id.dialog_edit_text1);
-        qtyField.setText(dummyProd.getQuantity());
-        priceField.setTextColor(prod.getCategory().getColor());
+        priceField.setText(dummyProd.getPrice());
+        priceField.setTextColor(Color.parseColor(prod.getCategory().getColor()));
         priceField.setVisibility(View.INVISIBLE);
 
         ////MAIN PICKER
@@ -478,23 +509,39 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onPageSelected(int position) {
                 String s = mainPickerItem.get(position).getText();
-                dummyProd.setQuantity(qtyField.getText().toString());
-                dummyProd.setPrice(priceField.getText().toString());
+
+                if (!qtyField.getText().toString().isEmpty() &&
+                        !qtyField.getText().toString().equalsIgnoreCase(dummyProd.getQuantity()))
+                    dummyProd.setQuantity(qtyField.getText().toString());
+                if (!priceField.getText().toString().isEmpty() &&
+                        !priceField.getText().toString().equalsIgnoreCase(dummyProd.getPrice()))
+                    dummyProd.setPrice(priceField.getText().toString());
 
                 if (s.equalsIgnoreCase("Quantity")){
                     subPickerItem = new ArrayList<>();
+                    infoLabel.setText(R.string.quantity_prompt);
+                    infoLabel.setVisibility(View.VISIBLE);
                     qtyField.setVisibility(View.VISIBLE);
+                    qtyField.setEnabled(true);
                     priceField.setVisibility(View.INVISIBLE);
+                    priceField.setEnabled(false);
                 }
                 else if (s.equalsIgnoreCase("($.$$)")){
                     subPickerItem = new ArrayList<>();
+                    infoLabel.setText(R.string.price_prompt);
+                    infoLabel.setVisibility(View.VISIBLE);
                     priceField.setVisibility(View.VISIBLE);
+                    priceField.setEnabled(true);
                     qtyField.setVisibility(View.INVISIBLE);
+                    qtyField.setEnabled(false);
                 }
                 else {
                     subPickerItem = getSubPicker(tag,s);
+                    infoLabel.setVisibility(View.INVISIBLE);
                     qtyField.setVisibility(View.INVISIBLE);
+                    qtyField.setEnabled(false);
                     priceField.setVisibility(View.INVISIBLE);
+                    priceField.setEnabled(false);
                 }
                 CarouselPicker.CarouselViewAdapter subTextAdapter;
                 subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
@@ -542,7 +589,7 @@ public class HomeActivity extends AppCompatActivity implements
 
         Button editDialogConfirmButton = (Button) dialog.findViewById(R.id.dialog_add_button);
         editDialogConfirmButton.setText(R.string.dialog_confirm_changes);
-        editDialogConfirmButton.setTextColor(prod.getCategory().getColor());
+        editDialogConfirmButton.setTextColor(Color.parseColor(prod.getCategory().getColor()));
         editDialogConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -556,7 +603,7 @@ public class HomeActivity extends AppCompatActivity implements
 
         Button editDialogDeleteButton = (Button) dialog.findViewById(R.id.dialog_cancel_button);
         editDialogDeleteButton.setText(R.string.dialog_delete);
-        editDialogDeleteButton.setTextColor(prod.getCategory().getColor());
+        editDialogDeleteButton.setTextColor(Color.parseColor(prod.getCategory().getColor()));
         editDialogDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -566,6 +613,9 @@ public class HomeActivity extends AppCompatActivity implements
             }
         });
 
+        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.999);
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setLayout(width, height);
         return dialog;
     }
 
@@ -582,7 +632,8 @@ public class HomeActivity extends AppCompatActivity implements
                         temp = S1.getSwordGrades();
                         break;
                     default:
-                        temp = S1.getUngraded();
+                        temp = new ArrayList<>();
+                        temp.add(new CarouselPicker.TextItem("Ungraded", 10));
                 }
                 break;
             case "Species":
@@ -679,11 +730,7 @@ public class HomeActivity extends AppCompatActivity implements
             confirmOrderDialogBuilder.setPositiveButton(R.string.dialog_continue, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    //SEND currentOrder TO JASON, ASK FOR CONFIRMATION
-                    //
-                    //
-                    //
-                    boolean success = sendOrder();
+                    boolean success = sendOrder(currentOrder);
                     if (success) {
                         currentOrder.clear();
                         homeViewPagerAdapter.notifyDataSetChanged();
@@ -693,6 +740,7 @@ public class HomeActivity extends AppCompatActivity implements
                         Toast.makeText(HomeActivity.this,
                                 R.string.submission_notconfirmed, Toast.LENGTH_LONG).show();
                     }
+                    Log.e("Order submit log", Boolean.toString(success));
                 }
             });
             confirmOrderDialogBuilder.setNegativeButton(R.string.dialog_cancel_button, new DialogInterface.OnClickListener() {
@@ -707,26 +755,33 @@ public class HomeActivity extends AppCompatActivity implements
     }
 
     //BIGBLUE DATABASE METHODS
-    public boolean sendOrder(){
-        boolean confirmation =  true;
-
-        //SEND DATA TO DATA BASE AND ASK FOR A CONFIRMATION SOMEHOW
-
+    public boolean sendOrder(ArrayList<Product> order){
+        boolean confirmation =  false;
+        String json = new Gson().toJson(order);
+        String[] params = {getResources().getString(R.string.order_tag), json};
+        PostJSONTask task = new PostJSONTask();
+        task.execute(params);
+        try{
+            confirmation = Boolean.parseBoolean(task.get());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         return confirmation;
     }
 
     //CUSTOMIZED PAGER ADAPTER FOR TABBED ACTIVITY FUNCTION
-    public static class FragmentStatePagerAdapter extends FragmentPagerAdapter {
-        private String tabTitles[] = new String[] { "News", "Product", "Order", "Chat" };
+    public static class ViewPagerAdapter extends FragmentStatePagerAdapter {
+        private String tabTitles[] = new String[] { "News", "Products", "My Order", "Chat" };
 
-        public FragmentStatePagerAdapter(FragmentManager fragmentManager){
+        public ViewPagerAdapter(FragmentManager fragmentManager){
             super(fragmentManager);
         }
 
         @Override
         public Fragment getItem(int position) {
             Fragment intendedFragment;
-
             switch (position){
                 case 0:
                     intendedFragment = NewsFragment.newInstance(1);
@@ -759,8 +814,8 @@ public class HomeActivity extends AppCompatActivity implements
 
         @Override
         public CharSequence getPageTitle(int position) {
-//            return tabTitles[position];
-            return null;
+            return tabTitles[position];
         }
+
     };
 }

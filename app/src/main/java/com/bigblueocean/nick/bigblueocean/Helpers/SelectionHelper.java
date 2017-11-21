@@ -22,6 +22,7 @@ public class SelectionHelper {
 
         public ArrayList<CarouselPicker.PickerItem> getTunaSpecies(){
             ArrayList<CarouselPicker.PickerItem> tunaSpecies = new ArrayList<>();
+            tunaSpecies.add(new CarouselPicker.TextItem("No Pref.", 8));
             tunaSpecies.add(new CarouselPicker.TextItem("Big Eye", 8));
             tunaSpecies.add(new CarouselPicker.TextItem("Yellow Fin", 8));
             tunaSpecies.add(new CarouselPicker.TextItem("Blue Fin", 8));
@@ -30,6 +31,7 @@ public class SelectionHelper {
 
         public ArrayList<CarouselPicker.PickerItem> getTunaGrades(){
             ArrayList<CarouselPicker.PickerItem> tunaGrades = new ArrayList<>();
+            tunaGrades.add(new CarouselPicker.TextItem("No Pref.", 8));
             tunaGrades.add(new CarouselPicker.TextItem("2", 10));
             tunaGrades.add(new CarouselPicker.TextItem("2+", 10));
             tunaGrades.add(new CarouselPicker.TextItem("1", 10));
@@ -39,6 +41,7 @@ public class SelectionHelper {
 
         public ArrayList<CarouselPicker.PickerItem> getTunaSizes(){
             ArrayList<CarouselPicker.PickerItem> tunaSizes = new ArrayList<>();
+            tunaSizes.add(new CarouselPicker.TextItem("No Pref.", 8));
             tunaSizes.add(new CarouselPicker.TextItem("40+", 10));
             tunaSizes.add(new CarouselPicker.TextItem("60+", 10));
             tunaSizes.add(new CarouselPicker.TextItem("100+", 10));
@@ -60,6 +63,7 @@ public class SelectionHelper {
 
     public ArrayList<CarouselPicker.PickerItem> getSwordGrades(){
         ArrayList<CarouselPicker.PickerItem> swordGrades = new ArrayList<>();
+        swordGrades.add(new CarouselPicker.TextItem("No Pref.", 8));
         swordGrades.add(new CarouselPicker.TextItem("BR", 10));
         swordGrades.add(new CarouselPicker.TextItem("R-", 10));
         swordGrades.add(new CarouselPicker.TextItem("R", 10));
@@ -69,6 +73,7 @@ public class SelectionHelper {
 
     public ArrayList<CarouselPicker.PickerItem> getSwordSizes(){
         ArrayList<CarouselPicker.PickerItem> swordSizes = new ArrayList<>();
+        swordSizes.add(new CarouselPicker.TextItem("No Pref.", 8));
         swordSizes.add(new CarouselPicker.TextItem("40+", 10));
         swordSizes.add(new CarouselPicker.TextItem("60+", 10));
         swordSizes.add(new CarouselPicker.TextItem("100+", 10));
@@ -88,6 +93,7 @@ public class SelectionHelper {
 
     public ArrayList<CarouselPicker.PickerItem> getMahiSizes(){
         ArrayList<CarouselPicker.PickerItem> mahiSizes = new ArrayList<>();
+        mahiSizes.add(new CarouselPicker.TextItem("No Pref.", 8));
         mahiSizes.add(new CarouselPicker.TextItem("40+", 10));
         mahiSizes.add(new CarouselPicker.TextItem("60+", 10));
         mahiSizes.add(new CarouselPicker.TextItem("100+", 10));
@@ -107,6 +113,7 @@ public class SelectionHelper {
 
     public ArrayList<CarouselPicker.PickerItem> getWahooSizes(){
         ArrayList<CarouselPicker.PickerItem> wahooSizes = new ArrayList<>();
+        wahooSizes.add(new CarouselPicker.TextItem("No Pref.", 8));
         wahooSizes.add(new CarouselPicker.TextItem("40+", 10));
         wahooSizes.add(new CarouselPicker.TextItem("60+", 10));
         wahooSizes.add(new CarouselPicker.TextItem("100+", 10));
@@ -127,6 +134,7 @@ public class SelectionHelper {
 
     public ArrayList<CarouselPicker.PickerItem> getGrouperSpecies(){
         ArrayList<CarouselPicker.PickerItem> grouperSpecies = new ArrayList<>();
+        grouperSpecies.add(new CarouselPicker.TextItem("No Pref.", 8));
         grouperSpecies.add(new CarouselPicker.TextItem("Red", 10));
         grouperSpecies.add(new CarouselPicker.TextItem("Black", 10));
         grouperSpecies.add(new CarouselPicker.TextItem("Dusky", 10));
@@ -135,6 +143,7 @@ public class SelectionHelper {
 
     public ArrayList<CarouselPicker.PickerItem> getGrouperSizes(){
         ArrayList<CarouselPicker.PickerItem> grouperSizes = new ArrayList<>();
+        grouperSizes.add(new CarouselPicker.TextItem("No Pref.", 8));
         grouperSizes.add(new CarouselPicker.TextItem("40+", 10));
         grouperSizes.add(new CarouselPicker.TextItem("60+", 10));
         grouperSizes.add(new CarouselPicker.TextItem("100+", 10));
@@ -155,6 +164,7 @@ public class SelectionHelper {
 
     public ArrayList<CarouselPicker.PickerItem> getSalmonSpecies(){
         ArrayList<CarouselPicker.PickerItem> salmonSpecies = new ArrayList<>();
+        salmonSpecies.add(new CarouselPicker.TextItem("No Pref.", 8));
         salmonSpecies.add(new CarouselPicker.TextItem("H&G", 10));
         salmonSpecies.add(new CarouselPicker.TextItem("Fillet", 10));
         return salmonSpecies;
@@ -162,6 +172,7 @@ public class SelectionHelper {
 
     public ArrayList<CarouselPicker.PickerItem> getSalmonHgSizes(){
         ArrayList<CarouselPicker.PickerItem> salmonSizes = new ArrayList<>();
+        salmonSizes.add(new CarouselPicker.TextItem("No Pref.", 8));
         salmonSizes.add(new CarouselPicker.TextItem("40+", 10));
         salmonSizes.add(new CarouselPicker.TextItem("60+", 10));
         salmonSizes.add(new CarouselPicker.TextItem("100+", 10));
@@ -171,6 +182,7 @@ public class SelectionHelper {
 
     public ArrayList<CarouselPicker.PickerItem> getSalmonFilletSizes(){
         ArrayList<CarouselPicker.PickerItem> salmonSizes = new ArrayList<>();
+        salmonSizes.add(new CarouselPicker.TextItem("No Pref.", 8));
         salmonSizes.add(new CarouselPicker.TextItem("10+", 10));
         salmonSizes.add(new CarouselPicker.TextItem("20+", 10));
         salmonSizes.add(new CarouselPicker.TextItem("30+", 10));
@@ -180,16 +192,12 @@ public class SelectionHelper {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     public ArrayList<CarouselPicker.PickerItem> getRegions(){
-        ArrayList<CarouselPicker.PickerItem> tunaRegions = new ArrayList<>();
-        tunaRegions.add(new CarouselPicker.TextItem("Caribbean", 8));
-        tunaRegions.add(new CarouselPicker.TextItem("Southeast Asia", 8));
-        tunaRegions.add(new CarouselPicker.TextItem("South America", 8));
-        return tunaRegions;
+        ArrayList<CarouselPicker.PickerItem> regionChoices = new ArrayList<>();
+        regionChoices.add(new CarouselPicker.TextItem("No Pref.", 8));
+        regionChoices.add(new CarouselPicker.TextItem("Caribbean", 8));
+        regionChoices.add(new CarouselPicker.TextItem("Southeast Asia", 8));
+        regionChoices.add(new CarouselPicker.TextItem("South America", 8));
+        return regionChoices;
     }
 
-    public ArrayList<CarouselPicker.PickerItem> getUngraded(){
-        ArrayList<CarouselPicker.PickerItem> noPrefGrade = new ArrayList<>();
-        noPrefGrade.add(new CarouselPicker.TextItem("N/A", 8));
-        return noPrefGrade;
-    }
 }

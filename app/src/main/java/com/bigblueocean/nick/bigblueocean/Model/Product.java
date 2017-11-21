@@ -11,7 +11,6 @@ import java.util.Locale;
 public class Product {
 
     private Category category;
-    private String [] productDetails = new String[5];
     private String species;
     private String region;
     private String size;
@@ -31,11 +30,6 @@ public class Product {
         this.size = sizes;
         this.quantity = quantity;
         this.price = price;
-        this.productDetails[0] = this.region;
-        this.productDetails[1] = this.grade;
-        this.productDetails[2] = this.size;
-        this.productDetails[3] = this.quantity;
-        this.productDetails[4] = this.price;
 
         if(!(category.getTag().equalsIgnoreCase("Tuna") || category.getTag().equalsIgnoreCase("Sword"))){
             this.grade = "U";
@@ -50,12 +44,8 @@ public class Product {
         this.category = category;
     }
 
-    public String [] getDescription() {
-        return productDetails;
-    }
-
     public String getSpecies(){
-        return this.species;
+        return species;
     }
 
     public String getRegion() {

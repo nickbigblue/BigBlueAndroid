@@ -118,8 +118,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     public Dialog generateDialog(int id){
         final Dialog input = new Dialog(LoginActivity.this);
-        int width = 0;
-        int height = 0;
         Button positive;
         Button negative = new Button(input.getContext());
 
@@ -183,8 +181,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             }
         });
 
-        width = (int)(getResources().getDisplayMetrics().widthPixels*0.999);
-        height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.999);
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         input.getWindow().setLayout(width, height);
         return input;
     }

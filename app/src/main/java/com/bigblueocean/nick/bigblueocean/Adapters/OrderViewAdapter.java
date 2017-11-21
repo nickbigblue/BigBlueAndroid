@@ -2,8 +2,8 @@ package com.bigblueocean.nick.bigblueocean.Adapters;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +42,12 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
         context = holder.productCell.getContext();
         final int pos = position;
         holder.currentProduct = currentOrder.get(pos);
-        holder.productTitle.setBackgroundColor(currentOrder.get(pos).getCategory().getColor());
+        holder.productTitle.setBackgroundColor(Color.parseColor(currentOrder.get(pos).getCategory().getColor()));
 
         holder.productTitle.setText(currentOrder.get(pos).getCategory().getTag());
         holder.productTitle.setTypeface(FontHelper.antonTypeface(context));
 
-        holder.productSubtitle.setBackgroundColor(currentOrder.get(pos).getCategory().getColor());
+        holder.productSubtitle.setBackgroundColor(Color.parseColor(currentOrder.get(pos).getCategory().getColor()));
         if (currentOrder.get(pos).getSpecies() != null && !currentOrder.get(pos).getSpecies().equalsIgnoreCase("N/P") ){
             holder.productSubtitle.setText(currentOrder.get(pos).getRegion()+" " +currentOrder.get(pos).getSpecies());
         }
@@ -58,17 +58,17 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
         String label = currentOrder.get(pos).getGrade();
         holder.productDetailsLabel1.setText(label);
         holder.productDetailsLabel1.setTypeface(FontHelper.antonTypeface(context));
-        holder.productDetailsLabel1.setTextColor(currentOrder.get(pos).getCategory().getColor());
+        holder.productDetailsLabel1.setTextColor(Color.parseColor(currentOrder.get(pos).getCategory().getColor()));
 
         label = currentOrder.get(pos).getSize();
         holder.productDetailsLabel2.setText(label);
         holder.productDetailsLabel2.setTypeface(FontHelper.antonTypeface(context));
-        holder.productDetailsLabel2.setTextColor(currentOrder.get(pos).getCategory().getColor());
+        holder.productDetailsLabel2.setTextColor(Color.parseColor(currentOrder.get(pos).getCategory().getColor()));
 
         label = currentOrder.get(pos).getQuantity() + " lbs.";
         holder.productDetailsLabel3.setText(label);
         holder.productDetailsLabel3.setTypeface(FontHelper.antonTypeface(context));
-        holder.productDetailsLabel3.setTextColor(currentOrder.get(pos).getCategory().getColor());
+        holder.productDetailsLabel3.setTextColor(Color.parseColor(currentOrder.get(pos).getCategory().getColor()));
 
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
         if (!currentOrder.get(pos).getPrice().isEmpty()) {
@@ -78,14 +78,13 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
             label = "$0.00";
         holder.productDetailsLabel4.setText(label);
         holder.productDetailsLabel4.setTypeface(FontHelper.antonTypeface(context));
-        holder.productDetailsLabel4.setTextColor(currentOrder.get(pos).getCategory().getColor());
+        holder.productDetailsLabel4.setTextColor(Color.parseColor(currentOrder.get(pos).getCategory().getColor()));
 
 
         holder.productCell.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 if (orderInteractionListener != null) {
-                    Log.e("adapter","On CLick listener: "+currentOrder.get(pos).getCategory().getTitle());
                     orderInteractionListener.onListFragmentInteraction(holder.currentProduct);
                 }
                 return true;

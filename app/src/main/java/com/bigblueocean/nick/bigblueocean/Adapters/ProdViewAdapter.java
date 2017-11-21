@@ -1,6 +1,7 @@
 package com.bigblueocean.nick.bigblueocean.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,11 +41,11 @@ public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHo
         context = holder.categoryCell.getContext();
         final int pos = position;
         holder.currentCategory = categoryArrayList.get(pos);
-        holder.categoryImage.setBackgroundColor(holder.currentCategory.getColor());
+        holder.categoryImage.setBackgroundColor(Color.parseColor(holder.currentCategory.getColor()));
         holder.categoryImage.setImageResource(categoryArrayList.get(pos).getImage());
         holder.categoryTitle.setText(categoryArrayList.get(pos).getTitle());
         holder.categoryTitle.setTypeface(FontHelper.antonTypeface(context));
-        holder.categoryTitle.setTextColor(categoryArrayList.get(pos).getColor());
+        holder.categoryTitle.setTextColor(Color.parseColor(categoryArrayList.get(pos).getColor()));
 
         holder.categoryCell.setOnClickListener(new View.OnClickListener() {
             @Override

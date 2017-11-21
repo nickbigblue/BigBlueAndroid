@@ -30,7 +30,6 @@ public class NewsFragment extends Fragment {
     private static int newsColumnCount = 1;
     private OnListFragmentInteractionListener newsFragmentListener;
     private ArrayList<News> recentNews;
-    private String dataSourceURL = "http://bigblueocean.net/jb2/public/bigblueapp/news";
 
     public NewsFragment() {
 
@@ -79,7 +78,7 @@ public class NewsFragment extends Fragment {
     public ArrayList<News> getRecentNews() {
         Type dataType = new TypeToken<List<News>>(){}.getType();
         ReadJSONFromURLTask task = new ReadJSONFromURLTask();
-        task.execute(dataSourceURL);
+        task.execute("http://bigblueocean.net/jb2/public/bigblueapp/news");
         String dataJSON = null;
             try {
                 dataJSON = task.get();

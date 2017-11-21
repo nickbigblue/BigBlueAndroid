@@ -69,5 +69,6 @@
     <string name="Wahoo">Wahoo H&amp;G Wild-Caught</string>
     <string name="Grouper">Grouper H&amp;G Wild-Caught</string>
     <string name="Salmon">Salmon H&amp;G Wild-Caught</string>
-
+    <string name="order_tag">ORD</string>
+    <string name="news_tag">NEWS</string>
 </resources>

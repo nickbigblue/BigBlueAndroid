@@ -17,8 +17,6 @@ import java.net.URL;
 
 public class ReadJSONFromURLTask extends AsyncTask<String, Void, String> {
 
-    private String data;
-
     protected String doInBackground(String... urlString) {
         String json = "";
         BufferedReader reader = null;
@@ -37,15 +35,7 @@ public class ReadJSONFromURLTask extends AsyncTask<String, Void, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.data = json;
         return json;
     }
 
-    protected void onPostExecute(String result) {
-        this.data = result;
-    }
-
-    public String getData() {
-        return this.data;
-    }
 }
