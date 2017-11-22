@@ -52,6 +52,7 @@ import com.bigblueocean.nick.bigblueocean.Model.Category;
 import com.bigblueocean.nick.bigblueocean.Model.News;
 import com.bigblueocean.nick.bigblueocean.Model.Product;
 import com.google.gson.reflect.TypeToken;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import org.json.JSONException;
 import org.w3c.dom.Text;
@@ -209,20 +210,34 @@ public class HomeActivity extends AppCompatActivity implements
 
     @Override
     public void onListFragmentInteraction(News item){
-        Intent toNewsPage = new Intent(this, NewsActivity.class);
-        toNewsPage.putExtra("newsID", ""+item.getNewsID());
-        toNewsPage.putExtra("selectedNews", new Gson().toJson(item));
-        startActivity(toNewsPage);
+        if (hasWindowFocus()) {
+            Intent toNewsPage = new Intent(this, NewsActivity.class);
+            toNewsPage.putExtra("newsID", "" + item.getNewsID());
+            toNewsPage.putExtra("selectedNews", new Gson().toJson(item));
+            startActivity(toNewsPage);
+        }
     }
 
     @Override
-    public void onListFragmentInteraction(Product item){
-        editProductDialog(item).show();
+    public void onListFragmentInteraction(Product item) {
+        if (hasWindowFocus()){
+            Dialog input = editProductDialog(item);
+            int width = (int)(getResources().getDisplayMetrics().widthPixels*0.999);
+            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            input.getWindow().setLayout(width, height);
+            input.show();
+        }
     }
 
     @Override
     public void onListFragmentInteraction(Category item){
-        addItemDialog(item).show();
+        if (hasWindowFocus()) {
+            Dialog input = addItemDialog(item);
+            int width = (int)(getResources().getDisplayMetrics().widthPixels*0.999);
+            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            input.getWindow().setLayout(width, height);
+            input.show();
+        }
     }
 
     //METHODS FOR DIALOGS
@@ -697,60 +712,69 @@ public class HomeActivity extends AppCompatActivity implements
     //METHODS FOR MANAGING CURRENT ORDER
     public void clearOrder(){
         if(!currentOrder.isEmpty()) {
-            final AlertDialog clearOrderDialog;
-            AlertDialog.Builder clearOrderDialogBuilder;
-            clearOrderDialogBuilder = new AlertDialog.Builder(HomeActivity.this, R.style.AlertDialogTheme);
-            clearOrderDialogBuilder.setTitle(R.string.clear_dialog_title);
-            clearOrderDialogBuilder.setMessage(R.string.clear_dialog_message);
-            clearOrderDialogBuilder.setPositiveButton(R.string.dialog_continue, new DialogInterface.OnClickListener() {
+            final SweetAlertDialog clearOrderDialog =
+                    new SweetAlertDialog(HomeActivity.this, SweetAlertDialog.WARNING_TYPE);
+            clearOrderDialog.setTitleText(getResources().getString(R.string.clear_dialog_title));
+            clearOrderDialog.setContentText(getResources().getString(R.string.clear_dialog_message));
+            clearOrderDialog.setConfirmText("Clear");
+            clearOrderDialog.setCancelText("Cancel");
+            clearOrderDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    clearOrderDialog.dismissWithAnimation();
                     currentOrder.clear();
                     homeViewPagerAdapter.notifyDataSetChanged();
                 }
             });
-            clearOrderDialogBuilder.setNegativeButton(R.string.dialog_cancel_button, new DialogInterface.OnClickListener() {
+            clearOrderDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    clearOrderDialog.dismissWithAnimation();
                 }
             });
-            clearOrderDialog = clearOrderDialogBuilder.create();
             clearOrderDialog.show();
         }
     }
 
     public void submitOrder(){
         if(!currentOrder.isEmpty()) {
-            final AlertDialog confirmOrderDialog;
-            AlertDialog.Builder confirmOrderDialogBuilder;
-            confirmOrderDialogBuilder = new AlertDialog.Builder(HomeActivity.this, R.style.AlertDialogTheme);
-            confirmOrderDialogBuilder.setTitle(R.string.submit_dialog_title);
-            confirmOrderDialogBuilder.setMessage(R.string.submit_dialog_message);
-            confirmOrderDialogBuilder.setPositiveButton(R.string.dialog_continue, new DialogInterface.OnClickListener() {
+            final SweetAlertDialog submitOrderDialog =
+                    new SweetAlertDialog(HomeActivity.this, SweetAlertDialog.WARNING_TYPE);
+            submitOrderDialog.setTitleText(getResources().getString(R.string.submit_dialog_title));
+            submitOrderDialog.setContentText(getResources().getString(R.string.submit_dialog_message));
+            submitOrderDialog.setConfirmText("Submit");
+            submitOrderDialog.setCancelText("Cancel");
+            submitOrderDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
                     boolean success = sendOrder(currentOrder);
                     if (success) {
+                        submitOrderDialog.dismissWithAnimation();
                         currentOrder.clear();
                         homeViewPagerAdapter.notifyDataSetChanged();
-                        Toast.makeText(HomeActivity.this,
-                                R.string.submission_confirmed, Toast.LENGTH_LONG).show();
+                        SweetAlertDialog confirmOrderSubmitDialog =
+                                new SweetAlertDialog(HomeActivity.this, SweetAlertDialog.SUCCESS_TYPE);
+                        confirmOrderSubmitDialog.setTitleText("Order Submission");
+                        confirmOrderSubmitDialog.setContentText(getResources().getString(R.string.submission_confirmed));
+                        confirmOrderSubmitDialog.setConfirmText("OK");
+                        confirmOrderSubmitDialog.show();
                     } else {
-                        Toast.makeText(HomeActivity.this,
-                                R.string.submission_notconfirmed, Toast.LENGTH_LONG).show();
+                        SweetAlertDialog failedOrderSubmitDialog =
+                                new SweetAlertDialog(HomeActivity.this, SweetAlertDialog.ERROR_TYPE);
+                        failedOrderSubmitDialog.setTitleText("Order Submission");
+                        failedOrderSubmitDialog.setContentText(getResources().getString(R.string.submission_notconfirmed));
+                        failedOrderSubmitDialog.setConfirmText("OK");
+                        failedOrderSubmitDialog.show();
                     }
-                    Log.e("Order submit log", Boolean.toString(success));
                 }
             });
-            confirmOrderDialogBuilder.setNegativeButton(R.string.dialog_cancel_button, new DialogInterface.OnClickListener() {
+            submitOrderDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    submitOrderDialog.dismissWithAnimation();
                 }
             });
-            confirmOrderDialog = confirmOrderDialogBuilder.create();
-            confirmOrderDialog.show();
+            submitOrderDialog.show();
         }
     }
 

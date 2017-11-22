@@ -18,10 +18,9 @@
                                                         Upon submission of this form, an email will be sent to the
                                                         provided address allowing you to reset your password.</string>
     <string name="forgot_password">Forgot your password?</string>
-    <string name="auth_failed">Either account or password is invalid. Confirm wireless connection and try again.</string>
+    <string name="password_reset_sent">Password reset email has been sent. Proceed to email to reset you password.</string>
     <string name="login_verify_failed">Current account is not verified. Verify account via link sent to specified email address.</string>
-    <string name="create_failed">Account creation failed. Address is invalid or already in use.</string>
-    <string name="create_success">Account creation success. Verification email sent to: </string>
+    <string name="create_success">Account creation success. Verification email sent to:</string>
     <string name="email_sent">Verification email has been sent. Proceed to email for verification.</string>
     <string name="email_error">Email Address error. Verification Email has not been sent.</string>
     <string name="nonexistent_email">This email address is not linked to a Big Blue Ocean account.
@@ -36,9 +35,10 @@
     <string name="help_body_text">Welcome to the Big Blue Ocean mobile app. In this section, you can
                                   review the application\'s features in order to streamline your
                                   experience.  </string>
-    <string name="order_help">Select a type of fish and specify your needs. It will be added to your \"Products\" tab for review.</string>
-    <string name="news_help">Announcements and news updates presented by Big Blue Ocean.</string>
-    <string name="product_help">Review, edit, or clear your order. Submitting will send it to your salesperson for review.</string>
+    <string name="products_help">Here you can select a type of fish and specify your needs. It will be added to your \"My Order\" tab for review.</string>
+    <string name="news_help">Here you can view announcements and news updates presented by Big Blue Ocean.</string>
+    <string name="my_order_help">Here you can review, edit, or clear your order.
+        Submitting will send it to your salesperson for review. Try adding something from the \"Products\" tab!</string>
     <string name="chat_help">This ought to be null</string>
     <string name="region">Region</string>
     <string name="grade">Grade</string>
@@ -54,6 +54,7 @@
     <string name="dialog_confirm_changes">Confirm changes</string>
     <string name="dialog_continue">Continue</string>
     <string name="dialog_delete">Delete this item</string>
+    <string name="dialog_explanation">Swipe through the selections below to specify your needs.</string>
     <string name="submit_dialog_title">Confirm Submission</string>
     <string name="submit_dialog_message">By confirming, you will submit your current order list to your salesperson.
                 Your order will be reviewed by your salesperson, who will then contact you to place your order officially.</string>

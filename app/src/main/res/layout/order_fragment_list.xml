@@ -5,19 +5,30 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-<android.support.v7.widget.RecyclerView
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
-    android:name="com.bigblueocean.nick.bigblueocean.OrderFragment"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="5"
-    app:layoutManager="LinearLayoutManager"
-    tools:context="com.bigblueocean.nick.bigblueocean.Fragments.ProdFragment"
-    tools:listitem="@layout/order_fragment" >
+    <TextView
+        android:id="@+id/my_order_help_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="18dp"
+        android:textColor="@color/black_overlay"
+        android:text="@string/my_order_help"
+        android:textAlignment="center"
+        android:textSize="28sp"/>
 
-</android.support.v7.widget.RecyclerView>
+    <android.support.v7.widget.RecyclerView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/list"
+        android:name="com.bigblueocean.nick.bigblueocean.OrderFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.bigblueocean.nick.bigblueocean.Fragments.ProdFragment"
+        tools:listitem="@layout/order_fragment" >
+    </android.support.v7.widget.RecyclerView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

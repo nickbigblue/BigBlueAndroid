@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 
 import com.bigblueocean.nick.bigblueocean.Activities.HomeActivity;
@@ -41,10 +42,23 @@ public class OrderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.order_fragment_list, container, false);
-        RecyclerView recyclerView= (RecyclerView) view.findViewById(R.id.list);
+        RecyclerView recyclerView = view.findViewById(R.id.list);
         recyclerView.setAdapter(new OrderViewAdapter(currentOrder, orderFragmentListener));
-        Button submitButton = (Button) view.findViewById(R.id.order_submit);
-        Button clearButton = (Button) view.findViewById(R.id.order_clear);
+        Button submitButton = view.findViewById(R.id.order_submit);
+        Button clearButton = view.findViewById(R.id.order_clear);
+        TextView hint = view.findViewById(R.id.my_order_help_hint);
+        if (currentOrder.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            submitButton.setVisibility(View.GONE);
+            clearButton.setVisibility(View.GONE);
+            hint.setVisibility(View.VISIBLE);
+        }
+        else {
+            recyclerView.setVisibility(View.VISIBLE);
+            submitButton.setVisibility(View.VISIBLE);
+            clearButton.setVisibility(View.VISIBLE);
+            hint.setVisibility(View.GONE);
+        }
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
