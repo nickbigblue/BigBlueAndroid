@@ -2,15 +2,10 @@ package com.bigblueocean.nick.bigblueocean.Activities;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 public class LoginActivity extends Activity implements View.OnClickListener {
@@ -32,6 +28,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private FirebaseAuth.AuthStateListener loginAuthListener;
     private EditText emailEdit;
     private EditText passwordEdit;
+    private EditText companyName;
+    private EditText phoneNum;
     private TextView title;
     private Button loginButton;
     private Button registerButton;
@@ -131,7 +129,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 positive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (credentialsAreComplete()) {
+                        if (loginCredentialsAreComplete()) {
                             signIn(emailEdit.getText().toString(), passwordEdit.getText().toString());
                             input.cancel();
                         }
@@ -143,14 +141,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 input.setContentView(R.layout.register_dialog);
                 emailEdit = input.findViewById(R.id.emailLogin);
                 passwordEdit = input.findViewById(R.id.passwordLogin);
-                EditText companyName = input.findViewById(R.id.register_company_name);
-                EditText phoneNum = input.findViewById(R.id.register_phone);
+                companyName = input.findViewById(R.id.register_company_name);
+                phoneNum = input.findViewById(R.id.register_phone);
                 positive = input.findViewById(R.id.dialog_positive);
                 negative = input.findViewById(R.id.dialog_negative);
                 positive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (credentialsAreComplete()) {
+                        if (registerCredentialsAreComplete()) {
                             createAccount(emailEdit.getText().toString(), passwordEdit.getText().toString());
                             input.cancel();
                         }
@@ -166,7 +164,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 positive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (credentialsAreComplete()) {
+                        if (forgotCredentialsAreComplete()) {
                             forgotPassword(emailEdit.getText().toString());
                             input.cancel();
                         }
@@ -191,13 +189,16 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     public void createAccount(String email, String password){
         final String emailString = email;
-        if (!credentialsAreComplete()){
+        if (!registerCredentialsAreComplete()){
             return;
         }
         else if (!existsInBigBlueDatabase(email)){
-            Toast.makeText(LoginActivity.this, R.string.nonexistent_email,
-                    Toast.LENGTH_LONG).show();
-            return;
+            SweetAlertDialog existsEmailErrDialog =
+            new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE);
+            existsEmailErrDialog.setTitleText("Non-existent Email Address");
+            existsEmailErrDialog.setContentText(getResources().getString(R.string.nonexistent_email));
+            existsEmailErrDialog.setConfirmText("OK");
+            existsEmailErrDialog.show();
         }
         else {
             loginAuthenticator.createUserWithEmailAndPassword(email, password)
@@ -205,13 +206,21 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, R.string.create_failed,
-                                        Toast.LENGTH_SHORT).show();
+                                SweetAlertDialog loginSuccessErrDialog =
+                                new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE);
+                                loginSuccessErrDialog.setTitleText("Log In Failed");
+                                loginSuccessErrDialog.setContentText(getResources().getString(R.string.create_failed));
+                                loginSuccessErrDialog.setConfirmText("OK");
+                                loginSuccessErrDialog.show();
                             }
                             else {
-                                Toast.makeText(LoginActivity.this, R.string.create_success+emailString,
-                                        Toast.LENGTH_SHORT).show();
                                 sendVerificationEmail();
+                                SweetAlertDialog loginSuccessErrDialog =
+                                new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.SUCCESS_TYPE);
+                                loginSuccessErrDialog.setTitleText("Account Created");
+                                loginSuccessErrDialog.setContentText(getResources().getString(R.string.create_success)+emailString);
+                                loginSuccessErrDialog.setConfirmText("OK");
+                                loginSuccessErrDialog.show();
                             }
                         }
                     });
@@ -219,24 +228,41 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     public void signIn(String email, String password){
-        if (!credentialsAreComplete()){
+        if (!loginCredentialsAreComplete()){
             return;
         }
         else {
+            final SweetAlertDialog loginLoadingDialog =
+                    new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+            loginLoadingDialog.getProgressHelper().setBarColor(R.color.colorPrimary);
+            loginLoadingDialog.setTitleText("Loading...");
+            loginLoadingDialog.setCancelable(false);
+            loginLoadingDialog.show();
             loginAuthenticator.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, R.string.auth_failed,
-                                        Toast.LENGTH_SHORT).show();
+                                loginLoadingDialog.dismiss();
+                                SweetAlertDialog loginSuccessErrDialog =
+                                new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE);
+                                loginSuccessErrDialog.setTitleText("Log In Failed");
+                                loginSuccessErrDialog.setContentText(getResources().getString(R.string.auth_failed));
+                                loginSuccessErrDialog.setConfirmText("OK");
+                                loginSuccessErrDialog.show();
                             }
                             else if (!isVerified()) {
-                                Toast.makeText(LoginActivity.this, R.string.login_verify_failed,
-                                        Toast.LENGTH_SHORT).show();
+                                loginLoadingDialog.dismiss();
+                                SweetAlertDialog loginVerifiedErrDialog =
+                                new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE);
+                                loginVerifiedErrDialog.setTitleText("Email Verification Failed");
+                                loginVerifiedErrDialog.setContentText(getResources().getString(R.string.login_verify_failed));
+                                loginVerifiedErrDialog.setConfirmText("OK");
+                                loginVerifiedErrDialog.show();
                             }
                             else{
-                                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                                loginLoadingDialog.dismiss();
+                                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         }
                         }
                     });
@@ -247,7 +273,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         FirebaseAuth.getInstance().sendPasswordResetEmail(email);
     }
 
-    private boolean credentialsAreComplete() {
+    private boolean registerCredentialsAreComplete() {
         boolean valid = false;
 
         String email = emailEdit.getText().toString();
@@ -277,6 +303,62 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             passwordEdit.setError(null);
             valid = true;
         }
+
+        String company = companyName.getText().toString();
+        if (company.isEmpty()) {
+            companyName.setError("Required.");
+        }
+        else if (companyName.length()<4){
+            companyName.setError("Company invalid.");
+        }
+        else{
+            companyName.setError(null);
+            valid = true;
+        }
+        
+        String phone = phoneNum.getText().toString();
+        if (phone.isEmpty()) {
+            phoneNum.setError("Required.");
+        }
+        else if (phone.length()>10){
+            phoneNum.setError("Phone Invalid.");
+        }
+        else{
+            phoneNum.setError(null);
+            valid = true;
+        }
+
+        return valid;
+    }
+
+    private boolean loginCredentialsAreComplete(){
+        boolean valid = false;
+        String email = emailEdit.getText().toString();
+        if (email.isEmpty()) {
+            emailEdit.setError("Required.");
+        }
+        else
+            valid = true;
+
+        String password = passwordEdit.getText().toString();
+        if (password.isEmpty()) {
+            passwordEdit.setError("Required.");
+        }
+        else
+            valid = true;
+
+        return valid;
+    }
+
+    private boolean forgotCredentialsAreComplete(){
+        boolean valid = false;
+        String email = emailEdit.getText().toString();
+        if (email.isEmpty()){
+            emailEdit.setError("Required.");
+        }
+        else
+            valid = true;
+
         return valid;
     }
 
@@ -299,19 +381,28 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, R.string.email_sent,
-                                    Toast.LENGTH_SHORT).show();
+                            SweetAlertDialog verifyConfirmDialog =
+                            new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.SUCCESS_TYPE);
+                            verifyConfirmDialog.setTitleText("Verify Email");
+                            verifyConfirmDialog.setContentText(getResources().getString(R.string.email_sent));
+                            verifyConfirmDialog.setConfirmText("OK");
+                            verifyConfirmDialog.show();
                         }
                         else {
-                            Toast.makeText(LoginActivity.this, R.string.email_error,
-                                    Toast.LENGTH_SHORT).show();
+                            SweetAlertDialog verifyErrDialog =
+                            new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE);
+                            verifyErrDialog.setTitleText("Verify Email");
+                            verifyErrDialog.setContentText(getResources().getString(R.string.email_error));
+                            verifyErrDialog.setConfirmText("OK");
+                            verifyErrDialog.show();
                         }
                     }
                 });
     }
 
     private boolean existsInBigBlueDatabase(String email){
-        boolean valid = false;
+        //change to false
+        boolean valid = true;
         ///QUERY JASON'S DATABASE FOR THIS EMAIL, IF IT EXISTS SET VALID = TRUE
         ///
         ///
