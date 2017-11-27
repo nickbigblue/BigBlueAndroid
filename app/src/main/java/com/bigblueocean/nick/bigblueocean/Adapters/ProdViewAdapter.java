@@ -11,12 +11,11 @@ import android.widget.TextView;
 
 import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
 import com.bigblueocean.nick.bigblueocean.Fragments.ProdFragment.OnListFragmentInteractionListener;
+import com.bigblueocean.nick.bigblueocean.Model.Category;
 import com.bigblueocean.nick.bigblueocean.R;
 
 
 import java.util.ArrayList;
-
-import com.bigblueocean.nick.bigblueocean.Model.Category;
 
 public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHolder> {
 
@@ -42,7 +41,7 @@ public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHo
         final int pos = position;
         holder.currentCategory = categoryArrayList.get(pos);
         holder.categoryImage.setBackgroundColor(Color.parseColor(holder.currentCategory.getColor()));
-        holder.categoryImage.setImageResource(categoryArrayList.get(pos).getImage());
+        holder.categoryImage.setImageResource(categoryArrayList.get(pos).getImageId());
         holder.categoryTitle.setText(categoryArrayList.get(pos).getTitle());
         holder.categoryTitle.setTypeface(FontHelper.antonTypeface(context));
         holder.categoryTitle.setTextColor(Color.parseColor(categoryArrayList.get(pos).getColor()));

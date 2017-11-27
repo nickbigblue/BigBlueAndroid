@@ -1,44 +1,32 @@
 package com.bigblueocean.nick.bigblueocean.Helpers;
 
 import android.os.AsyncTask;
-import android.util.Log;
-
-import com.bigblueocean.nick.bigblueocean.Model.News;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by nick on 11/14/17.
  */
 
-public class PostJSONTask extends AsyncTask<String, Void, String> {
+public class PostJSONTask extends AsyncTask<String, Void, JSONObject> {
 
-
-    protected String doInBackground(String... params) {
-
-        String response = "false";
+    @Override
+    protected JSONObject doInBackground(String... params) {
+        JSONObject responseJsonObj = new JSONObject();
         String data = "";
         if (params[1] != null) {
             data = params[1];
         }
-
         final String tag = params[0];
-        final String token = "1234567890";
-        final String url = "http://bigblueocean.net/jb2/public/bigblueapp/posttest";
+        final String url = params[2];
+        final String token = params[3];
 
         try {
             URL uri = new URL(url);
@@ -62,7 +50,8 @@ public class PostJSONTask extends AsyncTask<String, Void, String> {
             osw.flush();
             osw.close();
             int code = con.getResponseCode();
-            Log.e("PostJSON log", Integer.toString(code));
+            char[] codearr = Character.toChars(code);
+
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
             StringBuffer buffer = new StringBuffer();
@@ -71,20 +60,13 @@ public class PostJSONTask extends AsyncTask<String, Void, String> {
             while ((read = reader.read(chars)) != -1)
                 buffer.append(chars, 0, read);
             reader.close();
-            JSONObject responseJsonObj = new JSONObject(buffer.toString());
-            if (responseJsonObj.get("success").toString().equalsIgnoreCase("true")){
-//                JSONArray jsarray = responseJsonObj.getJSONArray("json");
-//                for(int i = 0; i <= jsarray.length(); i++){
-//                    jsarray.get(i);
-//                }
-                response = "true";
-            }
+            responseJsonObj = new JSONObject(buffer.toString());
 
         }
         catch (Exception e){
-            Log.v("ErrorAPP",e.toString());
+            e.printStackTrace();
         }
-        return response;
+        return responseJsonObj;
     }
 
 

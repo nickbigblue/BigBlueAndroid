@@ -1,34 +1,28 @@
 package com.bigblueocean.nick.bigblueocean.Fragments;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bigblueocean.nick.bigblueocean.Adapters.ProdViewAdapter;
+import com.bigblueocean.nick.bigblueocean.Model.Category;
 import com.bigblueocean.nick.bigblueocean.R;
 
 import java.util.ArrayList;
 
-import com.bigblueocean.nick.bigblueocean.Model.Category;
-
 public class ProdFragment extends Fragment {
 
-    private static int categoriesColumnCount;
     private OnListFragmentInteractionListener prodInteractionListener;
 
     public ProdFragment() {
     }
 
-    public static ProdFragment newInstance(int columnCount) {
-        ProdFragment fragment = new ProdFragment();
-        categoriesColumnCount = columnCount;
-        return fragment;
+    public static ProdFragment newInstance() {
+        return new ProdFragment();
     }
 
     @Override
@@ -66,19 +60,10 @@ public class ProdFragment extends Fragment {
     }
 
     public ArrayList<Category> categories() {
-        ArrayList<Category> CAL = new ArrayList<Category>();
-        CAL.add(new Category("Tuna"));
-
-        CAL.add(new Category("Sword"));
-
-        CAL.add(new Category("Mahi"));
-
-        CAL.add(new Category("Wahoo"));
-
-        CAL.add(new Category("Grouper"));
-
-        CAL.add(new Category("Salmon"));
-
-        return CAL;
+        ArrayList<Category> categories = new ArrayList<>();
+        for (Category cat: Category.values()){
+            categories.add(cat);
+        }
+        return categories;
     }
 }

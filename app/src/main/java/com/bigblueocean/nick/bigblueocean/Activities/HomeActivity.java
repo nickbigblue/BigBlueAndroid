@@ -1,8 +1,6 @@
 package com.bigblueocean.nick.bigblueocean.Activities;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
@@ -10,7 +8,6 @@ import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +15,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,26 +32,23 @@ import com.bigblueocean.nick.bigblueocean.Fragments.ChatFragment;
 import com.bigblueocean.nick.bigblueocean.Fragments.NewsFragment;
 import com.bigblueocean.nick.bigblueocean.Fragments.OrderFragment;
 import com.bigblueocean.nick.bigblueocean.Fragments.ProdFragment;
+import com.bigblueocean.nick.bigblueocean.Helpers.ServerPost;
+import com.bigblueocean.nick.bigblueocean.Model.Category;
 import com.bigblueocean.nick.bigblueocean.R;
 import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
-
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import com.bigblueocean.nick.bigblueocean.Model.Category;
 import com.bigblueocean.nick.bigblueocean.Model.News;
 import com.bigblueocean.nick.bigblueocean.Model.Product;
 import com.google.gson.reflect.TypeToken;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
-
 import org.json.JSONException;
-import org.w3c.dom.Text;
+import org.json.JSONObject;
 
 import in.goodiebag.carouselpicker.CarouselPicker;
 
@@ -93,9 +86,8 @@ public class HomeActivity extends AppCompatActivity implements
         });
 
         Toolbar homeToolbar = (Toolbar) findViewById(R.id.home_toolbar);
-        TextView toolbarTitle = (TextView) homeToolbar.findViewById(R.id.toolbar_title);
+        TextView toolbarTitle = homeToolbar.findViewById(R.id.toolbar_title);
         homeToolbar.setTitle("");
-        toolbarTitle.setText(R.string.app_name_caps);
         toolbarTitle.setTypeface(FontHelper.antonTypeface(this));
         setSupportActionBar(homeToolbar);
 
@@ -141,11 +133,6 @@ public class HomeActivity extends AppCompatActivity implements
         if (currentOrder == null){
             currentOrder = new ArrayList<>();
         }
-
-//        tabLayout.getTabAt(0).setIcon(R.drawable.news);
-//        tabLayout.getTabAt(1).setIcon(R.drawable.add_item);
-//        tabLayout.getTabAt(2).setIcon(R.drawable.list);
-//        tabLayout.getTabAt(3).setIcon(R.drawable.chat);
     }
 
     @Override
@@ -255,7 +242,7 @@ public class HomeActivity extends AppCompatActivity implements
 
 
         ImageView iv = dialog.findViewById(R.id.dialog_image);
-        iv.setImageBitmap(BitmapFactory.decodeResource(dialog.getContext().getResources(), cat.getImage()));
+        iv.setImageBitmap(BitmapFactory.decodeResource(dialog.getContext().getResources(), cat.getImageId()));
         iv.setBackgroundColor(Color.parseColor(cat.getColor()));
 
         final TextView infoLabel = dialog.findViewById(R.id.dialog_info_label);
@@ -273,29 +260,29 @@ public class HomeActivity extends AppCompatActivity implements
         final SelectionHelper infoPasser = new SelectionHelper();
         final CarouselPicker mainCarouselPicker = dialog.findViewById(R.id.dialog_main_carousel);
         final CarouselPicker subCarouselPicker = dialog.findViewById(R.id.dialog_sub_carousel);
-        final String tag = cat.getTag();
         final ArrayList<CarouselPicker.PickerItem> mainPickerItem;
         CarouselPicker.CarouselViewAdapter textAdapter;
-        switch (cat.getTag()){
-            case "Tuna":
+        switch (cat){
+            case TUNA:
                 mainPickerItem = infoPasser.getTunaSelections();
                 break;
-            case "Sword":
+            case SWORD:
                 mainPickerItem = infoPasser.getSwordSelections();
                 break;
-            case "Mahi":
+            case MAHI:
                 mainPickerItem = infoPasser.getMahiSelections();
                 break;
-            case "Wahoo":
+            case WAHOO:
                 mainPickerItem = infoPasser.getWahooSelections();
                 break;
-            case "Grouper":
+            case GROUPER:
                 mainPickerItem = infoPasser.getGrouperSelections();
                 break;
-            case "Salmon":
+            case SALMON:
                 mainPickerItem = infoPasser.getSalmonSelections();
                 break;
             default:
+                //change for "other" selections
                 mainPickerItem = infoPasser.getTunaSelections();
                 break;
 
@@ -308,7 +295,7 @@ public class HomeActivity extends AppCompatActivity implements
         if(s.equalsIgnoreCase("Quantity") || s.equalsIgnoreCase("($.$$)")){
             subPickerItem = new ArrayList<>();
         } else {
-            subPickerItem = getSubPicker(tag,s);
+            subPickerItem = getSubPicker(cat,s);
         }
         CarouselPicker.CarouselViewAdapter subTextAdapter;
         subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
@@ -352,7 +339,7 @@ public class HomeActivity extends AppCompatActivity implements
                     qtyField.setEnabled(false);
                 }
                 else {
-                    subPickerItem = getSubPicker(tag,s);
+                    subPickerItem = getSubPicker(cat,s);
                     infoLabel.setVisibility(View.INVISIBLE);
                     qtyField.setVisibility(View.INVISIBLE);
                     qtyField.setEnabled(false);
@@ -451,7 +438,7 @@ public class HomeActivity extends AppCompatActivity implements
         dummyProd.setQuantity(prod.getQuantity());
 
         ImageView iv = dialog.findViewById(R.id.dialog_image);
-        iv.setImageBitmap(BitmapFactory.decodeResource(dialog.getContext().getResources(), prod.getCategory().getImage()));
+        iv.setImageBitmap(BitmapFactory.decodeResource(dialog.getContext().getResources(), prod.getCategory().getImageId()));
         iv.setBackgroundColor(Color.parseColor(prod.getCategory().getColor()));
 
         final TextView infoLabel = dialog.findViewById(R.id.dialog_info_label);
@@ -474,26 +461,27 @@ public class HomeActivity extends AppCompatActivity implements
         final String tag = prod.getCategory().getTag();
         final ArrayList<CarouselPicker.PickerItem> mainPickerItem;
         CarouselPicker.CarouselViewAdapter textAdapter;
-        switch (prod.getCategory().getTag()){
-            case "Tuna":
+        switch (prod.getCategory()){
+            case TUNA:
                 mainPickerItem = infoPasser.getTunaSelections();
                 break;
-            case "Sword":
+            case SWORD:
                 mainPickerItem = infoPasser.getSwordSelections();
                 break;
-            case "Mahi":
+            case MAHI:
                 mainPickerItem = infoPasser.getMahiSelections();
                 break;
-            case "Wahoo":
+            case WAHOO:
                 mainPickerItem = infoPasser.getWahooSelections();
                 break;
-            case "Grouper":
+            case GROUPER:
                 mainPickerItem = infoPasser.getGrouperSelections();
                 break;
-            case "Salmon":
+            case SALMON:
                 mainPickerItem = infoPasser.getSalmonSelections();
                 break;
             default:
+                //change for "other" selections
                 mainPickerItem = infoPasser.getTunaSelections();
                 break;
 
@@ -506,7 +494,7 @@ public class HomeActivity extends AppCompatActivity implements
         if(s.equalsIgnoreCase("Quantity") || s.equalsIgnoreCase("($.$$)")){
             subPickerItem = new ArrayList<>();
         } else {
-            subPickerItem = getSubPicker(tag,s);
+            subPickerItem = getSubPicker(prod.getCategory(),s);
         }
         CarouselPicker.CarouselViewAdapter subTextAdapter;
         subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
@@ -551,7 +539,7 @@ public class HomeActivity extends AppCompatActivity implements
                     qtyField.setEnabled(false);
                 }
                 else {
-                    subPickerItem = getSubPicker(tag,s);
+                    subPickerItem = getSubPicker(prod.getCategory(),s);
                     infoLabel.setVisibility(View.INVISIBLE);
                     qtyField.setVisibility(View.INVISIBLE);
                     qtyField.setEnabled(false);
@@ -634,16 +622,16 @@ public class HomeActivity extends AppCompatActivity implements
         return dialog;
     }
 
-    public ArrayList<CarouselPicker.PickerItem> getSubPicker(String tag, String title){
+    public ArrayList<CarouselPicker.PickerItem> getSubPicker(Category cat, String title){
         ArrayList<CarouselPicker.PickerItem> temp;
         SelectionHelper S1 = new SelectionHelper();
         switch (title){
             case "Grade":
-                switch (tag){
-                    case "Tuna":
+                switch (cat){
+                    case TUNA:
                         temp = S1.getTunaGrades();
                         break;
-                    case "Sword":
+                    case SWORD:
                         temp = S1.getSwordGrades();
                         break;
                     default:
@@ -652,14 +640,14 @@ public class HomeActivity extends AppCompatActivity implements
                 }
                 break;
             case "Species":
-                switch (tag){
-                    case "Tuna":
+                switch (cat){
+                    case TUNA:
                         temp = S1.getTunaSpecies();
                         break;
-                    case "Grouper":
+                    case GROUPER:
                         temp = S1.getGrouperSpecies();
                         break;
-                    case "Salmon":
+                    case SALMON:
                         temp = S1.getSalmonSpecies();
                         break;
                     default:
@@ -670,23 +658,23 @@ public class HomeActivity extends AppCompatActivity implements
                 temp = S1.getRegions();
                 break;
             case "Size":
-                switch (tag){
-                    case "Tuna":
+                switch (cat){
+                    case TUNA:
                         temp = S1.getTunaSizes();
                         break;
-                    case "Sword":
+                    case SWORD:
                         temp = S1.getSwordSizes();
                         break;
-                    case "Mahi":
+                    case MAHI:
                         temp = S1.getMahiSizes();
                         break;
-                    case "Wahoo":
+                    case WAHOO:
                         temp = S1.getWahooSizes();
                         break;
-                    case "Grouper":
+                    case GROUPER:
                         temp = S1.getGrouperSizes();
                         break;
-                    case "Salmon":
+                    case SALMON:
                         if (dummyProd.getSpecies() != null) {
                             if (dummyProd.getSpecies().equalsIgnoreCase("Fillet")) {
                                 temp = S1.getSalmonFilletSizes();
@@ -759,6 +747,7 @@ public class HomeActivity extends AppCompatActivity implements
                         confirmOrderSubmitDialog.setConfirmText("OK");
                         confirmOrderSubmitDialog.show();
                     } else {
+                        submitOrderDialog.dismissWithAnimation();
                         SweetAlertDialog failedOrderSubmitDialog =
                                 new SweetAlertDialog(HomeActivity.this, SweetAlertDialog.ERROR_TYPE);
                         failedOrderSubmitDialog.setTitleText("Order Submission");
@@ -780,19 +769,10 @@ public class HomeActivity extends AppCompatActivity implements
 
     //BIGBLUE DATABASE METHODS
     public boolean sendOrder(ArrayList<Product> order){
-        boolean confirmation =  false;
         String json = new Gson().toJson(order);
         String[] params = {getResources().getString(R.string.order_tag), json};
-        PostJSONTask task = new PostJSONTask();
-        task.execute(params);
-        try{
-            confirmation = Boolean.parseBoolean(task.get());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return confirmation;
+        ServerPost sp = new ServerPost(params);
+        return  sp.getSuccess();
     }
 
     //CUSTOMIZED PAGER ADAPTER FOR TABBED ACTIVITY FUNCTION
@@ -808,19 +788,19 @@ public class HomeActivity extends AppCompatActivity implements
             Fragment intendedFragment;
             switch (position){
                 case 0:
-                    intendedFragment = NewsFragment.newInstance(1);
+                    intendedFragment = NewsFragment.newInstance();
                     break;
                 case 1:
-                    intendedFragment = ProdFragment.newInstance(1);
+                    intendedFragment = ProdFragment.newInstance();
                     break;
                 case 2:
-                    intendedFragment = OrderFragment.newInstance(1);
+                    intendedFragment = OrderFragment.newInstance();
                     break;
                 case 3:
-                    intendedFragment = ChatFragment.newInstance(1);
+                    intendedFragment = ChatFragment.newInstance();
                     break;
                 default:
-                    intendedFragment = ProdFragment.newInstance(1);
+                    intendedFragment = ProdFragment.newInstance();
                     break;
             }
             return intendedFragment;

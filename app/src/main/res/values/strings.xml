@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Big Blue Ocean</string>
-    <string name="app_name_caps">BIGBLUE</string>
+    <string name="app_name_caps">BIG  BLUE</string>
     <string name="login_button">Log In</string>
     <string name="register_button">Register</string>
     <string name="create_account_button">Create Account</string>
@@ -8,6 +8,7 @@
     <string name="login_subtitle">Log in now to access all the features Big Blue has to offer!</string>
     <string name="login_email_hint">Email Address</string>
     <string name="login_password_hint">Password</string>
+    <string name="login_name_hint">Name</string>
     <string name="login_company_hint">Company Name</string>
     <string name="login_phone_hint">Phone Number</string>
     <string name="login_dialog_description">Please provide your login credentials:</string>

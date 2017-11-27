@@ -21,17 +21,14 @@ import com.bigblueocean.nick.bigblueocean.Model.Product;
 
 public class OrderFragment extends Fragment {
 
-    private static int productColumnCount = 1;
     private OnListFragmentInteractionListener orderFragmentListener;
     public ArrayList<Product> currentOrder = HomeActivity.getCurrentOrder();
 
     public OrderFragment() {
     }
 
-    public static OrderFragment newInstance(int columnCount) {
-        OrderFragment fragment = new OrderFragment();
-        productColumnCount = columnCount;
-        return fragment;
+    public static OrderFragment newInstance() {
+        return new OrderFragment();
     }
 
     @Override

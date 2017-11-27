@@ -6,6 +6,10 @@ package com.bigblueocean.nick.bigblueocean.Model;
 
 public class User {
     private boolean bigBlue;
+    private String company;
+    private String name;
+    private String phone;
+    private String email;
 
     public User(String email, String UUID){
         this.bigBlue = true;

@@ -68,6 +68,21 @@
             android:visibility="visible" />
 
         <EditText
+            android:id="@+id/register_person"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:fontFamily="sans-serif-smallcaps"
+            android:hint="@string/login_name_hint"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textCursorDrawable="@drawable/custom_text_cursor"
+            android:visibility="visible" />
+
+        <EditText
             android:id="@+id/register_company_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

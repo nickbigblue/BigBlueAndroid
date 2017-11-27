@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
+import com.bigblueocean.nick.bigblueocean.Helpers.ServerPost;
 import com.bigblueocean.nick.bigblueocean.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,13 +24,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
-
 public class LoginActivity extends Activity implements View.OnClickListener {
 
     private FirebaseAuth loginAuthenticator;
     private FirebaseAuth.AuthStateListener loginAuthListener;
     private EditText emailEdit;
     private EditText passwordEdit;
+    private EditText userName;
     private EditText companyName;
     private EditText phoneNum;
     private TextView title;
@@ -136,6 +137,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 input.setContentView(R.layout.register_dialog);
                 emailEdit = input.findViewById(R.id.emailLogin);
                 passwordEdit = input.findViewById(R.id.passwordLogin);
+                userName = input.findViewById(R.id.register_person);
                 companyName = input.findViewById(R.id.register_company_name);
                 phoneNum = input.findViewById(R.id.register_phone);
                 positive = input.findViewById(R.id.dialog_positive);
@@ -253,6 +255,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                         loginAuthenticator.signOut();
                     }
                     else {
+                        ServerPost sp = new ServerPost();
+                        sp.setUser();
                         loginLoadingDialog.dismissWithAnimation();
                     }
                 }

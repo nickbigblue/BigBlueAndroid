@@ -1,9 +1,6 @@
 package com.bigblueocean.nick.bigblueocean.Model;
 
 
-import java.text.NumberFormat;
-import java.util.Locale;
-
 /**
  * Created by nick on 10/10/17.
  */
@@ -23,7 +20,7 @@ public class Product {
     }
 
     public Product (Category category, String species, String regions, String grades, String sizes, String quantity, String price){
-        this.category = category;
+        setCategory(category);
         this.species = species;
         this.region = regions;
         this.grade = grades;
@@ -31,7 +28,7 @@ public class Product {
         this.quantity = quantity;
         this.price = price;
 
-        if(!(category.getTag().equalsIgnoreCase("Tuna") || category.getTag().equalsIgnoreCase("Sword"))){
+        if(!(category == Category.TUNA || category == Category.SWORD)){
             this.grade = "U";
         }
     }
@@ -41,7 +38,11 @@ public class Product {
     }
 
     public void setCategory(Category category) {
-        this.category = category;
+        for (Category c : Category.values()){
+            if (category.getTag().equalsIgnoreCase(c.getTag())){
+                this.category = c;
+            }
+        }
     }
 
     public String getSpecies(){

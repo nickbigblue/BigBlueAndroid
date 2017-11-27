@@ -2,26 +2,36 @@ package com.bigblueocean.nick.bigblueocean.Model;
 
 import com.bigblueocean.nick.bigblueocean.R;
 
-public class Category {
-    private String title;
-    private int imageId;
-    private String color;
-    private String tag;
+/**
+ * Created by nick on 11/27/17.
+ */
 
+public enum Category {
+    TUNA ("Tuna H&G Wild-Caught", R.drawable.tuna2x, "#ba052b", "TUNA"),
+    SWORD   ("Sword H&G Wild-Caught", R.drawable.sword2x, "#6b7380", "SWORD"),
+    MAHI   ("Mahi H&G Wild-Caught", R.drawable.mahi2x, "#78b82c", "MAHI"),
+    WAHOO    ("Wahoo H&G Wild-Caught", R.drawable.wahoo2x, "#2e78a1", "WAHOO"),
+    GROUPER ("Grouper H&G Wild-Caught", R.drawable.grouper2x, "#c24f0a", "GROUPER"),
+    SALMON  ("Salmon H&G Wild-Caught", R.drawable.tuna2x, "#fcb0ed", "SALMON"),
+    OTHER  ("Other", R.drawable.tuna2x, "#8e699e", "OTHER");
 
-    public Category(String title, String tag){
-        this.title =  title;
-        this.imageId = R.drawable.tuna2x;
-        this.color = "#ba052b";
+    private final String title;
+    private final int imageId;
+    private final String color;
+    private final String tag;
+
+    Category(String title, int imageId, String color, String tag){
+        this.title = title;
+        this.imageId = imageId;
+        this.color = color;
         this.tag = tag;
     }
 
-    public Category( String tag){
-        this.tag = tag;
-        setEverything(tag);
+    public String getTitle() {
+        return title;
     }
 
-    public int getImage() {
+    public int getImageId() {
         return imageId;
     }
 
@@ -29,52 +39,7 @@ public class Category {
         return color;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
     public String getTag() {
         return tag;
     }
-
-    private void setEverything(String tag){
-        switch (tag){
-            case "Tuna":
-                this.title = "Tuna H&G Wild-Caught";
-                this.imageId = R.drawable.tuna2x;
-                this.color = "#ba052b";
-                break;
-            case "Sword":
-                this.title = "Sword H&G Wild-Caught";
-                this.imageId = R.drawable.sword2x;
-                this.color = "#6b7380";
-                break;
-            case "Mahi":
-                this.title = "Mahi H&G Wild-Caught";
-                this.imageId = R.drawable.mahi2x;
-                this.color = "#78b82c";
-                break;
-            case "Wahoo":
-                this.title = "Wahoo H&G Wild-Caught";
-                this.imageId = R.drawable.wahoo2x;
-                this.color = "#2e78a1";
-                break;
-            case "Grouper":
-                this.title = "Grouper H&G Wild-Caught";
-                this.imageId = R.drawable.grouper2x;
-                this.color = "#c24f0a";
-                break;
-            case "Salmon":
-                this.title = "Salmon Farm-Raised";
-                this.imageId = R.drawable.sword2x;
-                this.color = "#fcb0ed";
-                break;
-            default:
-                this.title = "Other";
-                this.imageId = R.drawable.tuna2x;
-                this.color = "#ba052b";
-                break;
-        }
-    }
-
 }
