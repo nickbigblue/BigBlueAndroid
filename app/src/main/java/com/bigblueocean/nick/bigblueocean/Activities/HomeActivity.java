@@ -26,35 +26,30 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
-import com.bigblueocean.nick.bigblueocean.Helpers.PostJSONTask;
 import com.bigblueocean.nick.bigblueocean.Helpers.SelectionHelper;
-import com.bigblueocean.nick.bigblueocean.Fragments.ChatFragment;
 import com.bigblueocean.nick.bigblueocean.Fragments.NewsFragment;
 import com.bigblueocean.nick.bigblueocean.Fragments.OrderFragment;
 import com.bigblueocean.nick.bigblueocean.Fragments.ProdFragment;
 import com.bigblueocean.nick.bigblueocean.Helpers.ServerPost;
 import com.bigblueocean.nick.bigblueocean.Model.Category;
 import com.bigblueocean.nick.bigblueocean.R;
-import com.bigblueocean.nick.bigblueocean.dummy.DummyContent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+
 import com.bigblueocean.nick.bigblueocean.Model.News;
 import com.bigblueocean.nick.bigblueocean.Model.Product;
 import com.google.gson.reflect.TypeToken;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import in.goodiebag.carouselpicker.CarouselPicker;
 
 public class HomeActivity extends AppCompatActivity implements
         ProdFragment.OnListFragmentInteractionListener, OrderFragment.OnListFragmentInteractionListener,
-        NewsFragment.OnListFragmentInteractionListener, ChatFragment.OnListFragmentInteractionListener {
+        NewsFragment.OnListFragmentInteractionListener {
 
     private static ViewPagerAdapter homeViewPagerAdapter;
     private ViewPager homeViewPager;
@@ -86,9 +81,7 @@ public class HomeActivity extends AppCompatActivity implements
         });
 
         Toolbar homeToolbar = (Toolbar) findViewById(R.id.home_toolbar);
-        TextView toolbarTitle = homeToolbar.findViewById(R.id.toolbar_title);
-        homeToolbar.setTitle("");
-        toolbarTitle.setTypeface(FontHelper.antonTypeface(this));
+        homeToolbar.setLogo(R.drawable.logobar);
         setSupportActionBar(homeToolbar);
 
         homeViewPager = (ViewPager) findViewById(R.id.container);
@@ -100,7 +93,6 @@ public class HomeActivity extends AppCompatActivity implements
         tabLayout.getTabAt(0).setIcon(R.drawable.news);
         tabLayout.getTabAt(1).setIcon(R.drawable.add_item);
         tabLayout.getTabAt(2).setIcon(R.drawable.list);
-        tabLayout.getTabAt(3).setIcon(R.drawable.chat);
 
         if (this.getIntent().hasExtra("currentItem"))
             homeViewPager.setCurrentItem(Integer.parseInt(this.getIntent().getStringExtra("currentItem")));
@@ -181,20 +173,12 @@ public class HomeActivity extends AppCompatActivity implements
                 this.finish();
                 startActivity(new Intent(this, LoginActivity.class));
                 return true;
-            case R.id.help_home_menu:
-                startActivity(new Intent(this, HelpActivity.class));
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     //METHODS FOR FRAGMENTS IN TABBED ACTIVITY
-    @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item){
-
-    }
-
     @Override
     public void onListFragmentInteraction(News item){
         if (hasWindowFocus()) {
@@ -242,7 +226,6 @@ public class HomeActivity extends AppCompatActivity implements
 
 
         ImageView iv = dialog.findViewById(R.id.dialog_image);
-        iv.setImageBitmap(BitmapFactory.decodeResource(dialog.getContext().getResources(), cat.getImageId()));
         iv.setBackgroundColor(Color.parseColor(cat.getColor()));
 
         final TextView infoLabel = dialog.findViewById(R.id.dialog_info_label);
@@ -438,7 +421,6 @@ public class HomeActivity extends AppCompatActivity implements
         dummyProd.setQuantity(prod.getQuantity());
 
         ImageView iv = dialog.findViewById(R.id.dialog_image);
-        iv.setImageBitmap(BitmapFactory.decodeResource(dialog.getContext().getResources(), prod.getCategory().getImageId()));
         iv.setBackgroundColor(Color.parseColor(prod.getCategory().getColor()));
 
         final TextView infoLabel = dialog.findViewById(R.id.dialog_info_label);
@@ -796,9 +778,6 @@ public class HomeActivity extends AppCompatActivity implements
                 case 2:
                     intendedFragment = OrderFragment.newInstance();
                     break;
-                case 3:
-                    intendedFragment = ChatFragment.newInstance();
-                    break;
                 default:
                     intendedFragment = ProdFragment.newInstance();
                     break;
@@ -808,7 +787,7 @@ public class HomeActivity extends AppCompatActivity implements
 
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
 
         @Override

@@ -3,9 +3,6 @@
     <item
         android:id="@+id/logout_home_menu"
         android:icon="?attr/actionModeCloseDrawable"
+        android:iconTint="@color/colorPrimary"
         android:title="@string/home_menu_signout" />
-    <item
-        android:id="@+id/help_home_menu"
-        android:icon="?android:attr/alertDialogIcon"
-        android:title="@string/home_menu_help" />
 </menu>

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bigblueocean.nick.bigblueocean.Fragments.NewsFragment.OnListFragmentInteractionListener;
+import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
 import com.bigblueocean.nick.bigblueocean.R;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHo
                 Picasso.with(context).load(recentNews.get(position).getImage()).into(holder.newsBanner);
             }
         holder.newsTitle.setText(recentNews.get(position).getTitle());
+        holder.newsTitle.setTypeface(FontHelper.antonTypeface(context));
         holder.newsCell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
