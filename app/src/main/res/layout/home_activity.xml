@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.bigblueocean.nick.bigblueocean.Activities.HomeActivity">
+    tools:context="com.bigblueocean.nick.bigblueocean.activities.HomeActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/home_appbar"
@@ -21,14 +21,22 @@
             android:layout_height="wrap_content"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            <TextView
-                android:id="@+id/toolbar_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/app_name_caps"
-                android:textColor="@color/white"
-                android:textSize="30sp" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:foregroundGravity="center"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerInside"
+                    android:maxHeight="36dp"
+                    android:src="@drawable/logobar"
+                    android:layout_gravity="center_horizontal"
+                    />
+
+            </FrameLayout>
 
         </android.support.v7.widget.Toolbar>
 

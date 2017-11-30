@@ -1,9 +1,8 @@
-package com.bigblueocean.nick.bigblueocean.Activities;
+package com.bigblueocean.nick.bigblueocean.activities;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -23,15 +22,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
-import com.bigblueocean.nick.bigblueocean.Helpers.SelectionHelper;
-import com.bigblueocean.nick.bigblueocean.Fragments.NewsFragment;
-import com.bigblueocean.nick.bigblueocean.Fragments.OrderFragment;
-import com.bigblueocean.nick.bigblueocean.Fragments.ProdFragment;
-import com.bigblueocean.nick.bigblueocean.Helpers.ServerPost;
-import com.bigblueocean.nick.bigblueocean.Model.Category;
+import com.bigblueocean.nick.bigblueocean.helpers.SelectionHelper;
+import com.bigblueocean.nick.bigblueocean.fragments.NewsFragment;
+import com.bigblueocean.nick.bigblueocean.fragments.OrderFragment;
+import com.bigblueocean.nick.bigblueocean.fragments.ProdFragment;
+import com.bigblueocean.nick.bigblueocean.helpers.ServerPost;
+import com.bigblueocean.nick.bigblueocean.model.Category;
 import com.bigblueocean.nick.bigblueocean.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,8 +37,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bigblueocean.nick.bigblueocean.Model.News;
-import com.bigblueocean.nick.bigblueocean.Model.Product;
+import com.bigblueocean.nick.bigblueocean.model.News;
+import com.bigblueocean.nick.bigblueocean.model.Product;
 import com.google.gson.reflect.TypeToken;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -53,9 +50,8 @@ public class HomeActivity extends AppCompatActivity implements
 
     private static ViewPagerAdapter homeViewPagerAdapter;
     private ViewPager homeViewPager;
+    static FirebaseAuth homeAuthenticator = FirebaseAuth.getInstance();
     private static ArrayList<Product> currentOrder = new ArrayList<>();
-    private static ArrayList<CarouselPicker.PickerItem> subPickerItem;
-    private static String userEmail;
     private static Product dummyProd = new Product();
     private TabLayout tabLayout;
 
@@ -64,8 +60,6 @@ public class HomeActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
-
-        FirebaseAuth homeAuthenticator = FirebaseAuth.getInstance();
         homeAuthenticator.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -74,14 +68,10 @@ public class HomeActivity extends AppCompatActivity implements
                     HomeActivity.this.finish();
                     startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                 }
-                else{
-                    userEmail = user.getEmail();
-                }
             }
         });
 
         Toolbar homeToolbar = (Toolbar) findViewById(R.id.home_toolbar);
-        homeToolbar.setLogo(R.drawable.logobar);
         setSupportActionBar(homeToolbar);
 
         homeViewPager = (ViewPager) findViewById(R.id.container);
@@ -224,12 +214,8 @@ public class HomeActivity extends AppCompatActivity implements
         dummyProd.setPrice("0.00");
         dummyProd.setQuantity("0");
 
-
         ImageView iv = dialog.findViewById(R.id.dialog_image);
         iv.setBackgroundColor(Color.parseColor(cat.getColor()));
-
-        final TextView infoLabel = dialog.findViewById(R.id.dialog_info_label);
-        infoLabel.setVisibility(View.INVISIBLE);
 
         final EditText qtyField = dialog.findViewById(R.id.dialog_edit_text2);
         qtyField.setTextColor(Color.parseColor(cat.getColor()));
@@ -240,137 +226,97 @@ public class HomeActivity extends AppCompatActivity implements
         priceField.setVisibility(View.INVISIBLE);
 
         ////MAIN PICKER
-        final SelectionHelper infoPasser = new SelectionHelper();
-        final CarouselPicker mainCarouselPicker = dialog.findViewById(R.id.dialog_main_carousel);
-        final CarouselPicker subCarouselPicker = dialog.findViewById(R.id.dialog_sub_carousel);
-        final ArrayList<CarouselPicker.PickerItem> mainPickerItem;
-        CarouselPicker.CarouselViewAdapter textAdapter;
-        switch (cat){
-            case TUNA:
-                mainPickerItem = infoPasser.getTunaSelections();
-                break;
-            case SWORD:
-                mainPickerItem = infoPasser.getSwordSelections();
-                break;
-            case MAHI:
-                mainPickerItem = infoPasser.getMahiSelections();
-                break;
-            case WAHOO:
-                mainPickerItem = infoPasser.getWahooSelections();
-                break;
-            case GROUPER:
-                mainPickerItem = infoPasser.getGrouperSelections();
-                break;
-            case SALMON:
-                mainPickerItem = infoPasser.getSalmonSelections();
-                break;
-            default:
-                //change for "other" selections
-                mainPickerItem = infoPasser.getTunaSelections();
-                break;
+        final ArrayList<CarouselPicker> allPickers = setSelections(cat, dialog);
+        final CarouselPicker dialogPicker1 = allPickers.get(0);
+        final CarouselPicker dialogPicker2 = allPickers.get(1);
+        final CarouselPicker dialogPicker3 = allPickers.get(2);
+        final CarouselPicker dialogPicker4 = allPickers.get(3);
 
-        }
-
-        String s = mainPickerItem.get(0).getText();
-
-
-        ////SUBPICKER
-        if(s.equalsIgnoreCase("Quantity") || s.equalsIgnoreCase("($.$$)")){
-            subPickerItem = new ArrayList<>();
-        } else {
-            subPickerItem = getSubPicker(cat,s);
-        }
-        CarouselPicker.CarouselViewAdapter subTextAdapter;
-        subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
-        subCarouselPicker.setAdapter(subTextAdapter);
-
-        textAdapter = new CarouselPicker.CarouselViewAdapter(this, mainPickerItem, 0);
-        mainCarouselPicker.setAdapter(textAdapter);
-
-        mainCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                String s = mainPickerItem.get(position).getText();
-                if (!qtyField.getText().toString().isEmpty() &&
-                        !qtyField.getText().toString().equalsIgnoreCase(dummyProd.getQuantity()))
-                    dummyProd.setQuantity(qtyField.getText().toString());
-                if (!priceField.getText().toString().isEmpty() &&
-                        !priceField.getText().toString().equalsIgnoreCase(dummyProd.getPrice()))
-                    dummyProd.setPrice(priceField.getText().toString());
-
-                if (s.equalsIgnoreCase("Quantity")){
-                    subPickerItem = new ArrayList<>();
-                    infoLabel.setText(R.string.quantity_prompt);
-                    infoLabel.setVisibility(View.VISIBLE);
-                    qtyField.setVisibility(View.VISIBLE);
-                    qtyField.setEnabled(true);
-                    priceField.setVisibility(View.INVISIBLE);
-                    priceField.setEnabled(false);
-                }
-                else if (s.equalsIgnoreCase("($.$$)")){
-                    subPickerItem = new ArrayList<>();
-                    infoLabel.setText(R.string.price_prompt);
-                    infoLabel.setVisibility(View.VISIBLE);
-                    priceField.setVisibility(View.VISIBLE);
-                    priceField.setEnabled(true);
-                    qtyField.setVisibility(View.INVISIBLE);
-                    qtyField.setEnabled(false);
-                }
-                else {
-                    subPickerItem = getSubPicker(cat,s);
-                    infoLabel.setVisibility(View.INVISIBLE);
-                    qtyField.setVisibility(View.INVISIBLE);
-                    qtyField.setEnabled(false);
-                    priceField.setVisibility(View.INVISIBLE);
-                    priceField.setEnabled(false);
-                }
-                CarouselPicker.CarouselViewAdapter subTextAdapter;
-                subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
-                subCarouselPicker.setAdapter(subTextAdapter);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
-
-        subCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                String s = mainPickerItem.get(mainCarouselPicker.getCurrentItem()).getText();
-                switch(s){
-                    case "Region":
-                        dummyProd.setRegion(subPickerItem.get(position).getText());
-                        break;
-                    case "Species":
-                        dummyProd.setSpecies(subPickerItem.get(position).getText());
-                        break;
-                    case "Size":
-                        dummyProd.setSize(subPickerItem.get(position).getText());
-                        break;
-                    case "Grade":
-                        dummyProd.setGrade(subPickerItem.get(position).getText());
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
+//
+//        mainCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                String s = mainPickerItem.get(position).getText();
+//                if (!qtyField.getText().toString().isEmpty() &&
+//                        !qtyField.getText().toString().equalsIgnoreCase(dummyProd.getQuantity()))
+//                    dummyProd.setQuantity(qtyField.getText().toString());
+//                if (!priceField.getText().toString().isEmpty() &&
+//                        !priceField.getText().toString().equalsIgnoreCase(dummyProd.getPrice()))
+//                    dummyProd.setPrice(priceField.getText().toString());
+//
+//                if (s.equalsIgnoreCase("Quantity")){
+//                    subPickerItem = new ArrayList<>();
+//                    infoLabel.setText(R.string.quantity_prompt);
+//                    infoLabel.setVisibility(View.VISIBLE);
+//                    qtyField.setVisibility(View.VISIBLE);
+//                    qtyField.setEnabled(true);
+//                    priceField.setVisibility(View.INVISIBLE);
+//                    priceField.setEnabled(false);
+//                }
+//                else if (s.equalsIgnoreCase("($.$$)")){
+//                    subPickerItem = new ArrayList<>();
+//                    infoLabel.setText(R.string.price_prompt);
+//                    infoLabel.setVisibility(View.VISIBLE);
+//                    priceField.setVisibility(View.VISIBLE);
+//                    priceField.setEnabled(true);
+//                    qtyField.setVisibility(View.INVISIBLE);
+//                    qtyField.setEnabled(false);
+//                }
+//                else {
+//                    subPickerItem = getSelections(cat,s);
+//                    infoLabel.setVisibility(View.INVISIBLE);
+//                    qtyField.setVisibility(View.INVISIBLE);
+//                    qtyField.setEnabled(false);
+//                    priceField.setVisibility(View.INVISIBLE);
+//                    priceField.setEnabled(false);
+//                }
+//                CarouselPicker.CarouselViewAdapter subTextAdapter;
+//                subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
+//                subCarouselPicker.setAdapter(subTextAdapter);
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//            }
+//        });
+//
+//
+//        subCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                String s = mainPickerItem.get(mainCarouselPicker.getCurrentItem()).getText();
+//                switch(s){
+//                    case "Region":
+//                        dummyProd.setRegion(subPickerItem.get(position).getText());
+//                        break;
+//                    case "Species":
+//                        dummyProd.setSpecies(subPickerItem.get(position).getText());
+//                        break;
+//                    case "Size":
+//                        dummyProd.setSize(subPickerItem.get(position).getText());
+//                        break;
+//                    case "Grade":
+//                        dummyProd.setGrade(subPickerItem.get(position).getText());
+//                        break;
+//                    default:
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//            }
+//        });
 
         Button dialogAddButton = (Button) dialog.findViewById(R.id.dialog_add_button);
         dialogAddButton.setTextColor(Color.parseColor(cat.getColor()));
@@ -423,180 +369,175 @@ public class HomeActivity extends AppCompatActivity implements
         ImageView iv = dialog.findViewById(R.id.dialog_image);
         iv.setBackgroundColor(Color.parseColor(prod.getCategory().getColor()));
 
-        final TextView infoLabel = dialog.findViewById(R.id.dialog_info_label);
-        infoLabel.setVisibility(View.INVISIBLE);
-
         final EditText qtyField = dialog.findViewById(R.id.dialog_edit_text2);
         qtyField.setText(dummyProd.getQuantity());
         qtyField.setTextColor(Color.parseColor(prod.getCategory().getColor()));
-        qtyField.setVisibility(View.INVISIBLE);
 
         final EditText priceField = dialog.findViewById(R.id.dialog_edit_text1);
         priceField.setText(dummyProd.getPrice());
         priceField.setTextColor(Color.parseColor(prod.getCategory().getColor()));
-        priceField.setVisibility(View.INVISIBLE);
 
-        ////MAIN PICKER
-        final SelectionHelper infoPasser = new SelectionHelper();
-        final CarouselPicker mainCarouselPicker = dialog.findViewById(R.id.dialog_main_carousel);
-        final CarouselPicker subCarouselPicker = dialog.findViewById(R.id.dialog_sub_carousel);
-        final String tag = prod.getCategory().getTag();
-        final ArrayList<CarouselPicker.PickerItem> mainPickerItem;
-        CarouselPicker.CarouselViewAdapter textAdapter;
-        switch (prod.getCategory()){
-            case TUNA:
-                mainPickerItem = infoPasser.getTunaSelections();
-                break;
-            case SWORD:
-                mainPickerItem = infoPasser.getSwordSelections();
-                break;
-            case MAHI:
-                mainPickerItem = infoPasser.getMahiSelections();
-                break;
-            case WAHOO:
-                mainPickerItem = infoPasser.getWahooSelections();
-                break;
-            case GROUPER:
-                mainPickerItem = infoPasser.getGrouperSelections();
-                break;
-            case SALMON:
-                mainPickerItem = infoPasser.getSalmonSelections();
-                break;
-            default:
-                //change for "other" selections
-                mainPickerItem = infoPasser.getTunaSelections();
-                break;
-
-        }
-
-        String s = mainPickerItem.get(0).getText();
-
-
-        ////SUBPICKER
-        if(s.equalsIgnoreCase("Quantity") || s.equalsIgnoreCase("($.$$)")){
-            subPickerItem = new ArrayList<>();
-        } else {
-            subPickerItem = getSubPicker(prod.getCategory(),s);
-        }
-        CarouselPicker.CarouselViewAdapter subTextAdapter;
-        subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
-        subCarouselPicker.setAdapter(subTextAdapter);
-
-        textAdapter = new CarouselPicker.CarouselViewAdapter(this, mainPickerItem, 0);
-        mainCarouselPicker.setAdapter(textAdapter);
-
-        mainCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                String s = mainPickerItem.get(position).getText();
-
-                if (!qtyField.getText().toString().isEmpty() &&
-                        !qtyField.getText().toString().equalsIgnoreCase(dummyProd.getQuantity()))
-                    dummyProd.setQuantity(qtyField.getText().toString());
-                if (!priceField.getText().toString().isEmpty() &&
-                        !priceField.getText().toString().equalsIgnoreCase(dummyProd.getPrice()))
-                    dummyProd.setPrice(priceField.getText().toString());
-
-                if (s.equalsIgnoreCase("Quantity")){
-                    subPickerItem = new ArrayList<>();
-                    infoLabel.setText(R.string.quantity_prompt);
-                    infoLabel.setVisibility(View.VISIBLE);
-                    qtyField.setVisibility(View.VISIBLE);
-                    qtyField.setEnabled(true);
-                    priceField.setVisibility(View.INVISIBLE);
-                    priceField.setEnabled(false);
-                }
-                else if (s.equalsIgnoreCase("($.$$)")){
-                    subPickerItem = new ArrayList<>();
-                    infoLabel.setText(R.string.price_prompt);
-                    infoLabel.setVisibility(View.VISIBLE);
-                    priceField.setVisibility(View.VISIBLE);
-                    priceField.setEnabled(true);
-                    qtyField.setVisibility(View.INVISIBLE);
-                    qtyField.setEnabled(false);
-                }
-                else {
-                    subPickerItem = getSubPicker(prod.getCategory(),s);
-                    infoLabel.setVisibility(View.INVISIBLE);
-                    qtyField.setVisibility(View.INVISIBLE);
-                    qtyField.setEnabled(false);
-                    priceField.setVisibility(View.INVISIBLE);
-                    priceField.setEnabled(false);
-                }
-                CarouselPicker.CarouselViewAdapter subTextAdapter;
-                subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
-                subCarouselPicker.setAdapter(subTextAdapter);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
-
-        subCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                String s = mainPickerItem.get(mainCarouselPicker.getCurrentItem()).getText();
-                switch(s){
-                    case "Region":
-                        dummyProd.setRegion(subPickerItem.get(position).getText());
-                        break;
-                    case "Species":
-                        dummyProd.setSpecies(subPickerItem.get(position).getText());
-                        break;
-                    case "Size":
-                        dummyProd.setSize(subPickerItem.get(position).getText());
-                        break;
-                    case "Grade":
-                        dummyProd.setGrade(subPickerItem.get(position).getText());
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
-
-        Button editDialogConfirmButton = (Button) dialog.findViewById(R.id.dialog_add_button);
-        editDialogConfirmButton.setText(R.string.dialog_confirm_changes);
-        editDialogConfirmButton.setTextColor(Color.parseColor(prod.getCategory().getColor()));
-        editDialogConfirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dummyProd.setQuantity(qtyField.getText().toString());
-                dummyProd.setPrice(priceField.getText().toString());
-                currentOrder.set(currentOrder.indexOf(prod), dummyProd);
-                dialog.cancel();
-                homeViewPagerAdapter.notifyDataSetChanged();
-            }
-        });
-
-        Button editDialogDeleteButton = (Button) dialog.findViewById(R.id.dialog_cancel_button);
-        editDialogDeleteButton.setText(R.string.dialog_delete);
-        editDialogDeleteButton.setTextColor(Color.parseColor(prod.getCategory().getColor()));
-        editDialogDeleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentOrder.remove(prod);
-                homeViewPagerAdapter.notifyDataSetChanged();
-                dialog.cancel();
-            }
-        });
+//        ////MAIN PICKER
+//        final SelectionHelper infoPasser = new SelectionHelper();
+//        final CarouselPicker mainCarouselPicker = dialog.findViewById(R.id.dialog_main_carousel);
+//        final CarouselPicker subCarouselPicker = dialog.findViewById(R.id.dialog_sub_carousel);
+//        final String tag = prod.getCategory().getTag();
+//        final ArrayList<CarouselPicker.PickerItem> mainPickerItem;
+//        CarouselPicker.CarouselViewAdapter textAdapter;
+//        switch (prod.getCategory()){
+//            case TUNA:
+//                mainPickerItem = infoPasser.getTunaSelections();
+//                break;
+//            case SWORD:
+//                mainPickerItem = infoPasser.getSwordSelections();
+//                break;
+//            case MAHI:
+//                mainPickerItem = infoPasser.getMahiSelections();
+//                break;
+//            case WAHOO:
+//                mainPickerItem = infoPasser.getWahooSelections();
+//                break;
+//            case GROUPER:
+//                mainPickerItem = infoPasser.getGrouperSelections();
+//                break;
+//            case SALMON:
+//                mainPickerItem = infoPasser.getSalmonSelections();
+//                break;
+//            default:
+//                //change for "other" selections
+//                mainPickerItem = infoPasser.getTunaSelections();
+//                break;
+//
+//        }
+//
+//        String s = mainPickerItem.get(0).getText();
+//
+//
+//        ////SUBPICKER
+//        if(s.equalsIgnoreCase("Quantity") || s.equalsIgnoreCase("($.$$)")){
+//            subPickerItem = new ArrayList<>();
+//        } else {
+//            subPickerItem = getSelections(prod.getCategory(),s);
+//        }
+//        CarouselPicker.CarouselViewAdapter subTextAdapter;
+//        subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
+//        subCarouselPicker.setAdapter(subTextAdapter);
+//
+//        textAdapter = new CarouselPicker.CarouselViewAdapter(this, mainPickerItem, 0);
+//        mainCarouselPicker.setAdapter(textAdapter);
+//
+//        mainCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                String s = mainPickerItem.get(position).getText();
+//
+//                if (!qtyField.getText().toString().isEmpty() &&
+//                        !qtyField.getText().toString().equalsIgnoreCase(dummyProd.getQuantity()))
+//                    dummyProd.setQuantity(qtyField.getText().toString());
+//                if (!priceField.getText().toString().isEmpty() &&
+//                        !priceField.getText().toString().equalsIgnoreCase(dummyProd.getPrice()))
+//                    dummyProd.setPrice(priceField.getText().toString());
+//
+//                if (s.equalsIgnoreCase("Quantity")){
+//                    subPickerItem = new ArrayList<>();
+//                    infoLabel.setText(R.string.quantity_prompt);
+//                    infoLabel.setVisibility(View.VISIBLE);
+//                    qtyField.setVisibility(View.VISIBLE);
+//                    qtyField.setEnabled(true);
+//                    priceField.setVisibility(View.INVISIBLE);
+//                    priceField.setEnabled(false);
+//                }
+//                else if (s.equalsIgnoreCase("($.$$)")){
+//                    subPickerItem = new ArrayList<>();
+//                    infoLabel.setText(R.string.price_prompt);
+//                    infoLabel.setVisibility(View.VISIBLE);
+//                    priceField.setVisibility(View.VISIBLE);
+//                    priceField.setEnabled(true);
+//                    qtyField.setVisibility(View.INVISIBLE);
+//                    qtyField.setEnabled(false);
+//                }
+//                else {
+//                    subPickerItem = getSelections(prod.getCategory(),s);
+//                    infoLabel.setVisibility(View.INVISIBLE);
+//                    qtyField.setVisibility(View.INVISIBLE);
+//                    qtyField.setEnabled(false);
+//                    priceField.setVisibility(View.INVISIBLE);
+//                    priceField.setEnabled(false);
+//                }
+//                CarouselPicker.CarouselViewAdapter subTextAdapter;
+//                subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
+//                subCarouselPicker.setAdapter(subTextAdapter);
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//            }
+//        });
+//
+//
+//        subCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                String s = mainPickerItem.get(mainCarouselPicker.getCurrentItem()).getText();
+//                switch(s){
+//                    case "Region":
+//                        dummyProd.setRegion(subPickerItem.get(position).getText());
+//                        break;
+//                    case "Species":
+//                        dummyProd.setSpecies(subPickerItem.get(position).getText());
+//                        break;
+//                    case "Size":
+//                        dummyProd.setSize(subPickerItem.get(position).getText());
+//                        break;
+//                    case "Grade":
+//                        dummyProd.setGrade(subPickerItem.get(position).getText());
+//                        break;
+//                    default:
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//            }
+//        });
+//
+//
+//        Button editDialogConfirmButton = (Button) dialog.findViewById(R.id.dialog_add_button);
+//        editDialogConfirmButton.setText(R.string.dialog_confirm_changes);
+//        editDialogConfirmButton.setTextColor(Color.parseColor(prod.getCategory().getColor()));
+//        editDialogConfirmButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dummyProd.setQuantity(qtyField.getText().toString());
+//                dummyProd.setPrice(priceField.getText().toString());
+//                currentOrder.set(currentOrder.indexOf(prod), dummyProd);
+//                dialog.cancel();
+//                homeViewPagerAdapter.notifyDataSetChanged();
+//            }
+//        });
+//
+//        Button editDialogDeleteButton = (Button) dialog.findViewById(R.id.dialog_cancel_button);
+//        editDialogDeleteButton.setText(R.string.dialog_delete);
+//        editDialogDeleteButton.setTextColor(Color.parseColor(prod.getCategory().getColor()));
+//        editDialogDeleteButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                currentOrder.remove(prod);
+//                homeViewPagerAdapter.notifyDataSetChanged();
+//                dialog.cancel();
+//            }
+//        });
 
         int width = (int)(getResources().getDisplayMetrics().widthPixels*0.999);
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -604,78 +545,64 @@ public class HomeActivity extends AppCompatActivity implements
         return dialog;
     }
 
-    public ArrayList<CarouselPicker.PickerItem> getSubPicker(Category cat, String title){
-        ArrayList<CarouselPicker.PickerItem> temp;
+    public ArrayList<CarouselPicker> setSelections(Category cat, Dialog d){
+        ArrayList<CarouselPicker> temp = new ArrayList<>(4);
         SelectionHelper S1 = new SelectionHelper();
-        switch (title){
-            case "Grade":
-                switch (cat){
+        final CarouselPicker dialogPicker1 = d.findViewById(R.id.dialog_carousel1);
+        final CarouselPicker dialogPicker2 = d.findViewById(R.id.dialog_carousel2);
+        final CarouselPicker dialogPicker3 = d.findViewById(R.id.dialog_carousel3);
+        final CarouselPicker dialogPicker4 = d.findViewById(R.id.dialog_carousel4);
+        final SelectionHelper infoPasser = new SelectionHelper();
+        CarouselPicker.CarouselViewAdapter regions = new CarouselPicker.CarouselViewAdapter(this, null, 0);
+        CarouselPicker.CarouselViewAdapter species = new CarouselPicker.CarouselViewAdapter(this, null, 0);
+        CarouselPicker.CarouselViewAdapter grades = new CarouselPicker.CarouselViewAdapter(this, null, 0);
+        CarouselPicker.CarouselViewAdapter sizes = new CarouselPicker.CarouselViewAdapter(this, null, 0);
+        switch (cat){
                     case TUNA:
-                        temp = S1.getTunaGrades();
+                        regions = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getRegions(), 0);
+                        species = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getTunaSpecies(), 0);
+                        grades = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getTunaGrades(), 0);
+                        sizes = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getTunaSizes(), 0);
                         break;
                     case SWORD:
-                        temp = S1.getSwordGrades();
-                        break;
-                    default:
-                        temp = new ArrayList<>();
-                        temp.add(new CarouselPicker.TextItem("Ungraded", 10));
-                }
-                break;
-            case "Species":
-                switch (cat){
-                    case TUNA:
-                        temp = S1.getTunaSpecies();
-                        break;
-                    case GROUPER:
-                        temp = S1.getGrouperSpecies();
-                        break;
-                    case SALMON:
-                        temp = S1.getSalmonSpecies();
-                        break;
-                    default:
-                        temp = S1.getTunaSpecies();
-                }
-                break;
-            case "Region":
-                temp = S1.getRegions();
-                break;
-            case "Size":
-                switch (cat){
-                    case TUNA:
-                        temp = S1.getTunaSizes();
-                        break;
-                    case SWORD:
-                        temp = S1.getSwordSizes();
+                        regions = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getRegions(), 0);
+                        species = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getNoSpecies(), 0);
+                        grades = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getSwordGrades(), 0);
+                        sizes = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getSwordSizes(), 0);
                         break;
                     case MAHI:
-                        temp = S1.getMahiSizes();
+                        regions = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getRegions(), 0);
+                        species = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getNoSpecies(), 0);
+                        grades = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getNoGrades(), 0);
+                        sizes = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getMahiSizes(), 0);
                         break;
                     case WAHOO:
-                        temp = S1.getWahooSizes();
-                        break;
-                    case GROUPER:
-                        temp = S1.getGrouperSizes();
+                        regions = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getRegions(), 0);
+                        species = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getNoSpecies(), 0);
+                        grades = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getNoGrades(), 0);
                         break;
                     case SALMON:
-                        if (dummyProd.getSpecies() != null) {
-                            if (dummyProd.getSpecies().equalsIgnoreCase("Fillet")) {
-                                temp = S1.getSalmonFilletSizes();
-                            } else if (dummyProd.getSpecies().equalsIgnoreCase("H&G")) {
-                                temp = S1.getSalmonHgSizes();
-                            } else {
-                                temp = new ArrayList<CarouselPicker.PickerItem>();
-                            }
-                            break;
-                        }
+                        regions = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getRegions(), 0);
+                        species = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getSalmonSpecies(), 0);
+                        grades = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getSwordGrades(), 0);
+                        sizes = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getSwordSizes(), 0);
+                        break;
+                    case OTHER:
+                        regions = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getRegions(), 0);
+                        species = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getNoSpecies(), 0);
+                        grades = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getNoGrades(), 0);
+                        sizes = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getTunaSizes(), 0);
+                        break;
                     default:
-                        temp = S1.getTunaSizes();
                 }
-                break;
-            default:
-                temp = S1.getTunaGrades();
-                break;
-
-        }
+        dialogPicker1.setAdapter(regions);
+        dialogPicker2.setAdapter(species);
+        dialogPicker3.setAdapter(grades);
+        dialogPicker4.setAdapter(sizes);
+        temp.add(dialogPicker1);
+        temp.add(dialogPicker2);
+        temp.add(dialogPicker3);
+        temp.add(dialogPicker4);
         return temp;
     }
 
@@ -753,10 +680,12 @@ public class HomeActivity extends AppCompatActivity implements
     public boolean sendOrder(ArrayList<Product> order){
         String json = new Gson().toJson(order);
         String[] params = {getResources().getString(R.string.order_tag), json};
-        ServerPost sp = new ServerPost(params);
+        ServerPost sp = new ServerPost(params, homeAuthenticator.getCurrentUser());
         return  sp.getSuccess();
     }
-
+    public static FirebaseUser getFirebaseUser(){
+        return homeAuthenticator.getCurrentUser();
+    }
     //CUSTOMIZED PAGER ADAPTER FOR TABBED ACTIVITY FUNCTION
     public static class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private String tabTitles[] = new String[] { "News", "Products", "My Order", "Chat" };

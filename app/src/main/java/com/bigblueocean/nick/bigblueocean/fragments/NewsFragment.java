@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean.Fragments;
+package com.bigblueocean.nick.bigblueocean.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,12 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bigblueocean.nick.bigblueocean.Adapters.NewsViewAdapter;;
-import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
-import com.bigblueocean.nick.bigblueocean.Helpers.ServerPost;
+import com.bigblueocean.nick.bigblueocean.activities.HomeActivity;
+import com.bigblueocean.nick.bigblueocean.adapters.NewsViewAdapter;;
+import com.bigblueocean.nick.bigblueocean.helpers.FontHelper;
+import com.bigblueocean.nick.bigblueocean.helpers.ServerPost;
 import com.bigblueocean.nick.bigblueocean.R;;
 import java.util.ArrayList;
-import com.bigblueocean.nick.bigblueocean.Model.News;
+import com.bigblueocean.nick.bigblueocean.model.News;
 
 
 public class NewsFragment extends Fragment {
@@ -40,7 +41,7 @@ public class NewsFragment extends Fragment {
         TextView newsTitle = view.findViewById(R.id.news_from_title);
         newsTitle.setTypeface(FontHelper.antonTypeface(getContext()));
             RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
-            ServerPost sp = new ServerPost();
+            ServerPost sp = new ServerPost(HomeActivity.getFirebaseUser());
             recyclerView.setAdapter(new NewsViewAdapter(sp.getRecentNews(recentNews), newsFragmentListener));
         return view;
     }

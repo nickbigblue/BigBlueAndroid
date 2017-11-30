@@ -1,6 +1,8 @@
-package com.bigblueocean.nick.bigblueocean.Helpers;
+package com.bigblueocean.nick.bigblueocean.helpers;
 
 import android.os.AsyncTask;
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.json.JSONObject;
@@ -27,6 +29,7 @@ public class PostJSONTask extends AsyncTask<String, Void, JSONObject> {
         final String tag = params[0];
         final String url = params[2];
         final String token = params[3];
+        final String id = params[4];
 
         try {
             URL uri = new URL(url);
@@ -34,9 +37,11 @@ public class PostJSONTask extends AsyncTask<String, Void, JSONObject> {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("Tag", tag);
             jsonObject.addProperty("Token",token);
-            jsonObject.addProperty("UID","0");
+            Log.e("ID", id);
+            jsonObject.addProperty("UID",id);
             jsonObject.addProperty("JSON", data);
             String gson = new Gson().toJson(jsonObject);
+            Log.e("Current json", gson);
 
             HttpURLConnection con = (HttpURLConnection) uri.openConnection();
             con.setDoOutput(true);
@@ -50,7 +55,7 @@ public class PostJSONTask extends AsyncTask<String, Void, JSONObject> {
             osw.flush();
             osw.close();
             int code = con.getResponseCode();
-            char[] codearr = Character.toChars(code);
+            Log.e("HTTP Code", Integer.toString(code));
 
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -60,11 +65,13 @@ public class PostJSONTask extends AsyncTask<String, Void, JSONObject> {
             while ((read = reader.read(chars)) != -1)
                 buffer.append(chars, 0, read);
             reader.close();
+            Log.e("buffer",buffer.toString());
             responseJsonObj = new JSONObject(buffer.toString());
-
+//            Log.e("This is the response", responseJsonObj.toString());
         }
         catch (Exception e){
             e.printStackTrace();
+            return null;
         }
         return responseJsonObj;
     }

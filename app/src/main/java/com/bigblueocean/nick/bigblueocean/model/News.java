@@ -1,8 +1,4 @@
-package com.bigblueocean.nick.bigblueocean.Model;
-
-import android.graphics.Bitmap;
-
-import com.google.gson.annotations.SerializedName;
+package com.bigblueocean.nick.bigblueocean.model;
 
 /**
  * Created by nick on 10/10/17.

@@ -44,6 +44,7 @@
     <string name="region">Region</string>
     <string name="grade">Grade</string>
     <string name="size">Size</string>
+    <string name="species">Species</string>
     <string name="quantity_price">Quantity and Price</string>
     <string name="submit_button">SUBMIT</string>
     <string name="clear_button">CLEAR</string>

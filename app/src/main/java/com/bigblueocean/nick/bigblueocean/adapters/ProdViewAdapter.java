@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean.Adapters;
+package com.bigblueocean.nick.bigblueocean.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
-import com.bigblueocean.nick.bigblueocean.Fragments.ProdFragment.OnListFragmentInteractionListener;
-import com.bigblueocean.nick.bigblueocean.Model.Category;
+import com.bigblueocean.nick.bigblueocean.helpers.FontHelper;
+import com.bigblueocean.nick.bigblueocean.fragments.ProdFragment.OnListFragmentInteractionListener;
+import com.bigblueocean.nick.bigblueocean.model.Category;
 import com.bigblueocean.nick.bigblueocean.R;
 
 

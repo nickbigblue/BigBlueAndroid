@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean.Adapters;
+package com.bigblueocean.nick.bigblueocean.adapters;
 
 
 import android.content.Context;
@@ -9,15 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
-import com.bigblueocean.nick.bigblueocean.Fragments.OrderFragment.OnListFragmentInteractionListener;
+import com.bigblueocean.nick.bigblueocean.helpers.FontHelper;
+import com.bigblueocean.nick.bigblueocean.fragments.OrderFragment.OnListFragmentInteractionListener;
 import com.bigblueocean.nick.bigblueocean.R;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import com.bigblueocean.nick.bigblueocean.Model.Product;
+import com.bigblueocean.nick.bigblueocean.model.Product;
 
 public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.ViewHolder> {
 

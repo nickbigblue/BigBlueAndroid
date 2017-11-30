@@ -1,14 +1,13 @@
-package com.bigblueocean.nick.bigblueocean.Helpers;
+package com.bigblueocean.nick.bigblueocean.helpers;
 
-import com.bigblueocean.nick.bigblueocean.Model.News;
-import com.bigblueocean.nick.bigblueocean.Model.Product;
-import com.bigblueocean.nick.bigblueocean.Model.User;
-import com.bigblueocean.nick.bigblueocean.R;
-import com.google.firebase.auth.FirebaseAuth;
+import android.util.Log;
+
+import com.bigblueocean.nick.bigblueocean.model.News;
+import com.bigblueocean.nick.bigblueocean.model.User;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,18 +22,20 @@ import java.util.concurrent.ExecutionException;
 
 public class ServerPost{
 
-    private String[] params = new String[4];
+    private String[] params = new String[5];
     private JSONObject response = new JSONObject();
     private String message;
     private boolean success = false;
+    private String id;
     private String url = "http://bigblueocean.net/jb2/public/bigblueapp/android";
-    private final String token = "wD3TE7ThkpTxtx4b7kD0Lli1sYJzJOBUeM";
+    private final String TOKEN = "wD3TE7ThkpTxtx4b7kD0Lli1sYJzJOBUeM";
 
-    public ServerPost() {
-
+    public ServerPost(FirebaseUser user) {
+        this.id = user.getUid();
     }
 
-    public ServerPost(String[] params) {
+    public ServerPost(String[] params, FirebaseUser user) {
+        this.id = user.getUid();
         setupParam(params);
         this.send();
     }
@@ -63,7 +64,8 @@ public class ServerPost{
         this.params[0] = params[0];
         this.params[1] = params[1];
         this.params[2] = url;
-        this.params[3] = token;
+        this.params[3] = TOKEN;
+        this.params[4] = id;
         return params;
     }
 
@@ -83,20 +85,21 @@ public class ServerPost{
         }
     }
 
-    public void setUser(){
+    public User setUser(){
+        User currentUser = new User();
         try {
-            FirebaseAuth fbauth = FirebaseAuth.getInstance();
-            String uid = fbauth.getCurrentUser().getUid();
             JSONObject js = new JSONObject();
-            js.put("uid", uid);
-            String[] params = {"AUTH",  new Gson().toJson(js)};
+            js.put("uid", id);
+            String[] params = {"LOGIN",  new Gson().toJson(js)};
             setupParam(params);
             send();
-//            User currentUser = new Gson().fromJson(getJson().getString("News"), User.class);
-            //bind @currentUser params
+            Log.e("", response.toString());
+            currentUser = new Gson().fromJson(getJson().getString("JSON"), User.class);
+
         } catch(JSONException e){
             e.printStackTrace();
         }
+        return currentUser;
     }
 
     public ArrayList<News> getRecentNews(ArrayList<News> recentNews) {
@@ -115,4 +118,18 @@ public class ServerPost{
         return recentNews;
     }
 
+    public boolean createUser(User currentUser){
+        boolean added = false;
+        try {
+            String js = new Gson().toJson(currentUser);
+            String[] params = {"REG",  js};
+            setupParam(params);
+            send();
+            Log.e("", response.toString());
+            added = Boolean.parseBoolean(response.get("success").toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return added;
+    }
 }

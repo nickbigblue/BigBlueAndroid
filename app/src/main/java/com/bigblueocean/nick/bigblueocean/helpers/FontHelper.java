@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean.Helpers;
+package com.bigblueocean.nick.bigblueocean.helpers;
 import android.content.Context;
 import android.graphics.Typeface;
 

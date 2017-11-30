@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean.Model;
+package com.bigblueocean.nick.bigblueocean.model;
 
 
 /**

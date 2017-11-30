@@ -19,6 +19,7 @@
         android:id="@+id/dialog_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="2"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -28,20 +29,20 @@
 
             <TextView
                 android:id="@+id/dialog_info_label1"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:layout_margin="8dp"
-                android:text="PLACEHOLDER"
+                android:text="@string/region"
                 android:textSize="16sp"
                 android:textAlignment="center"/>
 
             <in.goodiebag.carouselpicker.CarouselPicker
                 android:id="@+id/dialog_carousel1"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="7"
+                android:layout_weight="3"
                 android:layout_gravity="center"
                 android:background="@color/white"
                 android:layout_margin="4dp"
@@ -55,20 +56,20 @@
 
             <TextView
                 android:id="@+id/dialog_info_label2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:layout_margin="8dp"
-                android:text="PLACEHOLDER"
+                android:text="@string/species"
                 android:textSize="16sp"
                 android:textAlignment="center"/>
 
             <in.goodiebag.carouselpicker.CarouselPicker
                 android:id="@+id/dialog_carousel2"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="7"
+                android:layout_weight="3"
                 android:layout_gravity="center"
                 android:background="@color/white"
                 android:layout_margin="4dp"
@@ -82,20 +83,20 @@
 
             <TextView
                 android:id="@+id/dialog_info_label3"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:layout_margin="8dp"
-                android:text="PLACEHOLDER"
+                android:text="@string/grade"
                 android:textSize="16sp"
                 android:textAlignment="center"/>
 
             <in.goodiebag.carouselpicker.CarouselPicker
                 android:id="@+id/dialog_carousel3"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="7"
+                android:layout_weight="3"
                 android:layout_gravity="center"
                 android:background="@color/white"
                 android:layout_margin="4dp"
@@ -109,20 +110,20 @@
 
             <TextView
                 android:id="@+id/dialog_info_label4"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:layout_margin="8dp"
-                android:text="PLACEHOLDER"
+                android:text="@string/size"
                 android:textSize="16sp"
                 android:textAlignment="center"/>
 
             <in.goodiebag.carouselpicker.CarouselPicker
                 android:id="@+id/dialog_carousel4"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="7"
+                android:layout_weight="3"
                 android:layout_gravity="center"
                 android:background="@color/white"
                 android:layout_margin="4dp"
@@ -142,18 +143,20 @@
 
                 <TextView
                     android:id="@+id/dialog_info_label5"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_gravity="center"
                     android:layout_margin="8dp"
-                    android:text="PLACEHOLDER"
+                    android:text="Total lbs."
                     android:textSize="16sp"
                     android:textAlignment="center"/>
 
                 <EditText
                     android:id="@+id/dialog_edit_text1"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="3"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:layout_gravity="center"
@@ -163,7 +166,7 @@
                     android:imeOptions="actionDone"
                     android:inputType="number"
                     android:hint="@string/default_quantity"
-                    android:textSize="32sp"
+                    android:textSize="28sp"
                     android:textAlignment="center"
                     android:textStyle="bold"/>
 
@@ -176,19 +179,21 @@
 
                     <TextView
                         android:id="@+id/dialog_info_label6"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:layout_gravity="center"
                         android:layout_margin="8dp"
-                        android:text="PLACEHOLDER"
+                        android:text="Price per lb."
                         android:textSize="16sp"
                         android:textAlignment="center"/>
 
                     <EditText
                         android:id="@+id/dialog_edit_text2"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:layout_weight="3"
                         android:layout_marginBottom="8dp"
                         android:layout_gravity="center"
                         android:backgroundTint="@color/black_overlay"
@@ -197,7 +202,7 @@
                         android:inputType="numberDecimal"
                         android:imeOptions="actionDone"
                         android:hint="@string/default_price"
-                        android:textSize="32sp"
+                        android:textSize="28sp"
                         android:textAlignment="center"
                         android:textStyle="bold"/>
 

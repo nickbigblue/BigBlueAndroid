@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean.Fragments;
+package com.bigblueocean.nick.bigblueocean.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bigblueocean.nick.bigblueocean.Adapters.ProdViewAdapter;
-import com.bigblueocean.nick.bigblueocean.Model.Category;
+import com.bigblueocean.nick.bigblueocean.adapters.ProdViewAdapter;
+import com.bigblueocean.nick.bigblueocean.model.Category;
 import com.bigblueocean.nick.bigblueocean.R;
 
 import java.util.ArrayList;

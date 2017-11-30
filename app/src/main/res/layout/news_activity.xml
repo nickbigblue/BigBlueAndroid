@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context="com.bigblueocean.nick.bigblueocean.Activities.NewsActivity">
+    tools:context="com.bigblueocean.nick.bigblueocean.activities.NewsActivity">
 
     <ImageView
         android:id="@+id/news_page_image"

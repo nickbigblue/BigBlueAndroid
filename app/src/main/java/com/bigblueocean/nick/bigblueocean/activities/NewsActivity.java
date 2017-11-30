@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean.Activities;
+package com.bigblueocean.nick.bigblueocean.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +7,7 @@ import android.text.Html;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bigblueocean.nick.bigblueocean.Model.News;
+import com.bigblueocean.nick.bigblueocean.model.News;
 import com.bigblueocean.nick.bigblueocean.R;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;

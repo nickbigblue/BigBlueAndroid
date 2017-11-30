@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean.Adapters;
+package com.bigblueocean.nick.bigblueocean.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,13 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.bigblueocean.nick.bigblueocean.Fragments.NewsFragment.OnListFragmentInteractionListener;
-import com.bigblueocean.nick.bigblueocean.Helpers.FontHelper;
+import com.bigblueocean.nick.bigblueocean.fragments.NewsFragment.OnListFragmentInteractionListener;
+import com.bigblueocean.nick.bigblueocean.helpers.FontHelper;
 import com.bigblueocean.nick.bigblueocean.R;
 
 import java.util.ArrayList;
 
-import com.bigblueocean.nick.bigblueocean.Model.News;
+import com.bigblueocean.nick.bigblueocean.model.News;
 import com.squareup.picasso.Picasso;
 
 public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHolder> {

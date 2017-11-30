@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean.Fragments;
+package com.bigblueocean.nick.bigblueocean.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,13 +11,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
-import com.bigblueocean.nick.bigblueocean.Activities.HomeActivity;
-import com.bigblueocean.nick.bigblueocean.Adapters.OrderViewAdapter;
+import com.bigblueocean.nick.bigblueocean.activities.HomeActivity;
+import com.bigblueocean.nick.bigblueocean.adapters.OrderViewAdapter;
 import com.bigblueocean.nick.bigblueocean.R;
 
 import java.util.ArrayList;
 
-import com.bigblueocean.nick.bigblueocean.Model.Product;
+import com.bigblueocean.nick.bigblueocean.model.Product;
 
 public class OrderFragment extends Fragment {
 

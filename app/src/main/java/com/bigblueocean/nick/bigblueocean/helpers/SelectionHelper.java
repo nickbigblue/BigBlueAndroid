@@ -1,4 +1,4 @@
-package com.bigblueocean.nick.bigblueocean.Helpers;
+package com.bigblueocean.nick.bigblueocean.helpers;
 
 import java.util.ArrayList;
 
@@ -200,4 +200,15 @@ public class SelectionHelper {
         return regionChoices;
     }
 
+    public ArrayList<CarouselPicker.PickerItem> getNoGrades(){
+        ArrayList<CarouselPicker.PickerItem> regionChoices = new ArrayList<>();
+        regionChoices.add(new CarouselPicker.TextItem("Ungraded", 8));
+        return regionChoices;
+    }
+
+    public ArrayList<CarouselPicker.PickerItem> getNoSpecies(){
+        ArrayList<CarouselPicker.PickerItem> regionChoices = new ArrayList<>();
+        regionChoices.add(new CarouselPicker.TextItem("None", 8));
+        return regionChoices;
+    }
 }
