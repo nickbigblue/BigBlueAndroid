@@ -46,6 +46,8 @@
     <string name="size">Size</string>
     <string name="species">Species</string>
     <string name="quantity_price">Quantity and Price</string>
+    <string name="total_lbs">Total lbs.</string>
+    <string name="price_per_lb">Price per lb.</string>
     <string name="submit_button">SUBMIT</string>
     <string name="clear_button">CLEAR</string>
     <string name="submission_confirmed">Your salesperson will reach out to you shortly to help you place your order.

@@ -44,7 +44,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-        Log.e("Activity started", "blahblhablhas");
         loginAuthenticator = FirebaseAuth.getInstance();
         loginAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override

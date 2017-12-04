@@ -5,14 +5,15 @@
     android:id="@+id/login_main_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:weightSum="100"
     android:orientation="vertical"
     tools:context="com.bigblueocean.nick.bigblueocean.activities.LoginActivity">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/top_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_height="0dp"
+        android:layout_weight="40"
         android:orientation="vertical"
         android:background="@color/colorPrimaryDark">
 
@@ -31,11 +32,16 @@
 
     </android.support.constraint.ConstraintLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="60"
+        android:background="@color/white">
+
     <LinearLayout
         android:id="@+id/sub_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -131,4 +137,5 @@
 
         </LinearLayout>
     </LinearLayout>
+    </ScrollView>
 </LinearLayout>

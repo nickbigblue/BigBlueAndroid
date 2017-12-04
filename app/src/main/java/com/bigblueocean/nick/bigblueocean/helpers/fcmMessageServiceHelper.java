@@ -1,7 +1,16 @@
 package com.bigblueocean.nick.bigblueocean.helpers;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.bigblueocean.nick.bigblueocean.R;
+import com.bigblueocean.nick.bigblueocean.activities.HomeActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -20,14 +29,14 @@ public class fcmMessageServiceHelper extends FirebaseMessagingService {
 //         Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "Message data payload: " + remoteMessage.getData());
-
-            if (/* Check if data needs to be processed by long running job */ true) {
-                // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
+            sendNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("message"));
+//            if (/* Check if data needs to be processed by long running job */ true) {
+//                // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
 //                scheduleJob();
-            } else {
-                // Handle message within 10 seconds
+//            } else {
+//                // Handle message within 10 seconds
 //                handleNow();
-            }
+//            }
 
         }
 
@@ -36,7 +45,26 @@ public class fcmMessageServiceHelper extends FirebaseMessagingService {
             Log.e(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
 
-//         Also if you intend on generating your own notifications as a result of a received FCM
-//         message, here is where that should be initiated. See sendNotification method below.
+    }
+
+    private void sendNotification(String title, String messageBody) {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+
+        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.whitelogo)
+                .setContentTitle(title)
+                .setContentText(messageBody)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 }

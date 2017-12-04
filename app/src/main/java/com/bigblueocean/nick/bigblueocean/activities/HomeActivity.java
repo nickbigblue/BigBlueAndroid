@@ -14,14 +14,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 import com.bigblueocean.nick.bigblueocean.helpers.SelectionHelper;
 import com.bigblueocean.nick.bigblueocean.fragments.NewsFragment;
@@ -32,17 +36,16 @@ import com.bigblueocean.nick.bigblueocean.model.Category;
 import com.bigblueocean.nick.bigblueocean.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.bigblueocean.nick.bigblueocean.model.News;
 import com.bigblueocean.nick.bigblueocean.model.Product;
 import com.google.gson.reflect.TypeToken;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
-
-import in.goodiebag.carouselpicker.CarouselPicker;
 
 public class HomeActivity extends AppCompatActivity implements
         ProdFragment.OnListFragmentInteractionListener, OrderFragment.OnListFragmentInteractionListener,
@@ -64,6 +67,9 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                FirebaseMessaging.getInstance().subscribeToTopic("global");
+                String instanceId = FirebaseInstanceId.getInstance().getToken();
+                Log.e("instanceid",instanceId);
                 if (user == null) {
                     HomeActivity.this.finish();
                     startActivity(new Intent(HomeActivity.this, LoginActivity.class));
@@ -89,6 +95,7 @@ public class HomeActivity extends AppCompatActivity implements
         else
             homeViewPager.setCurrentItem(1);
         homeViewPager.setOffscreenPageLimit(0);
+
     }
 
     @Override
@@ -225,100 +232,105 @@ public class HomeActivity extends AppCompatActivity implements
         priceField.setTextColor(Color.parseColor(cat.getColor()));
         priceField.setVisibility(View.INVISIBLE);
 
-        ////MAIN PICKER
-        final ArrayList<CarouselPicker> allPickers = setSelections(cat, dialog);
-        final CarouselPicker dialogPicker1 = allPickers.get(0);
-        final CarouselPicker dialogPicker2 = allPickers.get(1);
-        final CarouselPicker dialogPicker3 = allPickers.get(2);
-        final CarouselPicker dialogPicker4 = allPickers.get(3);
+        SelectionHelper infoPicker = new SelectionHelper();
+        ArrayList<ArrayList<String>> arrayChoices = new ArrayList<>();
+        switch(cat){
+            case TUNA:
+                arrayChoices = infoPicker.getTuna();
+                break;
+            case SWORD:
+                arrayChoices = infoPicker.getSword();
+                break;
+            case MAHI:
+                arrayChoices = infoPicker.getMahi();
+                break;
+            case WAHOO:
+                arrayChoices = infoPicker.getWahoo();
+                break;
+            case GROUPER:
+                arrayChoices = infoPicker.getGrouper();
+                break;
+            case SALMON:
+                arrayChoices = infoPicker.getSalmon();
+                break;
+            case OTHER:
+                arrayChoices = infoPicker.getOther();
+                break;
+        }
 
-//
-//        mainCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                String s = mainPickerItem.get(position).getText();
-//                if (!qtyField.getText().toString().isEmpty() &&
-//                        !qtyField.getText().toString().equalsIgnoreCase(dummyProd.getQuantity()))
-//                    dummyProd.setQuantity(qtyField.getText().toString());
-//                if (!priceField.getText().toString().isEmpty() &&
-//                        !priceField.getText().toString().equalsIgnoreCase(dummyProd.getPrice()))
-//                    dummyProd.setPrice(priceField.getText().toString());
-//
-//                if (s.equalsIgnoreCase("Quantity")){
-//                    subPickerItem = new ArrayList<>();
-//                    infoLabel.setText(R.string.quantity_prompt);
-//                    infoLabel.setVisibility(View.VISIBLE);
-//                    qtyField.setVisibility(View.VISIBLE);
-//                    qtyField.setEnabled(true);
-//                    priceField.setVisibility(View.INVISIBLE);
-//                    priceField.setEnabled(false);
-//                }
-//                else if (s.equalsIgnoreCase("($.$$)")){
-//                    subPickerItem = new ArrayList<>();
-//                    infoLabel.setText(R.string.price_prompt);
-//                    infoLabel.setVisibility(View.VISIBLE);
-//                    priceField.setVisibility(View.VISIBLE);
-//                    priceField.setEnabled(true);
-//                    qtyField.setVisibility(View.INVISIBLE);
-//                    qtyField.setEnabled(false);
-//                }
-//                else {
-//                    subPickerItem = getSelections(cat,s);
-//                    infoLabel.setVisibility(View.INVISIBLE);
-//                    qtyField.setVisibility(View.INVISIBLE);
-//                    qtyField.setEnabled(false);
-//                    priceField.setVisibility(View.INVISIBLE);
-//                    priceField.setEnabled(false);
-//                }
-//                CarouselPicker.CarouselViewAdapter subTextAdapter;
-//                subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
-//                subCarouselPicker.setAdapter(subTextAdapter);
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//            }
-//        });
-//
-//
-//        subCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                String s = mainPickerItem.get(mainCarouselPicker.getCurrentItem()).getText();
-//                switch(s){
-//                    case "Region":
-//                        dummyProd.setRegion(subPickerItem.get(position).getText());
-//                        break;
-//                    case "Species":
-//                        dummyProd.setSpecies(subPickerItem.get(position).getText());
-//                        break;
-//                    case "Size":
-//                        dummyProd.setSize(subPickerItem.get(position).getText());
-//                        break;
-//                    case "Grade":
-//                        dummyProd.setGrade(subPickerItem.get(position).getText());
-//                        break;
-//                    default:
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//            }
-//        });
+        Spinner regions = dialog.findViewById(R.id.spinner1);
+        ArrayAdapter<String> regionSpinnerAdapter =
+                new ArrayAdapter<>(getApplicationContext(),
+                        android.R.layout.simple_spinner_item, arrayChoices.get(0));
+        regionSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        regions.setAdapter(regionSpinnerAdapter);
+        regions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                dummyProd.setRegion(parent.getItemAtPosition(position).toString());
+            }
 
-        Button dialogAddButton = (Button) dialog.findViewById(R.id.dialog_add_button);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Spinner species = dialog.findViewById(R.id.spinner2);
+        ArrayAdapter<String> speciesSpinnerAdapter =
+                new ArrayAdapter<>(getApplicationContext(),
+                        android.R.layout.simple_spinner_item, arrayChoices.get(1));
+        speciesSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        species.setAdapter(speciesSpinnerAdapter);
+        species.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                dummyProd.setSpecies(parent.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Spinner grades = dialog.findViewById(R.id.spinner3);
+        ArrayAdapter<String> gradesSpinnerAdapter =
+                new ArrayAdapter<>(getApplicationContext(),
+                        android.R.layout.simple_spinner_item, arrayChoices.get(2));
+        gradesSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        grades.setAdapter(gradesSpinnerAdapter);
+        grades.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                dummyProd.setGrade(parent.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Spinner sizes = dialog.findViewById(R.id.spinner4);
+        ArrayAdapter<String> sizesSpinnerAdapter =
+                new ArrayAdapter<>(getApplicationContext(),
+                        android.R.layout.simple_spinner_item, arrayChoices.get(3));
+        sizesSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sizes.setAdapter(sizesSpinnerAdapter);
+        sizes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                dummyProd.setSize(parent.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Button dialogAddButton = dialog.findViewById(R.id.dialog_add_button);
         dialogAddButton.setTextColor(Color.parseColor(cat.getColor()));
         dialogAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -339,7 +351,7 @@ public class HomeActivity extends AppCompatActivity implements
             }
         });
 
-        Button dialogCancelButton = (Button) dialog.findViewById(R.id.dialog_cancel_button);
+        Button dialogCancelButton = dialog.findViewById(R.id.dialog_cancel_button);
         dialogCancelButton.setTextColor(Color.parseColor(cat.getColor()));
         dialogCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -377,233 +389,141 @@ public class HomeActivity extends AppCompatActivity implements
         priceField.setText(dummyProd.getPrice());
         priceField.setTextColor(Color.parseColor(prod.getCategory().getColor()));
 
-//        ////MAIN PICKER
-//        final SelectionHelper infoPasser = new SelectionHelper();
-//        final CarouselPicker mainCarouselPicker = dialog.findViewById(R.id.dialog_main_carousel);
-//        final CarouselPicker subCarouselPicker = dialog.findViewById(R.id.dialog_sub_carousel);
-//        final String tag = prod.getCategory().getTag();
-//        final ArrayList<CarouselPicker.PickerItem> mainPickerItem;
-//        CarouselPicker.CarouselViewAdapter textAdapter;
-//        switch (prod.getCategory()){
-//            case TUNA:
-//                mainPickerItem = infoPasser.getTunaSelections();
-//                break;
-//            case SWORD:
-//                mainPickerItem = infoPasser.getSwordSelections();
-//                break;
-//            case MAHI:
-//                mainPickerItem = infoPasser.getMahiSelections();
-//                break;
-//            case WAHOO:
-//                mainPickerItem = infoPasser.getWahooSelections();
-//                break;
-//            case GROUPER:
-//                mainPickerItem = infoPasser.getGrouperSelections();
-//                break;
-//            case SALMON:
-//                mainPickerItem = infoPasser.getSalmonSelections();
-//                break;
-//            default:
-//                //change for "other" selections
-//                mainPickerItem = infoPasser.getTunaSelections();
-//                break;
-//
-//        }
-//
-//        String s = mainPickerItem.get(0).getText();
-//
-//
-//        ////SUBPICKER
-//        if(s.equalsIgnoreCase("Quantity") || s.equalsIgnoreCase("($.$$)")){
-//            subPickerItem = new ArrayList<>();
-//        } else {
-//            subPickerItem = getSelections(prod.getCategory(),s);
-//        }
-//        CarouselPicker.CarouselViewAdapter subTextAdapter;
-//        subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
-//        subCarouselPicker.setAdapter(subTextAdapter);
-//
-//        textAdapter = new CarouselPicker.CarouselViewAdapter(this, mainPickerItem, 0);
-//        mainCarouselPicker.setAdapter(textAdapter);
-//
-//        mainCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                String s = mainPickerItem.get(position).getText();
-//
-//                if (!qtyField.getText().toString().isEmpty() &&
-//                        !qtyField.getText().toString().equalsIgnoreCase(dummyProd.getQuantity()))
-//                    dummyProd.setQuantity(qtyField.getText().toString());
-//                if (!priceField.getText().toString().isEmpty() &&
-//                        !priceField.getText().toString().equalsIgnoreCase(dummyProd.getPrice()))
-//                    dummyProd.setPrice(priceField.getText().toString());
-//
-//                if (s.equalsIgnoreCase("Quantity")){
-//                    subPickerItem = new ArrayList<>();
-//                    infoLabel.setText(R.string.quantity_prompt);
-//                    infoLabel.setVisibility(View.VISIBLE);
-//                    qtyField.setVisibility(View.VISIBLE);
-//                    qtyField.setEnabled(true);
-//                    priceField.setVisibility(View.INVISIBLE);
-//                    priceField.setEnabled(false);
-//                }
-//                else if (s.equalsIgnoreCase("($.$$)")){
-//                    subPickerItem = new ArrayList<>();
-//                    infoLabel.setText(R.string.price_prompt);
-//                    infoLabel.setVisibility(View.VISIBLE);
-//                    priceField.setVisibility(View.VISIBLE);
-//                    priceField.setEnabled(true);
-//                    qtyField.setVisibility(View.INVISIBLE);
-//                    qtyField.setEnabled(false);
-//                }
-//                else {
-//                    subPickerItem = getSelections(prod.getCategory(),s);
-//                    infoLabel.setVisibility(View.INVISIBLE);
-//                    qtyField.setVisibility(View.INVISIBLE);
-//                    qtyField.setEnabled(false);
-//                    priceField.setVisibility(View.INVISIBLE);
-//                    priceField.setEnabled(false);
-//                }
-//                CarouselPicker.CarouselViewAdapter subTextAdapter;
-//                subTextAdapter = new CarouselPicker.CarouselViewAdapter(getApplicationContext(), subPickerItem, 0);
-//                subCarouselPicker.setAdapter(subTextAdapter);
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//            }
-//        });
-//
-//
-//        subCarouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                String s = mainPickerItem.get(mainCarouselPicker.getCurrentItem()).getText();
-//                switch(s){
-//                    case "Region":
-//                        dummyProd.setRegion(subPickerItem.get(position).getText());
-//                        break;
-//                    case "Species":
-//                        dummyProd.setSpecies(subPickerItem.get(position).getText());
-//                        break;
-//                    case "Size":
-//                        dummyProd.setSize(subPickerItem.get(position).getText());
-//                        break;
-//                    case "Grade":
-//                        dummyProd.setGrade(subPickerItem.get(position).getText());
-//                        break;
-//                    default:
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//            }
-//        });
-//
-//
-//        Button editDialogConfirmButton = (Button) dialog.findViewById(R.id.dialog_add_button);
-//        editDialogConfirmButton.setText(R.string.dialog_confirm_changes);
-//        editDialogConfirmButton.setTextColor(Color.parseColor(prod.getCategory().getColor()));
-//        editDialogConfirmButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dummyProd.setQuantity(qtyField.getText().toString());
-//                dummyProd.setPrice(priceField.getText().toString());
-//                currentOrder.set(currentOrder.indexOf(prod), dummyProd);
-//                dialog.cancel();
-//                homeViewPagerAdapter.notifyDataSetChanged();
-//            }
-//        });
-//
-//        Button editDialogDeleteButton = (Button) dialog.findViewById(R.id.dialog_cancel_button);
-//        editDialogDeleteButton.setText(R.string.dialog_delete);
-//        editDialogDeleteButton.setTextColor(Color.parseColor(prod.getCategory().getColor()));
-//        editDialogDeleteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                currentOrder.remove(prod);
-//                homeViewPagerAdapter.notifyDataSetChanged();
-//                dialog.cancel();
-//            }
-//        });
+        SelectionHelper infoPicker = new SelectionHelper();
+        ArrayList<ArrayList<String>> arrayChoices = new ArrayList<>();
+        switch(prod.getCategory()){
+            case TUNA:
+                arrayChoices = infoPicker.getTuna();
+                break;
+            case SWORD:
+                arrayChoices = infoPicker.getSword();
+                break;
+            case MAHI:
+                arrayChoices = infoPicker.getMahi();
+                break;
+            case WAHOO:
+                arrayChoices = infoPicker.getWahoo();
+                break;
+            case GROUPER:
+                arrayChoices = infoPicker.getGrouper();
+                break;
+            case SALMON:
+                arrayChoices = infoPicker.getSalmon();
+                break;
+            case OTHER:
+                arrayChoices = infoPicker.getOther();
+                break;
+        }
+
+        Spinner regions = dialog.findViewById(R.id.spinner1);
+        ArrayAdapter<String> regionSpinnerAdapter =
+                new ArrayAdapter<>(getApplicationContext(),
+                        android.R.layout.simple_spinner_item, arrayChoices.get(0));
+        regionSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        regions.setAdapter(regionSpinnerAdapter);
+        regions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                dummyProd.setRegion(parent.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                dummyProd.setRegion(dummyProd.getRegion());
+            }
+        });
+
+        Spinner species = dialog.findViewById(R.id.spinner2);
+        ArrayAdapter<String> speciesSpinnerAdapter =
+                new ArrayAdapter<>(getApplicationContext(),
+                        android.R.layout.simple_spinner_item, arrayChoices.get(1));
+        speciesSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        species.setAdapter(speciesSpinnerAdapter);
+        species.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                dummyProd.setSpecies(parent.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                dummyProd.setSpecies(dummyProd.getSpecies());
+            }
+        });
+
+        Spinner grades = dialog.findViewById(R.id.spinner3);
+        ArrayAdapter<String> gradesSpinnerAdapter =
+                new ArrayAdapter<>(getApplicationContext(),
+                        android.R.layout.simple_spinner_item, arrayChoices.get(2));
+        gradesSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        grades.setAdapter(gradesSpinnerAdapter);
+        grades.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                dummyProd.setGrade(parent.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                dummyProd.setGrade(dummyProd.getGrade());
+            }
+        });
+
+        Spinner sizes = dialog.findViewById(R.id.spinner4);
+        ArrayAdapter<String> sizesSpinnerAdapter =
+                new ArrayAdapter<>(getApplicationContext(),
+                        android.R.layout.simple_spinner_item, arrayChoices.get(3));
+        sizesSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sizes.setAdapter(sizesSpinnerAdapter);
+        sizes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                dummyProd.setSize(parent.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                dummyProd.setSize(dummyProd.getSize());
+            }
+        });
+
+        Button dialogAddButton = dialog.findViewById(R.id.dialog_add_button);
+        dialogAddButton.setText(getResources().getString(R.string.dialog_confirm_changes));
+        dialogAddButton.setTextColor(Color.parseColor(prod.getCategory().getColor()));
+        dialogAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentOrder.size() <= 50){
+                    if (!qtyField.getText().toString().isEmpty())
+                        dummyProd.setQuantity(qtyField.getText().toString());
+                    if (!priceField.getText().toString().isEmpty())
+                        dummyProd.setPrice(priceField.getText().toString());
+                    currentOrder.set(currentOrder.indexOf(prod), dummyProd);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),
+                            "You've reached your order maximum.", Toast.LENGTH_SHORT).show();
+                }
+                dialog.cancel();
+                homeViewPagerAdapter.notifyDataSetChanged();
+            }
+        });
+
+        Button dialogCancelButton = dialog.findViewById(R.id.dialog_cancel_button);
+        dialogAddButton.setText(getResources().getString(R.string.dialog_delete));
+        dialogCancelButton.setTextColor(Color.parseColor(prod.getCategory().getColor()));
+        dialogCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentOrder.remove(prod);
+                dialog.cancel();
+            }
+        });
 
         int width = (int)(getResources().getDisplayMetrics().widthPixels*0.999);
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setLayout(width, height);
         return dialog;
-    }
-
-    public ArrayList<CarouselPicker> setSelections(Category cat, Dialog d){
-        ArrayList<CarouselPicker> temp = new ArrayList<>(4);
-        SelectionHelper S1 = new SelectionHelper();
-        final CarouselPicker dialogPicker1 = d.findViewById(R.id.dialog_carousel1);
-        final CarouselPicker dialogPicker2 = d.findViewById(R.id.dialog_carousel2);
-        final CarouselPicker dialogPicker3 = d.findViewById(R.id.dialog_carousel3);
-        final CarouselPicker dialogPicker4 = d.findViewById(R.id.dialog_carousel4);
-        final SelectionHelper infoPasser = new SelectionHelper();
-        CarouselPicker.CarouselViewAdapter regions = new CarouselPicker.CarouselViewAdapter(this, null, 0);
-        CarouselPicker.CarouselViewAdapter species = new CarouselPicker.CarouselViewAdapter(this, null, 0);
-        CarouselPicker.CarouselViewAdapter grades = new CarouselPicker.CarouselViewAdapter(this, null, 0);
-        CarouselPicker.CarouselViewAdapter sizes = new CarouselPicker.CarouselViewAdapter(this, null, 0);
-        switch (cat){
-                    case TUNA:
-                        regions = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getRegions(), 0);
-                        species = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getTunaSpecies(), 0);
-                        grades = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getTunaGrades(), 0);
-                        sizes = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getTunaSizes(), 0);
-                        break;
-                    case SWORD:
-                        regions = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getRegions(), 0);
-                        species = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getNoSpecies(), 0);
-                        grades = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getSwordGrades(), 0);
-                        sizes = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getSwordSizes(), 0);
-                        break;
-                    case MAHI:
-                        regions = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getRegions(), 0);
-                        species = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getNoSpecies(), 0);
-                        grades = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getNoGrades(), 0);
-                        sizes = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getMahiSizes(), 0);
-                        break;
-                    case WAHOO:
-                        regions = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getRegions(), 0);
-                        species = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getNoSpecies(), 0);
-                        grades = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getNoGrades(), 0);
-                        break;
-                    case SALMON:
-                        regions = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getRegions(), 0);
-                        species = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getSalmonSpecies(), 0);
-                        grades = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getSwordGrades(), 0);
-                        sizes = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getSwordSizes(), 0);
-                        break;
-                    case OTHER:
-                        regions = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getRegions(), 0);
-                        species = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getNoSpecies(), 0);
-                        grades = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getNoGrades(), 0);
-                        sizes = new CarouselPicker.CarouselViewAdapter(this, infoPasser.getTunaSizes(), 0);
-                        break;
-                    default:
-                }
-        dialogPicker1.setAdapter(regions);
-        dialogPicker2.setAdapter(species);
-        dialogPicker3.setAdapter(grades);
-        dialogPicker4.setAdapter(sizes);
-        temp.add(dialogPicker1);
-        temp.add(dialogPicker2);
-        temp.add(dialogPicker3);
-        temp.add(dialogPicker4);
-        return temp;
     }
 
     //METHODS FOR MANAGING CURRENT ORDER
@@ -683,9 +603,11 @@ public class HomeActivity extends AppCompatActivity implements
         ServerPost sp = new ServerPost(params, homeAuthenticator.getCurrentUser());
         return  sp.getSuccess();
     }
+
     public static FirebaseUser getFirebaseUser(){
         return homeAuthenticator.getCurrentUser();
     }
+
     //CUSTOMIZED PAGER ADAPTER FOR TABBED ACTIVITY FUNCTION
     public static class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private String tabTitles[] = new String[] { "News", "Products", "My Order", "Chat" };
