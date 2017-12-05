@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.bigblueocean.nick.bigblueocean.R;
 import com.bigblueocean.nick.bigblueocean.activities.HomeActivity;
+import com.bigblueocean.nick.bigblueocean.activities.LoginActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -48,14 +49,14 @@ public class fcmMessageServiceHelper extends FirebaseMessagingService {
     }
 
     private void sendNotification(String title, String messageBody) {
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.whitelogo)
+                .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle(title)
                 .setContentText(messageBody)
                 .setAutoCancel(true)

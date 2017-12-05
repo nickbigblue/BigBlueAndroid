@@ -331,6 +331,7 @@ public class HomeActivity extends AppCompatActivity implements
         });
 
         Button dialogAddButton = dialog.findViewById(R.id.dialog_add_button);
+        dialogAddButton.setText(getResources().getString(R.string.dialog_add_button));
         dialogAddButton.setTextColor(Color.parseColor(cat.getColor()));
         dialogAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -352,6 +353,7 @@ public class HomeActivity extends AppCompatActivity implements
         });
 
         Button dialogCancelButton = dialog.findViewById(R.id.dialog_cancel_button);
+        dialogCancelButton.setText(getResources().getString(R.string.dialog_cancel_button));
         dialogCancelButton.setTextColor(Color.parseColor(cat.getColor()));
         dialogCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -510,7 +512,7 @@ public class HomeActivity extends AppCompatActivity implements
         });
 
         Button dialogCancelButton = dialog.findViewById(R.id.dialog_cancel_button);
-        dialogAddButton.setText(getResources().getString(R.string.dialog_delete));
+        dialogCancelButton.setText(getResources().getString(R.string.dialog_delete));
         dialogCancelButton.setTextColor(Color.parseColor(prod.getCategory().getColor()));
         dialogCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -58,7 +58,6 @@
     <string name="dialog_confirm_changes">Confirm changes</string>
     <string name="dialog_continue">Continue</string>
     <string name="dialog_delete">Delete this item</string>
-    <string name="dialog_explanation">Swipe through the selections below to specify your needs.</string>
     <string name="submit_dialog_title">Confirm Submission</string>
     <string name="submit_dialog_message">By confirming, you will submit your current order list to your salesperson.
                 Your order will be reviewed by your salesperson, who will then contact you to place your order officially.</string>
