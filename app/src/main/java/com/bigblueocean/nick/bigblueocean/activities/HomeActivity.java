@@ -87,7 +87,7 @@ public class HomeActivity extends AppCompatActivity implements
         tabLayout.setupWithViewPager(homeViewPager, false);
 
         tabLayout.getTabAt(0).setIcon(R.drawable.news);
-        tabLayout.getTabAt(1).setIcon(R.drawable.add_item);
+//        tabLayout.getTabAt(1).setIcon(R.drawable.add_item);
         tabLayout.getTabAt(2).setIcon(R.drawable.list);
 
         if (this.getIntent().hasExtra("currentItem"))
@@ -226,11 +226,9 @@ public class HomeActivity extends AppCompatActivity implements
 
         final EditText qtyField = dialog.findViewById(R.id.dialog_edit_text2);
         qtyField.setTextColor(Color.parseColor(cat.getColor()));
-        qtyField.setVisibility(View.INVISIBLE);
 
         final EditText priceField = dialog.findViewById(R.id.dialog_edit_text1);
         priceField.setTextColor(Color.parseColor(cat.getColor()));
-        priceField.setVisibility(View.INVISIBLE);
 
         SelectionHelper infoPicker = new SelectionHelper();
         ArrayList<ArrayList<String>> arrayChoices = new ArrayList<>();
@@ -501,13 +499,9 @@ public class HomeActivity extends AppCompatActivity implements
                     if (!priceField.getText().toString().isEmpty())
                         dummyProd.setPrice(priceField.getText().toString());
                     currentOrder.set(currentOrder.indexOf(prod), dummyProd);
+                    dialog.cancel();
+                    homeViewPagerAdapter.notifyDataSetChanged();
                 }
-                else {
-                    Toast.makeText(getApplicationContext(),
-                            "You've reached your order maximum.", Toast.LENGTH_SHORT).show();
-                }
-                dialog.cancel();
-                homeViewPagerAdapter.notifyDataSetChanged();
             }
         });
 
@@ -519,6 +513,7 @@ public class HomeActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 currentOrder.remove(prod);
                 dialog.cancel();
+                homeViewPagerAdapter.notifyDataSetChanged();
             }
         });
 
@@ -612,7 +607,7 @@ public class HomeActivity extends AppCompatActivity implements
 
     //CUSTOMIZED PAGER ADAPTER FOR TABBED ACTIVITY FUNCTION
     public static class ViewPagerAdapter extends FragmentStatePagerAdapter {
-        private String tabTitles[] = new String[] { "News", "Products", "My Order", "Chat" };
+        private String tabTitles[] = new String[] { "News", "What You Want", "My Order"};
 
         public ViewPagerAdapter(FragmentManager fragmentManager){
             super(fragmentManager);

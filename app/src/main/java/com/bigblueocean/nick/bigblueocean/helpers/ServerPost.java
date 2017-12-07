@@ -82,6 +82,8 @@ public class ServerPost{
             e.printStackTrace();
         } catch (JSONException e){
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
     }
 

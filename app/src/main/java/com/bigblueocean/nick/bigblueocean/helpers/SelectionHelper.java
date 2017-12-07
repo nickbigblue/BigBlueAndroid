@@ -96,7 +96,11 @@ public class SelectionHelper {
     public ArrayList<ArrayList<String>> getGrouper(){
         ArrayList<ArrayList<String>> grouper = new ArrayList<>();
         ArrayList<String> regions = getRegions();
-        ArrayList<String> species = new ArrayList<>();;
+        ArrayList<String> species = new ArrayList<>();
+        species.add("No Pref.");
+        species.add("Red");
+        species.add("Black");
+        species.add("Dusky");
         ArrayList<String> grades = getNoGrades();
         ArrayList<String> sizes = new ArrayList<>();
         sizes.add("No Pref.");

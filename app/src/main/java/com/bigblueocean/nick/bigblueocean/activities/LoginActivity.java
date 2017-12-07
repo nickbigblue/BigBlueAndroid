@@ -54,7 +54,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             }
         };
 
-
         //setupViews
         loginButton = findViewById(R.id.loginButton);
         registerButton = findViewById(R.id.registerButton);
