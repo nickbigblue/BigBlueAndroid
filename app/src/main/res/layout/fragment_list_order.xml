@@ -26,7 +26,7 @@
         android:layout_weight="5"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.bigblueocean.nick.bigblueocean.fragments.ProdFragment"
-        tools:listitem="@layout/order_fragment" >
+        tools:listitem="@layout/fragment_order" >
     </android.support.v7.widget.RecyclerView>
 
     <LinearLayout
@@ -44,7 +44,7 @@
             android:textColor="@color/white"
             android:textAlignment="center"
             android:textSize="34sp"
-            android:fontFamily="@font/antonregular"
+            android:fontFamily="@font/impact"
             android:layout_weight="1"/>
 
         <Button
@@ -56,7 +56,7 @@
             android:textColor="@color/white"
             android:textAlignment="center"
             android:textSize="34sp"
-            android:fontFamily="@font/antonregular"
+            android:fontFamily="@font/impact"
             android:layout_weight="1"/>
 
     </LinearLayout>

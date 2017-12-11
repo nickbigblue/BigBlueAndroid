@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.AlertDialogLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/register_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:text="@string/register_button"
+            android:textColor="@color/colorPrimary"
+            android:textSize="34sp"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:fontFamily="@font/impact"/>
+
+        <TextView
+            android:id="@+id/register_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:text="@string/register_dialog_description"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textAlignment="center"/>
+
+        <EditText
+            android:id="@+id/emailLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:fontFamily="sans-serif-smallcaps"
+            android:hint="@string/login_email_hint"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:textCursorDrawable="@drawable/custom_text_cursor"
+            android:visibility="visible" />
+
+        <EditText
+            android:id="@+id/passwordLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:fontFamily="sans-serif-smallcaps"
+            android:hint="@string/login_password_hint"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:textCursorDrawable="@drawable/custom_text_cursor"
+            android:visibility="visible" />
+
+        <EditText
+            android:id="@+id/register_person"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:fontFamily="sans-serif-smallcaps"
+            android:hint="@string/login_name_hint"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textCursorDrawable="@drawable/custom_text_cursor"
+            android:visibility="visible" />
+
+        <EditText
+            android:id="@+id/register_company_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:fontFamily="sans-serif-smallcaps"
+            android:hint="@string/login_company_hint"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textCursorDrawable="@drawable/custom_text_cursor"
+            android:visibility="visible" />
+
+        <EditText
+            android:id="@+id/register_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:fontFamily="sans-serif-smallcaps"
+            android:hint="@string/login_phone_hint"
+            android:imeOptions="actionDone"
+            android:inputType="phone"
+            android:maxLines="1"
+            android:maxLength="10"
+            android:textCursorDrawable="@drawable/custom_text_cursor"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/login_button_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:background="@color/white">
+
+            <Button
+                android:id="@+id/dialog_negative"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/dialog_cancel_button"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:background="@color/white"/>
+
+            <Button
+                android:id="@+id/dialog_positive"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/register_button"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:background="@color/white"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.AlertDialogLayout>

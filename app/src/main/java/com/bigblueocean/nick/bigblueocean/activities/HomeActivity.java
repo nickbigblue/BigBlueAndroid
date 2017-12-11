@@ -62,7 +62,7 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home_activity);
+        setContentView(R.layout.activity_home);
         homeAuthenticator.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -86,9 +86,9 @@ public class HomeActivity extends AppCompatActivity implements
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(homeViewPager, false);
 
-        tabLayout.getTabAt(0).setIcon(R.drawable.news);
-//        tabLayout.getTabAt(1).setIcon(R.drawable.add_item);
-        tabLayout.getTabAt(2).setIcon(R.drawable.list);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_news);
+//        tabLayout.getTabAt(1).setIcon(R.drawable.ic_add_item);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_list);
 
         if (this.getIntent().hasExtra("currentItem"))
             homeViewPager.setCurrentItem(Integer.parseInt(this.getIntent().getStringExtra("currentItem")));
@@ -211,7 +211,7 @@ public class HomeActivity extends AppCompatActivity implements
     //METHODS FOR DIALOGS
     public Dialog addItemDialog(final Category cat){
         final Dialog dialog = new Dialog(HomeActivity.this);
-        dialog.setContentView(R.layout.add_product_selection_dialog);
+        dialog.setContentView(R.layout.dialog_add_product);
         dummyProd = new Product();
         dummyProd.setCategory(cat);
         dummyProd.setRegion("N/P");
@@ -224,10 +224,10 @@ public class HomeActivity extends AppCompatActivity implements
         ImageView iv = dialog.findViewById(R.id.dialog_image);
         iv.setBackgroundColor(Color.parseColor(cat.getColor()));
 
-        final EditText qtyField = dialog.findViewById(R.id.dialog_edit_text2);
+        final EditText qtyField = dialog.findViewById(R.id.dialog_edit_text1);
         qtyField.setTextColor(Color.parseColor(cat.getColor()));
 
-        final EditText priceField = dialog.findViewById(R.id.dialog_edit_text1);
+        final EditText priceField = dialog.findViewById(R.id.dialog_edit_text2);
         priceField.setTextColor(Color.parseColor(cat.getColor()));
 
         SelectionHelper infoPicker = new SelectionHelper();
@@ -265,12 +265,13 @@ public class HomeActivity extends AppCompatActivity implements
         regions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
                 dummyProd.setRegion(parent.getItemAtPosition(position).toString());
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                dummyProd.setRegion("N/P");
             }
         });
 
@@ -283,12 +284,13 @@ public class HomeActivity extends AppCompatActivity implements
         species.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
                 dummyProd.setSpecies(parent.getItemAtPosition(position).toString());
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                dummyProd.setSpecies("");
             }
         });
 
@@ -301,12 +303,13 @@ public class HomeActivity extends AppCompatActivity implements
         grades.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
                 dummyProd.setGrade(parent.getItemAtPosition(position).toString());
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                dummyProd.setGrade("N/P");
             }
         });
 
@@ -319,12 +322,13 @@ public class HomeActivity extends AppCompatActivity implements
         sizes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
                 dummyProd.setSize(parent.getItemAtPosition(position).toString());
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                dummyProd.setSize("N/P");
             }
         });
 
@@ -368,7 +372,7 @@ public class HomeActivity extends AppCompatActivity implements
 
     public Dialog editProductDialog(final Product prod){
         final Dialog dialog = new Dialog(HomeActivity.this);
-        dialog.setContentView(R.layout.add_product_selection_dialog);
+        dialog.setContentView(R.layout.dialog_add_product);
         dummyProd = new Product();
         dummyProd.setCategory(prod.getCategory());
         dummyProd.setRegion(prod.getRegion());
@@ -381,11 +385,11 @@ public class HomeActivity extends AppCompatActivity implements
         ImageView iv = dialog.findViewById(R.id.dialog_image);
         iv.setBackgroundColor(Color.parseColor(prod.getCategory().getColor()));
 
-        final EditText qtyField = dialog.findViewById(R.id.dialog_edit_text2);
+        final EditText qtyField = dialog.findViewById(R.id.dialog_edit_text1);
         qtyField.setText(dummyProd.getQuantity());
         qtyField.setTextColor(Color.parseColor(prod.getCategory().getColor()));
 
-        final EditText priceField = dialog.findViewById(R.id.dialog_edit_text1);
+        final EditText priceField = dialog.findViewById(R.id.dialog_edit_text2);
         priceField.setText(dummyProd.getPrice());
         priceField.setTextColor(Color.parseColor(prod.getCategory().getColor()));
 
@@ -424,6 +428,7 @@ public class HomeActivity extends AppCompatActivity implements
         regions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
                 dummyProd.setRegion(parent.getItemAtPosition(position).toString());
             }
 
@@ -442,6 +447,7 @@ public class HomeActivity extends AppCompatActivity implements
         species.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
                 dummyProd.setSpecies(parent.getItemAtPosition(position).toString());
             }
 
@@ -460,6 +466,7 @@ public class HomeActivity extends AppCompatActivity implements
         grades.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
                 dummyProd.setGrade(parent.getItemAtPosition(position).toString());
             }
 
@@ -478,6 +485,7 @@ public class HomeActivity extends AppCompatActivity implements
         sizes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
                 dummyProd.setSize(parent.getItemAtPosition(position).toString());
             }
 

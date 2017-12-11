@@ -38,6 +38,7 @@
             android:textSize="28sp"
             android:paddingLeft="10dp"
             android:gravity="left"
+            android:fontFamily="@font/impact"
             android:textColor="@color/colorPrimary"
             android:textAppearance="?attr/textAppearanceListItem" />
 

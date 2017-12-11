@@ -38,7 +38,7 @@ public class OrderFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.order_fragment_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_order, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.list);
         recyclerView.setAdapter(new OrderViewAdapter(currentOrder, orderFragmentListener));
         Button submitButton = view.findViewById(R.id.order_submit);

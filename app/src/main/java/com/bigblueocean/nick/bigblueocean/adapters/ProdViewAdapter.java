@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bigblueocean.nick.bigblueocean.helpers.FontHelper;
 import com.bigblueocean.nick.bigblueocean.fragments.ProdFragment.OnListFragmentInteractionListener;
 import com.bigblueocean.nick.bigblueocean.model.Category;
 import com.bigblueocean.nick.bigblueocean.R;
@@ -31,7 +30,7 @@ public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.product_fragment, parent, false);
+                .inflate(R.layout.fragment_product, parent, false);
         return new ViewHolder(view);
     }
 
@@ -43,7 +42,6 @@ public class ProdViewAdapter extends RecyclerView.Adapter<ProdViewAdapter.ViewHo
         holder.categoryImage.setBackgroundColor(Color.parseColor(holder.currentCategory.getColor()));
         holder.categoryImage.setImageResource(categoryArrayList.get(pos).getImageId());
         holder.categoryTitle.setText(categoryArrayList.get(pos).getTitle());
-        holder.categoryTitle.setTypeface(FontHelper.antonTypeface(context));
         holder.categoryTitle.setTextColor(Color.parseColor(categoryArrayList.get(pos).getColor()));
 
         holder.categoryCell.setOnClickListener(new View.OnClickListener() {

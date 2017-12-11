@@ -10,23 +10,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.bigblueocean.nick.bigblueocean.helpers.FontHelper;
+
 import com.bigblueocean.nick.bigblueocean.helpers.ServerPost;
 import com.bigblueocean.nick.bigblueocean.helpers.SweetAlertHelper;
 import com.bigblueocean.nick.bigblueocean.model.User;
 import com.bigblueocean.nick.bigblueocean.R;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
-
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
 
@@ -46,7 +40,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_activity);
+        setContentView(R.layout.activity_login);
         loginAuthenticator = FirebaseAuth.getInstance();
         loginAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -62,7 +56,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         registerButton = findViewById(R.id.registerButton);
         forgotPasswordButton = findViewById(R.id.forgotPasswordButton);
         title = findViewById(R.id.loginTitle);
-        title.setTypeface(FontHelper.antonTypeface(this));
 
         //setupButtons
         loginButton.setOnClickListener(this);
@@ -114,7 +107,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
         switch(id){
             case R.id.loginButton:
-                input.setContentView(R.layout.login_dialog);
+                input.setContentView(R.layout.dialog_login);
                 emailEdit = input.findViewById(R.id.emailLogin);
                 passwordEdit = input.findViewById(R.id.passwordLogin);
                 positive = input.findViewById(R.id.dialog_positive);
@@ -131,7 +124,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 break;
 
             case R.id.registerButton:
-                input.setContentView(R.layout.register_dialog);
+                input.setContentView(R.layout.dialog_register);
                 emailEdit = input.findViewById(R.id.emailLogin);
                 passwordEdit = input.findViewById(R.id.passwordLogin);
                 userName = input.findViewById(R.id.register_person);
@@ -151,7 +144,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 break;
 
             case R.id.forgotPasswordButton:
-                input.setContentView(R.layout.forgot_password_dialog);
+                input.setContentView(R.layout.dialog_forgot_password);
                 emailEdit = input.findViewById(R.id.emailLogin);
                 positive = input.findViewById(R.id.dialog_positive);
                 negative = input.findViewById(R.id.dialog_negative);

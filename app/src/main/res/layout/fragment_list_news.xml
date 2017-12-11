@@ -14,8 +14,8 @@
         android:background="@color/white"
         android:text="@string/news_title"
         android:textColor="@color/colorPrimary"
-        android:textSize="32sp"
-        android:fontFamily="@font/antonregular"/>
+        android:textSize="40sp"
+        android:fontFamily="@font/impact"/>
 
     <android.support.v7.widget.RecyclerView
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -26,6 +26,6 @@
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.bigblueocean.nick.bigblueocean.fragments.NewsFragment"
-        tools:listitem="@layout/news_fragment" />
+        tools:listitem="@layout/fragment_news" />
 
 </LinearLayout>

@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bigblueocean.nick.bigblueocean.helpers.FontHelper;
 import com.bigblueocean.nick.bigblueocean.fragments.OrderFragment.OnListFragmentInteractionListener;
 import com.bigblueocean.nick.bigblueocean.R;
 
@@ -33,7 +32,7 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.order_fragment, parent, false);
+                .inflate(R.layout.fragment_order, parent, false);
         return new ViewHolder(view);
     }
 
@@ -45,29 +44,24 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
         holder.productTitle.setBackgroundColor(Color.parseColor(currentOrder.get(pos).getCategory().getColor()));
 
         holder.productTitle.setText(currentOrder.get(pos).getCategory().getTag());
-        holder.productTitle.setTypeface(FontHelper.antonTypeface(context));
 
         holder.productSubtitle.setBackgroundColor(Color.parseColor(currentOrder.get(pos).getCategory().getColor()));
         if (currentOrder.get(pos).getSpecies() != null && !currentOrder.get(pos).getSpecies().equalsIgnoreCase("N/P") ){
-            holder.productSubtitle.setText(currentOrder.get(pos).getRegion()+" " +currentOrder.get(pos).getSpecies());
+            holder.productSubtitle.setText(currentOrder.get(pos).getRegion()+" "+currentOrder.get(pos).getSpecies());
         }
         else
             holder.productSubtitle.setText(currentOrder.get(pos).getRegion());
-        holder.productSubtitle.setTypeface(FontHelper.antonTypeface(context));
 
         String label = currentOrder.get(pos).getGrade();
         holder.productDetailsLabel1.setText(label);
-        holder.productDetailsLabel1.setTypeface(FontHelper.antonTypeface(context));
         holder.productDetailsLabel1.setTextColor(Color.parseColor(currentOrder.get(pos).getCategory().getColor()));
 
         label = currentOrder.get(pos).getSize();
         holder.productDetailsLabel2.setText(label);
-        holder.productDetailsLabel2.setTypeface(FontHelper.antonTypeface(context));
         holder.productDetailsLabel2.setTextColor(Color.parseColor(currentOrder.get(pos).getCategory().getColor()));
 
         label = currentOrder.get(pos).getQuantity() + " lbs.";
         holder.productDetailsLabel3.setText(label);
-        holder.productDetailsLabel3.setTypeface(FontHelper.antonTypeface(context));
         holder.productDetailsLabel3.setTextColor(Color.parseColor(currentOrder.get(pos).getCategory().getColor()));
 
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
@@ -77,7 +71,6 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.View
         else
             label = "$0.00";
         holder.productDetailsLabel4.setText(label);
-        holder.productDetailsLabel4.setTypeface(FontHelper.antonTypeface(context));
         holder.productDetailsLabel4.setTextColor(Color.parseColor(currentOrder.get(pos).getCategory().getColor()));
 
 

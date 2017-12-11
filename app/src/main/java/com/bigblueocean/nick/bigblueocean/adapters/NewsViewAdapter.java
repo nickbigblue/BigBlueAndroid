@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bigblueocean.nick.bigblueocean.fragments.NewsFragment.OnListFragmentInteractionListener;
-import com.bigblueocean.nick.bigblueocean.helpers.FontHelper;
 import com.bigblueocean.nick.bigblueocean.R;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.news_fragment, parent, false);
+                .inflate(R.layout.fragment_news, parent, false);
         return new ViewHolder(view);
     }
 
@@ -37,14 +36,13 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Context context = holder.newsCell.getContext();
         holder.currentNews = recentNews.get(position);
-            if(recentNews.get(position).getImage()==null) {
-//                holder.newsBanner.setImageResource(recentNews.get(position).getImageID());
+            if(recentNews.get(position).getImage() == null) {
+                holder.newsBanner.setImageResource(R.drawable.newsgenericimage);
             }
             else{
                 Picasso.with(context).load(recentNews.get(position).getImage()).into(holder.newsBanner);
             }
         holder.newsTitle.setText(recentNews.get(position).getTitle());
-        holder.newsTitle.setTypeface(FontHelper.antonTypeface(context));
         holder.newsCell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
