@@ -24,6 +24,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+
 public class LoginActivity extends Activity implements View.OnClickListener {
 
     private FirebaseAuth loginAuthenticator;
@@ -58,25 +62,18 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         registerButton = findViewById(R.id.registerButton);
         forgotPasswordButton = findViewById(R.id.forgotPasswordButton);
         title = findViewById(R.id.loginTitle);
+        title.setTypeface(FontHelper.antonTypeface(this));
 
         //setupButtons
         loginButton.setOnClickListener(this);
         registerButton.setOnClickListener(this);
         forgotPasswordButton.setOnClickListener(this);
-        title.setTypeface(FontHelper.antonTypeface(this));
     }
 
     @Override
     public void onStart() {
         super.onStart();
         loginAuthenticator.addAuthStateListener(loginAuthListener);
-
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-
     }
 
     @Override
@@ -399,17 +396,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     private void sendVerificationEmail(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
         user.sendEmailVerification()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            sweetBuilder
-                                    .createSweetDialog(LoginActivity.this, "Success",
-                                                        "Verify Email", R.string.email_sent, "Ok")
-                                    .show();
-                        }
+                    public void onSuccess(Void aVoid) {
+                        sweetBuilder
+                                .createSweetDialog(LoginActivity.this, "Success",
+                                        "Verify Email", R.string.email_sent, "Ok")
+                                .show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
