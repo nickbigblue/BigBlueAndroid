@@ -92,7 +92,7 @@ public class HomeActivity extends AppCompatActivity implements
         tabLayout.setupWithViewPager(homeViewPager, false);
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_news);
-//        tabLayout.getTabAt(1).setIcon(R.drawable.ic_add_item);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_fishook);
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_list);
 
         if (this.getIntent().hasExtra("currentItem"))
@@ -620,7 +620,7 @@ public class HomeActivity extends AppCompatActivity implements
 
     //CUSTOMIZED PAGER ADAPTER FOR TABBED ACTIVITY FUNCTION
     public static class ViewPagerAdapter extends FragmentStatePagerAdapter {
-        private String tabTitles[] = new String[] { "News", "What You Want", "My Order"};
+        private String tabTitles[] = new String[] { "News", "The Goods", "My Order"};
 
         public ViewPagerAdapter(FragmentManager fragmentManager){
             super(fragmentManager);
