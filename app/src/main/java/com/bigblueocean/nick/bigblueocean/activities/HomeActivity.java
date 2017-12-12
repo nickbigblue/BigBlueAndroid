@@ -52,6 +52,7 @@ public class HomeActivity extends AppCompatActivity implements
         ProdFragment.OnListFragmentInteractionListener, OrderFragment.OnListFragmentInteractionListener,
         NewsFragment.OnListFragmentInteractionListener {
     User opUser = new User();
+    private final static int PERMISSIONS_THRESHOLD = 3;
     private static ViewPagerAdapter homeViewPagerAdapter;
     private ViewPager homeViewPager;
     static FirebaseAuth homeAuthenticator = FirebaseAuth.getInstance();
@@ -63,7 +64,6 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
         homeAuthenticator.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -82,25 +82,48 @@ public class HomeActivity extends AppCompatActivity implements
             }
         });
 
-        Toolbar homeToolbar = findViewById(R.id.home_toolbar);
-        setSupportActionBar(homeToolbar);
 
-        homeViewPager = (ViewPager) findViewById(R.id.container);
-        homeViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        homeViewPager.setAdapter(homeViewPagerAdapter);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(homeViewPager, false);
+        if (opUser.getType() < PERMISSIONS_THRESHOLD) {
+            setContentView(R.layout.activity_home_cust);
+            Toolbar homeToolbar = findViewById(R.id.home_toolbar);
+            setSupportActionBar(homeToolbar);
 
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_news);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_fishook);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_list);
+            homeViewPager = (ViewPager) findViewById(R.id.container);
+            homeViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+            homeViewPager.setAdapter(homeViewPagerAdapter);
+            tabLayout = (TabLayout) findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(homeViewPager, false);
 
-        if (this.getIntent().hasExtra("currentItem"))
-            homeViewPager.setCurrentItem(Integer.parseInt(this.getIntent().getStringExtra("currentItem")));
-        else
-            homeViewPager.setCurrentItem(1);
-        homeViewPager.setOffscreenPageLimit(0);
+            tabLayout.getTabAt(0).setIcon(R.drawable.ic_news);
+            tabLayout.getTabAt(1).setIcon(R.drawable.ic_fishook);
+            tabLayout.getTabAt(2).setIcon(R.drawable.ic_list);
 
+            if (this.getIntent().hasExtra("currentItem"))
+                homeViewPager.setCurrentItem(Integer.parseInt(this.getIntent().getStringExtra("currentItem")));
+            else
+                homeViewPager.setCurrentItem(1);
+            homeViewPager.setOffscreenPageLimit(0);
+        } else {
+            setContentView(R.layout.activity_home_company);
+            Toolbar homeToolbar = findViewById(R.id.home_toolbar);
+            setSupportActionBar(homeToolbar);
+
+            homeViewPager = (ViewPager) findViewById(R.id.container);
+            homeViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+            homeViewPager.setAdapter(homeViewPagerAdapter);
+            tabLayout = (TabLayout) findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(homeViewPager, false);
+
+            tabLayout.getTabAt(0).setIcon(R.drawable.ic_news);
+            tabLayout.getTabAt(1).setIcon(R.drawable.ic_fishook);
+            tabLayout.getTabAt(2).setIcon(R.drawable.ic_list);
+
+            if (this.getIntent().hasExtra("currentItem"))
+                homeViewPager.setCurrentItem(Integer.parseInt(this.getIntent().getStringExtra("currentItem")));
+            else
+                homeViewPager.setCurrentItem(1);
+            homeViewPager.setOffscreenPageLimit(0);
+        }
     }
 
     @Override
