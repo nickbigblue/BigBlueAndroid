@@ -1,9 +1,11 @@
 package com.bigblueocean.nick.bigblueocean.activities;
 
 import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,14 +28,14 @@ public class NewsActivity extends AppCompatActivity {
             newsID = getIntent().getStringExtra("newsID");
         } else {
             newsID = "fail";
-            throw new IllegalArgumentException("Activity cannot find  extras: "+newsID);
+            throw new IllegalArgumentException("Activity cannot find  extras: " + newsID);
         }
 
-        if (getIntent().hasExtra("selectedNews")){
+        if (getIntent().hasExtra("selectedNews")) {
             String json = getIntent().getExtras().getString("selectedNews");
             newsPage = new Gson().fromJson(json, News.class);
         } else {
-            newsPage = new News("Default News","Default Content", R.drawable.newsgenericimage, 0);
+            newsPage = new News("Default News", "Default Content", R.drawable.newsgenericimage, 0);
 //            throw new IllegalArgumentException("Activity cannot find extras: 'selectedNews'");
         }
 
@@ -50,12 +52,11 @@ public class NewsActivity extends AppCompatActivity {
         body.setText(newsPage.getContent());
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            body.setText(Html.fromHtml(newsPage.getContent(),Html.FROM_HTML_MODE_LEGACY));
+            body.setText(Html.fromHtml(newsPage.getContent(), Html.FROM_HTML_MODE_LEGACY));
         } else {
             body.setText(Html.fromHtml(newsPage.getContent()));
         }
     }
-
 
     @Override
     public void onBackPressed() {

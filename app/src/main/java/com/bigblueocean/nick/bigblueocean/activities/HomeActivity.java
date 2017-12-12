@@ -34,6 +34,7 @@ import com.bigblueocean.nick.bigblueocean.fragments.ProdFragment;
 import com.bigblueocean.nick.bigblueocean.helpers.ServerPost;
 import com.bigblueocean.nick.bigblueocean.model.Category;
 import com.bigblueocean.nick.bigblueocean.R;
+import com.bigblueocean.nick.bigblueocean.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -50,7 +51,7 @@ import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 public class HomeActivity extends AppCompatActivity implements
         ProdFragment.OnListFragmentInteractionListener, OrderFragment.OnListFragmentInteractionListener,
         NewsFragment.OnListFragmentInteractionListener {
-
+    User opUser = new User();
     private static ViewPagerAdapter homeViewPagerAdapter;
     private ViewPager homeViewPager;
     static FirebaseAuth homeAuthenticator = FirebaseAuth.getInstance();
@@ -74,10 +75,14 @@ public class HomeActivity extends AppCompatActivity implements
                     HomeActivity.this.finish();
                     startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                 }
+                else{
+                    ServerPost sp = new ServerPost(user);
+                    opUser = sp.setUser();
+                }
             }
         });
 
-        Toolbar homeToolbar = (Toolbar) findViewById(R.id.home_toolbar);
+        Toolbar homeToolbar = findViewById(R.id.home_toolbar);
         setSupportActionBar(homeToolbar);
 
         homeViewPager = (ViewPager) findViewById(R.id.container);

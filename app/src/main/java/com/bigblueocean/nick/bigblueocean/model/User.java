@@ -5,6 +5,7 @@ package com.bigblueocean.nick.bigblueocean.model;
  */
 
 public class User {
+
     private int verified;
     private String company;
     private String name;

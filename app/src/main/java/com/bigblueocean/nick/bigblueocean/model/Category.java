@@ -12,7 +12,7 @@ public enum Category {
     MAHI   ("Mahi H&G Wild-Caught", R.drawable.mahi, "#78b82c", "MAHI"),
     WAHOO    ("Wahoo H&G Wild-Caught", R.drawable.wahoo, "#2e78a1", "WAHOO"),
     GROUPER ("Grouper H&G Wild-Caught", R.drawable.grouper, "#c24f0a", "GROUPER"),
-    SALMON  ("Salmon H&G Wild-Caught", R.drawable.tuna, "#fcb0ed", "SALMON"),
+    SALMON  ("Salmon Farm-Raised", R.drawable.tuna, "#fcb0ed", "SALMON"),
     OTHER  ("Other", R.drawable.tuna, "#8e699e", "OTHER");
 
     private final String title;

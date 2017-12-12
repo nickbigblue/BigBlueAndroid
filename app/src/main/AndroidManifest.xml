@@ -30,8 +30,10 @@
             android:label="@string/title_activity_home"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
-        <activity android:name=".activities.NewsActivity"></activity>
+            android:theme="@style/AppTheme"> </activity>
+        <activity android:name=".activities.NewsActivity"
+            android:parentActivityName=".activities.HomeActivity"
+            android:noHistory="false"> </activity>
 
         <service android:name=".helpers.fcmInstanceServiceHelper">
             <intent-filter>
@@ -44,7 +46,6 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".activities.CalendarActivity"></activity>
     </application>
 
 </manifest>
