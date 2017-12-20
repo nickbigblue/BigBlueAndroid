@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:layoutAnimation="@anim/products_cell_animation">
 
-
     <TextView
         android:id="@+id/order_title"
         android:layout_width="match_parent"

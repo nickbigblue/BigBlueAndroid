@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -40,6 +41,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
+
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,8 +85,7 @@ public class HomeActivity extends AppCompatActivity implements
             }
         });
 
-
-        if (opUser.getType() < PERMISSIONS_THRESHOLD) {
+//        if (opUser.getType() < PERMISSIONS_THRESHOLD) {
             setContentView(R.layout.activity_home_cust);
             Toolbar homeToolbar = findViewById(R.id.home_toolbar);
             setSupportActionBar(homeToolbar);
@@ -103,27 +105,27 @@ public class HomeActivity extends AppCompatActivity implements
             else
                 homeViewPager.setCurrentItem(1);
             homeViewPager.setOffscreenPageLimit(0);
-        } else {
-            setContentView(R.layout.activity_home_company);
-            Toolbar homeToolbar = findViewById(R.id.home_toolbar);
-            setSupportActionBar(homeToolbar);
-
-            homeViewPager = (ViewPager) findViewById(R.id.container);
-            homeViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-            homeViewPager.setAdapter(homeViewPagerAdapter);
-            tabLayout = (TabLayout) findViewById(R.id.tabs);
-            tabLayout.setupWithViewPager(homeViewPager, false);
-
-            tabLayout.getTabAt(0).setIcon(R.drawable.ic_news);
-            tabLayout.getTabAt(1).setIcon(R.drawable.ic_fishook);
-            tabLayout.getTabAt(2).setIcon(R.drawable.ic_list);
-
-            if (this.getIntent().hasExtra("currentItem"))
-                homeViewPager.setCurrentItem(Integer.parseInt(this.getIntent().getStringExtra("currentItem")));
-            else
-                homeViewPager.setCurrentItem(1);
-            homeViewPager.setOffscreenPageLimit(0);
-        }
+//        } else {
+//            setContentView(R.layout.activity_home_company);
+//            Toolbar homeToolbar = findViewById(R.id.home_toolbar);
+//            setSupportActionBar(homeToolbar);
+//
+//            homeViewPager = (ViewPager) findViewById(R.id.container);
+//            homeViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+//            homeViewPager.setAdapter(homeViewPagerAdapter);
+//            tabLayout = (TabLayout) findViewById(R.id.tabs);
+//            tabLayout.setupWithViewPager(homeViewPager, false);
+//
+//            tabLayout.getTabAt(0).setIcon(R.drawable.ic_news);
+//            tabLayout.getTabAt(1).setIcon(R.drawable.ic_fishook);
+//            tabLayout.getTabAt(2).setIcon(R.drawable.ic_list);
+//
+//            if (this.getIntent().hasExtra("currentItem"))
+//                homeViewPager.setCurrentItem(Integer.parseInt(this.getIntent().getStringExtra("currentItem")));
+//            else
+//                homeViewPager.setCurrentItem(1);
+//            homeViewPager.setOffscreenPageLimit(0);
+//        }
     }
 
     @Override
@@ -239,6 +241,7 @@ public class HomeActivity extends AppCompatActivity implements
     //METHODS FOR DIALOGS
     public Dialog addItemDialog(final Category cat){
         final Dialog dialog = new Dialog(HomeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_add_product);
         dummyProd = new Product();
         dummyProd.setCategory(cat);
@@ -400,6 +403,7 @@ public class HomeActivity extends AppCompatActivity implements
 
     public Dialog editProductDialog(final Product prod){
         final Dialog dialog = new Dialog(HomeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_add_product);
         dummyProd = new Product();
         dummyProd.setCategory(prod.getCategory());

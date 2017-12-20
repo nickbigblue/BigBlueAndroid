@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
         android:id="@+id/moon_calendar"
         android:icon="?attr/actionModeCloseDrawable"
-        android:iconTint="@color/colorPrimary"
         android:title="@string/home_menu_calendar" />
+
     <item
         android:id="@+id/user_help"
         android:icon="?attr/actionModeCloseDrawable"
-        android:iconTint="@color/colorPrimary"
         android:title="@string/home_menu_help" />
+
     <item
         android:id="@+id/logout_home_menu"
         android:icon="?attr/actionModeCloseDrawable"
-        android:iconTint="@color/colorPrimary"
         android:title="@string/home_menu_signout" />
 </menu>

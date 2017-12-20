@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -80,7 +81,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         int clickedItem = v.getId();
-        if (hasWindowFocus()){
+        if (hasWindowFocus()) {
             switch (clickedItem) {
                 case R.id.loginButton:
                     generateDialog(R.id.loginButton).show();
@@ -94,18 +95,18 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 default:
                     break;
             }
-        }
-        else {
+        } else {
             return;
         }
     }
 
-    public Dialog generateDialog(int id){
+    public Dialog generateDialog(int id) {
         final Dialog input = new Dialog(LoginActivity.this);
+        input.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Button positive;
         Button negative = new Button(input.getContext());
 
-        switch(id){
+        switch (id) {
             case R.id.loginButton:
                 input.setContentView(R.layout.dialog_login);
                 emailEdit = input.findViewById(R.id.emailLogin);
@@ -165,8 +166,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 input.cancel();
             }
         });
-
-        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.999);
+        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.999);
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         input.getWindow().setLayout(width, height);
         return input;
@@ -174,14 +174,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     public void createAccount(String email, String password) {
         final String emailString = email;
-        if (!registerCredentialsAreComplete()) { return; }
-        else if (!existsInBigBlueDatabase(email)){
+        if (!registerCredentialsAreComplete()) {
+            return;
+        } else if (!existsInBigBlueDatabase(email)) {
             sweetBuilder
                     .createSweetDialog(LoginActivity.this, "Error",
                             "Non-existent Address", R.string.nonexistent_email, "Ok")
                     .show();
-        }
-        else {
+        } else {
             final SweetAlertDialog creationLoadingDialog = sweetBuilder.createProgressSweetDialog(LoginActivity.this);
             creationLoadingDialog.show();
             loginAuthenticator.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -222,31 +222,29 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    public void signIn(String email, String password){
-        if (!loginCredentialsAreComplete()){
+    public void signIn(String email, String password) {
+        if (!loginCredentialsAreComplete()) {
             return;
-        }
-        else {
+        } else {
             final SweetAlertDialog loadingDialog = sweetBuilder.createProgressSweetDialog(LoginActivity.this);
             loadingDialog.show();
 
             loginAuthenticator.signInWithEmailAndPassword(email, password)
-            .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                public void onSuccess(AuthResult authResult) {
-                    loadingDialog.dismissWithAnimation();
-                    if (!isVerified()) {
-                        sweetBuilder
-                                .createSweetDialog(LoginActivity.this, "Error",
-                                        "Email Verification Failed", R.string.login_verify_failed, "Ok")
-                                .show();
-                        loginAuthenticator.signOut();
-                    }
-                    else {
-                        ServerPost sp = new ServerPost(loginAuthenticator.getCurrentUser());
-                        User currentUser = sp.setUser();
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
+                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        public void onSuccess(AuthResult authResult) {
+                            loadingDialog.dismissWithAnimation();
+                            if (!isVerified()) {
+                                sweetBuilder
+                                        .createSweetDialog(LoginActivity.this, "Error",
+                                                "Email Verification Failed", R.string.login_verify_failed, "Ok")
+                                        .show();
+                                loginAuthenticator.signOut();
+                            } else {
+                                ServerPost sp = new ServerPost(loginAuthenticator.getCurrentUser());
+                                User currentUser = sp.setUser();
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     loadingDialog.dismissWithAnimation();
@@ -259,7 +257,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    public void forgotPassword(String email){
+    public void forgotPassword(String email) {
         FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -286,12 +284,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         if (email.isEmpty()) {
             emailEdit.setError("Required.");
             valid = false;
-        }
-        else if(!email.matches("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")){
+        } else if (!email.matches("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")) {
             emailEdit.setError("Not a valid address.");
             valid = false;
-        }
-        else {
+        } else {
             emailEdit.setError(null);
             valid = true;
         }
@@ -299,12 +295,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         if (password.isEmpty()) {
             passwordEdit.setError("Required.");
             valid = false;
-        }
-        else if(!password.matches("(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{6,}")){
+        } else if (!password.matches("(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{6,}")) {
             passwordEdit.setError("Weak password.");
             valid = false;
-        }
-        else {
+        } else {
             passwordEdit.setError(null);
             valid = true;
         }
@@ -313,26 +307,22 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         if (company.isEmpty()) {
             companyName.setError("Required.");
             valid = false;
-        }
-        else if (companyName.length()<4){
+        } else if (companyName.length() < 4) {
             companyName.setError("Company invalid.");
             valid = false;
-        }
-        else{
+        } else {
             companyName.setError(null);
             valid = true;
         }
-        
+
         String phone = phoneNum.getText().toString();
         if (phone.isEmpty()) {
             phoneNum.setError("Required.");
             valid = false;
-        }
-        else if (phone.length()>10){
+        } else if (phone.length() > 10) {
             phoneNum.setError("Phone Invalid.");
             valid = false;
-        }
-        else{
+        } else {
             phoneNum.setError(null);
             valid = true;
         }
@@ -340,54 +330,51 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         return valid;
     }
 
-    private boolean loginCredentialsAreComplete(){
+    private boolean loginCredentialsAreComplete() {
         boolean valid;
         String email = emailEdit.getText().toString();
         if (email.isEmpty()) {
             emailEdit.setError("Required.");
             valid = false;
-        } else if(!email.matches("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")){
+        } else if (!email.matches("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")) {
             emailEdit.setError("Not a valid address.");
             valid = false;
-        }
-        else
+        } else
             valid = true;
 
         String password = passwordEdit.getText().toString();
         if (password.isEmpty()) {
             passwordEdit.setError("Required.");
             valid = false;
-        }
-        else
+        } else
             valid = true;
 
         return valid;
     }
 
-    private boolean forgotCredentialsAreComplete(){
+    private boolean forgotCredentialsAreComplete() {
         boolean valid = false;
         String email = emailEdit.getText().toString();
-        if (email.isEmpty()){
+        if (email.isEmpty()) {
             emailEdit.setError("Required.");
-        }
-        else
+        } else
             valid = true;
 
         return valid;
     }
 
-    private boolean isVerified(){
+    private boolean isVerified() {
         boolean status = false;
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null && user.isEmailVerified()){
+        if (user != null && user.isEmailVerified()) {
             status = true;
         }
 
         return status;
     }
 
-    private void sendVerificationEmail(){
+    private void sendVerificationEmail() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         user.sendEmailVerification()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -399,17 +386,17 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                 .show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        sweetBuilder
-                                .createSweetDialog(LoginActivity.this, "Error",
-                                        "Verify Email", e.getMessage(), "Ok")
-                                .show();
-                    }
-                });
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                sweetBuilder
+                        .createSweetDialog(LoginActivity.this, "Error",
+                                "Verify Email", e.getMessage(), "Ok")
+                        .show();
+            }
+        });
     }
 
-    private boolean existsInBigBlueDatabase(String email){
+    private boolean existsInBigBlueDatabase(String email) {
         //change to false
         boolean valid = true;
         ///QUERY JASON'S DATABASE FOR THIS EMAIL, IF IT EXISTS SET VALID = TRUE
