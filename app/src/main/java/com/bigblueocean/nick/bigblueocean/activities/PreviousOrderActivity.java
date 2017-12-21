@@ -1,7 +1,6 @@
 package com.bigblueocean.nick.bigblueocean.activities;
 
 import android.content.Intent;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,43 +8,52 @@ import android.support.v7.widget.RecyclerView;
 
 import com.bigblueocean.nick.bigblueocean.R;
 import com.bigblueocean.nick.bigblueocean.adapters.PreviousOrderAdapter;
-import com.bigblueocean.nick.bigblueocean.fragments.OrderFragment;
-import com.bigblueocean.nick.bigblueocean.model.Category;
-import com.bigblueocean.nick.bigblueocean.model.Order;
-import com.bigblueocean.nick.bigblueocean.model.Product;
+import com.bigblueocean.nick.bigblueocean.model.OrderHeader;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class PreviousOrderActivity extends AppCompatActivity {
 
-    private ArrayList<Order> previousOrders = new ArrayList<Order>();
+    private ArrayList<OrderHeader> previousOrderHeaders = new ArrayList<OrderHeader>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_previous_order);
 
-        Product dummyProd1 = new Product(Category.TUNA, "Big Eye", "Carribbean", "1+", "60", "100", "7.25");
-        Product dummyProd2 = new Product(Category.MAHI, "", "", "", "100", "10", "10.25");
-        Product dummyProd3 = new Product(Category.WAHOO, "", "", "", "40", "30", "8.50");
+        ArrayList<String> dummyProds1 = new ArrayList<>();
+        dummyProds1.add("TUNA");
+        dummyProds1.add("MAHI");
+        dummyProds1.add("GROUPER");
 
-        ArrayList<Product> dummyProds = new ArrayList<>();
-        dummyProds.add(dummyProd1);
-        dummyProds.add(dummyProd2);
-        dummyProds.add(dummyProd3);
+        ArrayList<String> dummyProds2 = new ArrayList<>();
+        dummyProds2.add("SWORD");
+        dummyProds2.add("WAHOO");
+        dummyProds2.add("SALMON");
 
-        Order dummyOrder = new Order(Calendar.getInstance().getTime().toString(), "Nick", dummyProds);
-        previousOrders.add(dummyOrder);
-        previousOrders.add(dummyOrder);
-        previousOrders.add(dummyOrder);
+
+        ArrayList<String> dummyProds3 = new ArrayList<>();
+        dummyProds3.add("TUNA");
+        dummyProds3.add("SWORD");
+        dummyProds3.add("MAHI");
+        dummyProds3.add("WAHOO");
+        dummyProds3.add("GROUPER");
+        dummyProds3.add("SALMON");
+
+        OrderHeader dummyOrderHeader = new OrderHeader(Calendar.getInstance().getTime().toString(), "123", dummyProds1);
+        previousOrderHeaders.add(dummyOrderHeader);
+        dummyOrderHeader = new OrderHeader(Calendar.getInstance().getTime().toString(), "124", dummyProds2);
+        previousOrderHeaders.add(dummyOrderHeader);
+        dummyOrderHeader = new OrderHeader(Calendar.getInstance().getTime().toString(), "125", dummyProds3);
+        previousOrderHeaders.add(dummyOrderHeader);
 
 
         RecyclerView previousOrdersRecycler = findViewById(R.id.previous_order_recycler);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         previousOrdersRecycler.setLayoutManager(llm);
-        previousOrdersRecycler.setAdapter(new PreviousOrderAdapter(previousOrders));
+        previousOrdersRecycler.setAdapter(new PreviousOrderAdapter(previousOrderHeaders));
 
         //HomeActivity.getCurrentOrder().addAll(order);
     }

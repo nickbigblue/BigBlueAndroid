@@ -5,12 +5,21 @@
     <color name="colorAccent">#FFFFFF</color>
     <color name="white">#ffffff</color>
     <color name="tuna">#ba052b</color>
+    <color name="tunaDim">#2dba052b</color>
     <color name="sword">#6b7380</color>
+    <color name="swordDim">#2d6b7380</color>
     <color name="mahi">#78b82c</color>
+    <color name="mahiDim">#2d78b82c</color>
     <color name="wahoo">#2e78a1</color>
+    <color name="wahooDim">#2d2e78a1</color>
     <color name="grouper">#c24f0a</color>
+    <color name="grouperDim">#2dc24f0a</color>
     <color name="salmon">#fcb0ed</color>
+    <color name="salmonDim">#32fdd1f5</color>
     <color name="other">#8e699e</color>
+    <color name="otherDim">#328e699e</color>
     <color name="transparent">#00ffffff</color>
     <color name="black_overlay">#4b000000</color>
+    <color name="dark_grey">#4C4C4C</color>
+    <color name="light_frame">#4ec2c0c0</color>
 </resources>

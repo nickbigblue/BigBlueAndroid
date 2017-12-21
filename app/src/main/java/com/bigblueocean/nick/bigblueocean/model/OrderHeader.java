@@ -6,14 +6,14 @@ import java.util.ArrayList;
  * Created by nick on 12/20/17.
  */
 
-public class Order {
+public class OrderHeader {
     private String timestamp;
-    private String sender;
-    private ArrayList<Product> lineItems = new ArrayList<Product>();
+    private String orderId;
+    private ArrayList<String> lineItems = new ArrayList<>();
 
-    public Order(String timestamp, String sender, ArrayList<Product> lineItems){
+    public OrderHeader(String timestamp, String orderId, ArrayList<String> lineItems){
         this.timestamp = timestamp;
-        this.sender = sender;
+        this.orderId = orderId;
         this.lineItems.addAll(lineItems);
     }
 
@@ -25,19 +25,19 @@ public class Order {
         this.timestamp = timestamp;
     }
 
-    public String getSender() {
-        return sender;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
-    public ArrayList<Product> getLineItems() {
+    public ArrayList<String> getLineItems() {
         return lineItems;
     }
 
-    public void setLineItems(ArrayList<Product> lineItems) {
+    public void setLineItems(ArrayList<String> lineItems) {
         this.lineItems = lineItems;
     }
 }

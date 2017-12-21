@@ -1,23 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
+    android:gravity="center"
     android:padding="8dp"
-    android:background="#CCC">
+    card_view:cardCornerRadius="14dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
     <TextView
         android:id="@+id/past_order_id"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_weight="7"
+        android:layout_gravity="start"
         android:background="@color/white"
-        android:text="Order No. 00000"
+        android:text="Sent: 88/88/88 88:88:88 pm"
         android:textColor="@color/colorPrimary"
-        android:textAlignment="center"
-        android:textSize="32sp"
-        android:fontFamily="@font/impact"/>
+        android:textAlignment="viewStart"
+        android:textSize="24sp"
+        android:textAllCaps="true"
+        android:fontFamily="@font/impact"
+        android:padding="6dp"
+        android:paddingLeft="12dp"
+        android:paddingStart="12dp"/>
+
+        <ImageButton
+            android:id="@+id/past_order_details_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:tint="@color/colorPrimary"
+            android:src="@drawable/ic_forward"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="10dp"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,49 +64,101 @@
             android:layout_height="wrap_content"
             android:text="Species Ordered:"
             android:textColor="@color/black_overlay"
-            android:textSize="20sp"
-            android:padding="4dp"/>
+            android:textSize="22sp"
+            android:padding="6dp"
+            android:paddingLeft="12dp"
+            android:paddingStart="12dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="6dp">
 
-            <ImageView
+            <TextView
+                android:id="@+id/tuna_past"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="Tu"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:fontFamily="@font/impact"
+                android:background="@color/light_frame"
+                android:padding="4dp" />
+
+            <TextView
+                android:id="@+id/sword_past"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:background="@drawable/error_center_x"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="Sw"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:fontFamily="@font/impact"
+                android:background="@color/light_frame"
+                android:padding="4dp"/>
 
-            <ImageView
+            <TextView
+                android:id="@+id/mahi_past"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="Ma"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:fontFamily="@font/impact"
+                android:background="@color/light_frame"
+                android:padding="4dp" />
 
-            <ImageView
+            <TextView
+                android:id="@+id/wahoo_past"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="Wa"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:fontFamily="@font/impact"
+                android:background="@color/light_frame"
+                android:padding="4dp" />
 
-            <ImageView
+            <TextView
+                android:id="@+id/grouper_past"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="Gr"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:fontFamily="@font/impact"
+                android:background="@color/light_frame"
+                android:padding="4dp" />
 
-            <ImageView
+            <TextView
+                android:id="@+id/salmon_past"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="Sa"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:fontFamily="@font/impact"
+                android:background="@color/light_frame"
+                android:padding="4dp"
+                />
 
         </LinearLayout>
 
@@ -81,37 +167,26 @@
                 android:layout_height="wrap_content"
                 android:text="Total Poundage:"
                 android:textColor="@color/black_overlay"
-                android:textSize="20sp"
-                android:padding="4dp"/>
+                android:textSize="22sp"
+                android:padding="6dp"
+                android:paddingLeft="12dp"
+                android:paddingStart="12dp"/>
 
             <TextView
+                android:id="@+id/past_total_poundage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="000 lbs."
                 android:textColor="@color/black_overlay"
-                android:textSize="16sp"
-                android:textAlignment="viewEnd"
-                android:layout_gravity="end"
-                android:padding="6dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Placed by:"
-                android:textColor="@color/black_overlay"
                 android:textSize="20sp"
-                android:padding="4dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="User"
-                android:textColor="@color/black_overlay"
-                android:textSize="16sp"
                 android:textAlignment="viewEnd"
                 android:layout_gravity="end"
-                android:padding="6dp"/>
+                android:padding="6dp"
+                android:paddingRight="12dp"
+                android:paddingEnd="12dp"/>
+
+         </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</android.support.v7.widget.CardView>
