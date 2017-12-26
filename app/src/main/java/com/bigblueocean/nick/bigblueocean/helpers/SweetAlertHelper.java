@@ -60,7 +60,7 @@ public class SweetAlertHelper {
     public SweetAlertDialog createProgressSweetDialog(Context context){
         SweetAlertDialog dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
         dialog.setTitleText("Loading...");
-        dialog.getProgressHelper().setRimColor(Color.DKGRAY);
+        dialog.getProgressHelper().setRimColor(Color.WHITE);
         dialog.getProgressHelper().setBarColor(Color.LTGRAY);
         dialog.setCancelable(false);
         return dialog;

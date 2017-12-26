@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import com.bigblueocean.nick.bigblueocean.helpers.SelectionHelper;
 import com.bigblueocean.nick.bigblueocean.fragments.NewsFragment;
 import com.bigblueocean.nick.bigblueocean.fragments.OrderFragment;
@@ -46,6 +47,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.bigblueocean.nick.bigblueocean.model.News;
 import com.bigblueocean.nick.bigblueocean.model.Product;
 import com.google.gson.reflect.TypeToken;
@@ -73,12 +75,11 @@ public class HomeActivity extends AppCompatActivity implements
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 FirebaseMessaging.getInstance().subscribeToTopic("global");
                 String instanceId = FirebaseInstanceId.getInstance().getToken();
-                Log.e("instanceid",instanceId);
+                Log.e("instanceid", instanceId);
                 if (user == null) {
                     HomeActivity.this.finish();
                     startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-                }
-                else{
+                } else {
                     ServerPost sp = new ServerPost(user);
                     opUser = sp.setUser();
                 }
@@ -86,25 +87,25 @@ public class HomeActivity extends AppCompatActivity implements
         });
 
 //        if (opUser.getType() < PERMISSIONS_THRESHOLD) {
-            setContentView(R.layout.activity_home_cust);
-            Toolbar homeToolbar = findViewById(R.id.home_toolbar);
-            setSupportActionBar(homeToolbar);
+        setContentView(R.layout.activity_home_cust);
+        Toolbar homeToolbar = findViewById(R.id.home_toolbar);
+        setSupportActionBar(homeToolbar);
 
-            homeViewPager = (ViewPager) findViewById(R.id.container);
-            homeViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-            homeViewPager.setAdapter(homeViewPagerAdapter);
-            tabLayout = (TabLayout) findViewById(R.id.tabs);
-            tabLayout.setupWithViewPager(homeViewPager, false);
+        homeViewPager = (ViewPager) findViewById(R.id.container);
+        homeViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        homeViewPager.setAdapter(homeViewPagerAdapter);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(homeViewPager, false);
 
-            tabLayout.getTabAt(0).setIcon(R.drawable.ic_news);
-            tabLayout.getTabAt(1).setIcon(R.drawable.ic_fishook);
-            tabLayout.getTabAt(2).setIcon(R.drawable.ic_list);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_news);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_fishook);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_list);
 
-            if (this.getIntent().hasExtra("currentItem"))
-                homeViewPager.setCurrentItem(Integer.parseInt(this.getIntent().getStringExtra("currentItem")));
-            else
-                homeViewPager.setCurrentItem(1);
-            homeViewPager.setOffscreenPageLimit(0);
+        if (this.getIntent().hasExtra("currentItem"))
+            homeViewPager.setCurrentItem(Integer.parseInt(this.getIntent().getStringExtra("currentItem")));
+        else
+            homeViewPager.setCurrentItem(1);
+        homeViewPager.setOffscreenPageLimit(0);
 //        } else {
 //            setContentView(R.layout.activity_home_company);
 //            Toolbar homeToolbar = findViewById(R.id.home_toolbar);
@@ -136,7 +137,7 @@ public class HomeActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
         if (!(homeViewPagerAdapter == null)) {
@@ -146,22 +147,23 @@ public class HomeActivity extends AppCompatActivity implements
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(this.getApplicationContext());
         Gson gson = new Gson();
-        Type type = new TypeToken<List<Product>>(){}.getType();
+        Type type = new TypeToken<List<Product>>() {
+        }.getType();
         String json = appSharedPrefs.getString("CurrentOrder", "");
         currentOrder = gson.fromJson(json, type);
-        if (currentOrder == null){
+        if (currentOrder == null) {
             currentOrder = new ArrayList<>();
         }
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
 
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
 
 
@@ -176,7 +178,7 @@ public class HomeActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
 
     }
@@ -187,7 +189,7 @@ public class HomeActivity extends AppCompatActivity implements
         finish();
     }
 
-    public static ArrayList<Product> getCurrentOrder(){
+    public static ArrayList<Product> getCurrentOrder() {
         return currentOrder;
     }
 
@@ -207,7 +209,7 @@ public class HomeActivity extends AppCompatActivity implements
 
     //METHODS FOR FRAGMENTS IN TABBED ACTIVITY
     @Override
-    public void onListFragmentInteraction(News item){
+    public void onListFragmentInteraction(News item) {
         if (hasWindowFocus()) {
             Intent toNewsPage = new Intent(this, NewsActivity.class);
             toNewsPage.putExtra("newsID", "" + item.getNewsID());
@@ -218,9 +220,9 @@ public class HomeActivity extends AppCompatActivity implements
 
     @Override
     public void onListFragmentInteraction(Product item) {
-        if (hasWindowFocus()){
+        if (hasWindowFocus()) {
             Dialog input = editProductDialog(item);
-            int width = (int)(getResources().getDisplayMetrics().widthPixels*0.999);
+            int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.999);
             int height = LinearLayout.LayoutParams.WRAP_CONTENT;
             input.getWindow().setLayout(width, height);
             input.show();
@@ -228,10 +230,10 @@ public class HomeActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onListFragmentInteraction(Category item){
+    public void onListFragmentInteraction(Category item) {
         if (hasWindowFocus()) {
             Dialog input = addItemDialog(item);
-            int width = (int)(getResources().getDisplayMetrics().widthPixels*0.999);
+            int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.999);
             int height = LinearLayout.LayoutParams.WRAP_CONTENT;
             input.getWindow().setLayout(width, height);
             input.show();
@@ -239,7 +241,7 @@ public class HomeActivity extends AppCompatActivity implements
     }
 
     //METHODS FOR DIALOGS
-    public Dialog addItemDialog(final Category cat){
+    public Dialog addItemDialog(final Category cat) {
         final Dialog dialog = new Dialog(HomeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_add_product);
@@ -263,7 +265,7 @@ public class HomeActivity extends AppCompatActivity implements
 
         SelectionHelper infoPicker = new SelectionHelper();
         ArrayList<ArrayList<String>> arrayChoices = new ArrayList<>();
-        switch(cat){
+        switch (cat) {
             case TUNA:
                 arrayChoices = infoPicker.getTuna();
                 break;
@@ -297,7 +299,7 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
-                dummyProd.setRegion(parent.getItemAtPosition(position).toString());
+                    dummyProd.setRegion(parent.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -316,7 +318,7 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
-                dummyProd.setSpecies(parent.getItemAtPosition(position).toString());
+                    dummyProd.setSpecies(parent.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -335,7 +337,7 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
-                dummyProd.setGrade(parent.getItemAtPosition(position).toString());
+                    dummyProd.setGrade(parent.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -354,7 +356,7 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
-                dummyProd.setSize(parent.getItemAtPosition(position).toString());
+                    dummyProd.setSize(parent.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -369,14 +371,13 @@ public class HomeActivity extends AppCompatActivity implements
         dialogAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentOrder.size() <= 50){
+                if (currentOrder.size() <= 50) {
                     if (!qtyField.getText().toString().isEmpty())
                         dummyProd.setQuantity(qtyField.getText().toString());
                     if (!priceField.getText().toString().isEmpty())
                         dummyProd.setPrice(priceField.getText().toString());
                     currentOrder.add(dummyProd);
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(),
                             "You've reached your order maximum.", Toast.LENGTH_SHORT).show();
                 }
@@ -395,13 +396,13 @@ public class HomeActivity extends AppCompatActivity implements
             }
         });
 
-        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.999);
+        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.999);
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setLayout(width, height);
         return dialog;
     }
 
-    public Dialog editProductDialog(final Product prod){
+    public Dialog editProductDialog(final Product prod) {
         final Dialog dialog = new Dialog(HomeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_add_product);
@@ -427,7 +428,7 @@ public class HomeActivity extends AppCompatActivity implements
 
         SelectionHelper infoPicker = new SelectionHelper();
         ArrayList<ArrayList<String>> arrayChoices = new ArrayList<>();
-        switch(prod.getCategory()){
+        switch (prod.getCategory()) {
             case TUNA:
                 arrayChoices = infoPicker.getTuna();
                 break;
@@ -461,7 +462,7 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
-                dummyProd.setRegion(parent.getItemAtPosition(position).toString());
+                    dummyProd.setRegion(parent.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -480,7 +481,7 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
-                dummyProd.setSpecies(parent.getItemAtPosition(position).toString());
+                    dummyProd.setSpecies(parent.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -499,7 +500,7 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
-                dummyProd.setGrade(parent.getItemAtPosition(position).toString());
+                    dummyProd.setGrade(parent.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -518,7 +519,7 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (parent.getItemAtPosition(position).toString().equalsIgnoreCase("No Pref."))
-                dummyProd.setSize(parent.getItemAtPosition(position).toString());
+                    dummyProd.setSize(parent.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -533,7 +534,7 @@ public class HomeActivity extends AppCompatActivity implements
         dialogAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentOrder.size() <= 50){
+                if (currentOrder.size() <= 50) {
                     if (!qtyField.getText().toString().isEmpty())
                         dummyProd.setQuantity(qtyField.getText().toString());
                     if (!priceField.getText().toString().isEmpty())
@@ -557,15 +558,15 @@ public class HomeActivity extends AppCompatActivity implements
             }
         });
 
-        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.999);
+        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.999);
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setLayout(width, height);
         return dialog;
     }
 
     //METHODS FOR MANAGING CURRENT ORDER
-    public void clearOrder(){
-        if(!currentOrder.isEmpty()) {
+    public void clearOrder() {
+        if (!currentOrder.isEmpty()) {
             final SweetAlertDialog clearOrderDialog =
                     new SweetAlertDialog(HomeActivity.this, SweetAlertDialog.WARNING_TYPE);
             clearOrderDialog.setTitleText(getResources().getString(R.string.clear_dialog_title));
@@ -590,8 +591,8 @@ public class HomeActivity extends AppCompatActivity implements
         }
     }
 
-    public void submitOrder(){
-        if(!currentOrder.isEmpty()) {
+    public void submitOrder() {
+        if (!currentOrder.isEmpty()) {
             final SweetAlertDialog submitOrderDialog =
                     new SweetAlertDialog(HomeActivity.this, SweetAlertDialog.WARNING_TYPE);
             submitOrderDialog.setTitleText(getResources().getString(R.string.submit_dialog_title));
@@ -634,29 +635,29 @@ public class HomeActivity extends AppCompatActivity implements
     }
 
     //BIGBLUE DATABASE METHODS
-    public boolean sendOrder(ArrayList<Product> order){
+    public boolean sendOrder(ArrayList<Product> order) {
         String json = new Gson().toJson(order);
         String[] params = {getResources().getString(R.string.order_tag), json};
         ServerPost sp = new ServerPost(params, homeAuthenticator.getCurrentUser());
-        return  sp.getSuccess();
+        return sp.getSuccess();
     }
 
-    public static FirebaseUser getFirebaseUser(){
+    public static FirebaseUser getFirebaseUser() {
         return homeAuthenticator.getCurrentUser();
     }
 
     //CUSTOMIZED PAGER ADAPTER FOR TABBED ACTIVITY FUNCTION
     public static class ViewPagerAdapter extends FragmentStatePagerAdapter {
-        private String tabTitles[] = new String[] { "News", "The Goods", "My Order"};
+        private String tabTitles[] = new String[]{"News", "The Goods", "My Order"};
 
-        public ViewPagerAdapter(FragmentManager fragmentManager){
+        public ViewPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
         }
 
         @Override
         public Fragment getItem(int position) {
             Fragment intendedFragment;
-            switch (position){
+            switch (position) {
                 case 0:
                     intendedFragment = NewsFragment.newInstance();
                     break;
@@ -688,5 +689,7 @@ public class HomeActivity extends AppCompatActivity implements
             return tabTitles[position];
         }
 
-    };
+    }
+
+    ;
 }
