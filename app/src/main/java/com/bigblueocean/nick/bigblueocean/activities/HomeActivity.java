@@ -97,36 +97,16 @@ public class HomeActivity extends AppCompatActivity implements
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(homeViewPager, false);
 
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_news);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_fishook);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_list);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_fishook);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_list);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_news);
 
         if (this.getIntent().hasExtra("currentItem"))
             homeViewPager.setCurrentItem(Integer.parseInt(this.getIntent().getStringExtra("currentItem")));
         else
-            homeViewPager.setCurrentItem(1);
+            homeViewPager.setCurrentItem(0);
+
         homeViewPager.setOffscreenPageLimit(0);
-//        } else {
-//            setContentView(R.layout.activity_home_company);
-//            Toolbar homeToolbar = findViewById(R.id.home_toolbar);
-//            setSupportActionBar(homeToolbar);
-//
-//            homeViewPager = (ViewPager) findViewById(R.id.container);
-//            homeViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-//            homeViewPager.setAdapter(homeViewPagerAdapter);
-//            tabLayout = (TabLayout) findViewById(R.id.tabs);
-//            tabLayout.setupWithViewPager(homeViewPager, false);
-//
-//            tabLayout.getTabAt(0).setIcon(R.drawable.ic_news);
-//            tabLayout.getTabAt(1).setIcon(R.drawable.ic_fishook);
-//            tabLayout.getTabAt(2).setIcon(R.drawable.ic_list);
-//
-//            if (this.getIntent().hasExtra("currentItem"))
-//                homeViewPager.setCurrentItem(Integer.parseInt(this.getIntent().getStringExtra("currentItem")));
-//            else
-//                homeViewPager.setCurrentItem(1);
-//            homeViewPager.setOffscreenPageLimit(0);
-//        }
     }
 
     @Override
@@ -159,13 +139,11 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     public void onStop() {
         super.onStop();
-
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
 
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(this.getApplicationContext());
@@ -180,7 +158,6 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-
     }
 
     @Override
@@ -648,7 +625,7 @@ public class HomeActivity extends AppCompatActivity implements
 
     //CUSTOMIZED PAGER ADAPTER FOR TABBED ACTIVITY FUNCTION
     public static class ViewPagerAdapter extends FragmentStatePagerAdapter {
-        private String tabTitles[] = new String[]{"News", "The Goods", "My Order"};
+        private String tabTitles[] = new String[]{"The Goods", "My Order", "The News"};
 
         public ViewPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
@@ -659,13 +636,13 @@ public class HomeActivity extends AppCompatActivity implements
             Fragment intendedFragment;
             switch (position) {
                 case 0:
-                    intendedFragment = NewsFragment.newInstance();
-                    break;
-                case 1:
                     intendedFragment = ProdFragment.newInstance();
                     break;
-                case 2:
+                case 1:
                     intendedFragment = OrderFragment.newInstance();
+                    break;
+                case 2:
+                    intendedFragment = NewsFragment.newInstance();
                     break;
                 default:
                     intendedFragment = ProdFragment.newInstance();

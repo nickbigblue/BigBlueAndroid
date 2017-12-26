@@ -35,15 +35,22 @@ public class NewsActivity extends AppCompatActivity {
             String json = getIntent().getExtras().getString("selectedNews");
             newsPage = new Gson().fromJson(json, News.class);
         } else {
-            newsPage = new News("Default News", "Default Content", R.drawable.newsgenericimage, 0);
+            newsPage = new News("Default News", "Default Content", R.drawable.newsgenericimage, 2);
 //            throw new IllegalArgumentException("Activity cannot find extras: 'selectedNews'");
         }
 
         ImageView banner = (ImageView) findViewById(R.id.news_page_image);
-        if (!(newsPage.getImage() == null))
-            Picasso.with(this).load(newsPage.getImage()).into(banner);
-        else
+        if (newsPage.getImage() != null) {
+            Picasso
+                    .with(this)
+                    .load(newsPage.getImage())
+                    .resize(640, 360)
+                    .centerCrop()
+                    .into(banner);
+        }
+        else {
             banner.setImageResource(newsPage.getImageID());
+        }
 
         TextView title = (TextView) findViewById(R.id.news_page_title);
         title.setText(newsPage.getTitle());

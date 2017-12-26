@@ -42,7 +42,6 @@
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="32sp"
-        android:textAllCaps="true"
         android:fontFamily="@font/impact"/>
 
     </android.support.v7.widget.CardView>

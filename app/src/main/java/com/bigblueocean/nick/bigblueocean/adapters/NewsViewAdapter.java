@@ -40,7 +40,12 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHo
                 holder.newsBanner.setImageResource(R.drawable.newsgenericimage);
             }
             else{
-                Picasso.with(context).load(recentNews.get(position).getImage()).into(holder.newsBanner);
+                Picasso
+                        .with(context)
+                        .load(recentNews.get(position).getImage())
+                        .resize(640,360)
+                        .centerCrop()
+                        .into(holder.newsBanner);
             }
         holder.newsTitle.setText(recentNews.get(position).getTitle());
         holder.newsCell.setOnClickListener(new View.OnClickListener() {
