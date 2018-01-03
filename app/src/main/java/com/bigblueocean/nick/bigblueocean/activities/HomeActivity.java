@@ -73,7 +73,9 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                FirebaseMessaging.getInstance().subscribeToTopic("global");
+                FirebaseMessaging.getInstance().unsubscribeFromTopic("bigblue");
+                FirebaseMessaging.getInstance().subscribeToTopic("bigblue");
+                FirebaseMessaging.getInstance().subscribeToTopic(user.getUid());
                 String instanceId = FirebaseInstanceId.getInstance().getToken();
                 Log.e("instanceid", instanceId);
                 if (user == null) {

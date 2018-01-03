@@ -27,7 +27,7 @@ public class ServerPost{
     private String message;
     private boolean success = false;
     private String id;
-    private String url = "http://bigblueocean.net/jb2/public/bigblueapp/android";
+    private String url = "https://bigblueocean.net/jb2/public/bigblueapp/android";
     private final String TOKEN = "wD3TE7ThkpTxtx4b7kD0Lli1sYJzJOBUeM";
 
     public ServerPost(FirebaseUser user) {

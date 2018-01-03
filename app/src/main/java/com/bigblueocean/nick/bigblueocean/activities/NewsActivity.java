@@ -16,6 +16,8 @@ import com.squareup.picasso.Picasso;
 
 public class NewsActivity extends AppCompatActivity {
 
+    private final String RETURN_IDENTIFIER = "2";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +37,7 @@ public class NewsActivity extends AppCompatActivity {
             String json = getIntent().getExtras().getString("selectedNews");
             newsPage = new Gson().fromJson(json, News.class);
         } else {
-            newsPage = new News("Default News", "Default Content", R.drawable.newsgenericimage, 2);
+            newsPage = new News("Default News", "Default Content", R.drawable.newsgenericimage, 0);
 //            throw new IllegalArgumentException("Activity cannot find extras: 'selectedNews'");
         }
 
@@ -44,8 +46,6 @@ public class NewsActivity extends AppCompatActivity {
             Picasso
                     .with(this)
                     .load(newsPage.getImage())
-                    .resize(640, 360)
-                    .centerCrop()
                     .into(banner);
         }
         else {
@@ -69,7 +69,7 @@ public class NewsActivity extends AppCompatActivity {
     public void onBackPressed() {
         NewsActivity.this.finish();
         Intent intent = new Intent(NewsActivity.this,HomeActivity.class);
-        intent.putExtra("currentItem","0");
+        intent.putExtra("currentItem", RETURN_IDENTIFIER);
         startActivity(intent);
     }
 
