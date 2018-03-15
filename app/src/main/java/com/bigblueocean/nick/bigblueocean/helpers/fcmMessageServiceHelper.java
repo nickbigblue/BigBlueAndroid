@@ -10,7 +10,6 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.bigblueocean.nick.bigblueocean.R;
-import com.bigblueocean.nick.bigblueocean.activities.HomeActivity;
 import com.bigblueocean.nick.bigblueocean.activities.LoginActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;

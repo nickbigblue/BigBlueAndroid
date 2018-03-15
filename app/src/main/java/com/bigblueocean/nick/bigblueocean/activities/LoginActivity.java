@@ -56,7 +56,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         loginButton = findViewById(R.id.loginButton);
         registerButton = findViewById(R.id.registerButton);
         forgotPasswordButton = findViewById(R.id.forgotPasswordButton);
-        title = findViewById(R.id.loginTitle);
+        title = findViewById(R.id.login_title);
 
         //setupButtons
         loginButton.setOnClickListener(this);
