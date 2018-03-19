@@ -25,16 +25,35 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activities.RegisterActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+
+        </activity>
+        <activity
+            android:name=".activities.ForgotPasswordActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+
+        </activity>
+        <activity
             android:name=".activities.HomeActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_home"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme">
+
+        </activity>
+
         <activity
             android:name=".activities.NewsActivity"
             android:noHistory="false"
-            android:parentActivityName=".activities.HomeActivity"></activity>
+            android:parentActivityName=".activities.HomeActivity">
+
+        </activity>
 
         <service android:name=".helpers.fcmInstanceServiceHelper">
             <intent-filter>
