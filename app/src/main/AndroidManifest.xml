@@ -13,60 +13,57 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
+        
         <activity
             android:name=".activities.LoginActivity"
             android:configChanges="orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeBlue">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name=".activities.RegisterActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppThemeWhite">
 
         </activity>
+        
         <activity
             android:name=".activities.ForgotPasswordActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppThemeWhite">
 
         </activity>
+        
         <activity
             android:name=".activities.HomeActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_home"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppThemeWhite">
 
         </activity>
-
-        <activity
-            android:name=".activities.NewsActivity"
-            android:noHistory="false"
-            android:parentActivityName=".activities.HomeActivity">
-
-        </activity>
-
+        
         <service android:name=".helpers.fcmInstanceServiceHelper">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
         <service android:name=".helpers.fcmMessageServiceHelper">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name=".activities.PreviousOrderActivity"></activity>
     </application>
 
 </manifest>
